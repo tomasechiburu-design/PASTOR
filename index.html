@@ -1,0 +1,1583 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Arquitecto de Ciudades</title>
+
+  <!-- Configuración PWA & iPadOS Home Screen App -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Arquitecto" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="theme-color" content="#111827" />
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="apple-touch-icon" sizes="512x512" href="./icon-512.png" />
+  <link rel="icon" type="image/png" href="./icon-512.png" />
+
+  <style>
+    :root {
+      --bg-panel: rgba(17, 24, 39, 0.90);
+      --bg-panel-solid: #111827;
+      --bg-card: rgba(31, 41, 55, 0.92);
+      --bg-card-active: rgba(245, 158, 11, 0.25);
+      --border: rgba(255, 255, 255, 0.16);
+      --gold: #f59e0b;
+      --emerald: #10b981;
+      --sky: #38bdf8;
+      --danger: #ef4444;
+      --text: #f9fafb;
+      --muted: #9ca3af;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #111827;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Rounded", "Segoe UI", Roboto, sans-serif;
+      color: var(--text);
+      touch-action: none;
+    }
+
+    #app {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+    }
+
+    #world {
+      display: block;
+      width: 100%;
+      height: 100%;
+      touch-action: none;
+    }
+
+    /* BARRA SUPERIOR COMPACTA PARA IPAD */
+    #hud-top {
+      position: absolute;
+      top: max(10px, env(safe-area-inset-top));
+      left: max(10px, env(safe-area-inset-left));
+      right: max(10px, env(safe-area-inset-right));
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      pointer-events: none;
+      z-index: 20;
+      flex-wrap: wrap;
+    }
+
+    .pill-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--bg-panel);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 6px 10px;
+      pointer-events: auto;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.45);
+    }
+
+    .stat {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 14px;
+      font-weight: 800;
+      padding: 4px 8px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 10px;
+    }
+
+    .icon-btn {
+      min-width: 42px;
+      height: 40px;
+      padding: 0 11px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text);
+      font-size: 16px;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      cursor: pointer;
+    }
+    .icon-btn:active { transform: scale(0.95); }
+    .icon-btn.active {
+      background: rgba(56, 189, 248, 0.25);
+      border-color: var(--sky);
+    }
+    .icon-btn.gold {
+      background: linear-gradient(135deg, #d97706, #f59e0b);
+      color: #111827;
+      border: none;
+    }
+
+    /* MINIMAPA TÁCTIL SUPERIOR DERECHO */
+    #minimap-wrap {
+      position: absolute;
+      top: calc(max(10px, env(safe-area-inset-top)) + 60px);
+      right: max(10px, env(safe-area-inset-right));
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 5px;
+      z-index: 18;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.45);
+    }
+    #minimap {
+      display: block;
+      width: 132px;
+      height: 98px;
+      border-radius: 9px;
+    }
+
+    /* PANEL DESPLEGABLE DE TRABAJADORES */
+    #workers-drawer {
+      position: absolute;
+      top: calc(max(10px, env(safe-area-inset-top)) + 60px);
+      left: max(10px, env(safe-area-inset-left));
+      width: 270px;
+      background: var(--bg-panel);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 12px;
+      z-index: 25;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.55);
+      display: none;
+    }
+    #workers-drawer.open { display: block; }
+
+    .drawer-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+    .role-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .stepper {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .step-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: #fff;
+      font-size: 18px;
+      font-weight: 900;
+    }
+    .step-btn:disabled { opacity: 0.3; }
+
+    /* BARRA INFERIOR DE CONSTRUCCIÓN VISUAL */
+    #dock {
+      position: absolute;
+      bottom: max(10px, env(safe-area-inset-bottom));
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(980px, calc(100vw - 20px));
+      background: var(--bg-panel);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 8px 10px;
+      z-index: 20;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.55);
+    }
+
+    .tabs {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 8px;
+      overflow-x: auto;
+    }
+
+    .tab-btn {
+      flex: 1;
+      min-width: 90px;
+      height: 38px;
+      border-radius: 12px;
+      border: 1px solid transparent;
+      background: rgba(255,255,255,0.06);
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
+    .tab-btn.active {
+      background: var(--bg-card-active);
+      border-color: var(--gold);
+      color: #fde68a;
+    }
+
+    .cards {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+    }
+
+    .card {
+      min-width: 112px;
+      background: var(--bg-card);
+      border: 2px solid transparent;
+      border-radius: 14px;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      color: var(--text);
+      flex-shrink: 0;
+    }
+    .card.active {
+      background: var(--bg-card-active);
+      border-color: var(--gold);
+    }
+    .card.locked { opacity: 0.42; }
+    .card-ico { font-size: 26px; line-height: 1; }
+    .card-lbl { font-size: 12px; font-weight: 800; text-align: center; }
+    .card-prc { font-size: 11px; font-weight: 700; color: #fbbf24; }
+
+    /* BANNER FLOTANTE CORTO */
+    #banner {
+      position: absolute;
+      top: calc(max(10px, env(safe-area-inset-top)) + 60px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(17, 24, 39, 0.92);
+      border: 1px solid var(--gold);
+      border-radius: 14px;
+      padding: 7px 14px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #fde68a;
+      z-index: 22;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.2s;
+      white-space: nowrap;
+    }
+    #banner.show { opacity: 1; }
+
+    /* MODAL SIMPLE DE REGIÓN / ERA */
+    #modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(3, 7, 18, 0.78);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+      padding: 16px;
+    }
+    #modal.hidden { display: none; }
+
+    .modal-box {
+      width: min(560px, 100%);
+      background: var(--bg-panel-solid);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      border-radius: 22px;
+      padding: 20px;
+      box-shadow: 0 20px 48px rgba(0,0,0,0.7);
+    }
+    .modal-title {
+      font-size: 19px;
+      font-weight: 900;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+    .reg-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .reg-btn {
+      background: var(--bg-card);
+      border: 2px solid transparent;
+      border-radius: 16px;
+      padding: 14px 10px;
+      color: var(--text);
+      font-size: 15px;
+      font-weight: 800;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    .reg-btn.selected {
+      border-color: var(--gold);
+      background: var(--bg-card-active);
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <canvas id="world"></canvas>
+
+    <div id="hud-top">
+      <div class="pill-group">
+        <span id="era-pill" class="stat">🏰 Era I</span>
+        <span class="stat">🪙 <span id="v-gold">650</span></span>
+        <span class="stat">🪵 <span id="v-wood">140</span></span>
+        <span class="stat">🪨 <span id="v-stone">90</span></span>
+        <span class="stat">🌾 <span id="v-food">48</span></span>
+        <span class="stat">👥 <span id="v-pop">0/0</span></span>
+      </div>
+
+      <div class="pill-group">
+        <button id="btn-workers" class="icon-btn">👷 <span id="v-free">0</span></button>
+        <button id="btn-era" class="icon-btn gold">⚔️ Era II</button>
+        <button id="btn-undo" class="icon-btn" title="Deshacer">↩️</button>
+        <button id="btn-rotate" class="icon-btn" title="Rotar">↻</button>
+        <button id="btn-fire" class="icon-btn" title="Probar Fuego">🔥</button>
+        <button id="btn-speed" class="icon-btn">▶️</button>
+        <button id="btn-export" class="icon-btn" title="Respaldar ciudad">💾</button>
+        <button id="btn-region" class="icon-btn" title="Nuevo mapa">🗺️</button>
+      </div>
+    </div>
+
+    <div id="banner"></div>
+
+    <div id="minimap-wrap">
+      <canvas id="minimap" width="132" height="98"></canvas>
+    </div>
+
+    <aside id="workers-drawer">
+      <div class="drawer-head">
+        <span>👷 Trabajadores (<span id="w-free">0</span> libres)</span>
+        <button id="btn-auto" class="icon-btn gold" style="height:32px;font-size:13px;">⚡ Auto</button>
+      </div>
+      <div id="roles-list"></div>
+    </aside>
+
+    <section id="dock">
+      <div id="tabs" class="tabs">
+        <button class="tab-btn active" data-sec="roads">🛣️ Calles</button>
+        <button class="tab-btn" data-sec="houses">🏡 Casas</button>
+        <button class="tab-btn" data-sec="prod">⚒️ Recursos</button>
+        <button class="tab-btn" data-sec="serv">🛡️ Guardia</button>
+        <button class="tab-btn" data-sec="tools">🚜 Obras</button>
+      </div>
+      <div id="cards" class="cards"></div>
+    </section>
+
+    <div id="modal">
+      <div class="modal-box">
+        <div id="modal-title" class="modal-title">🗺️ Elige tu Región</div>
+        <div id="modal-body"></div>
+        <div style="display:flex;gap:10px;justify-content:center;">
+          <button id="modal-cancel" class="icon-btn" style="flex:1;height:46px;">Cerrar</button>
+          <button id="modal-ok" class="icon-btn gold" style="flex:2;height:46px;font-size:16px;">¡Empezar!</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Registrar Service Worker para funcionamiento offline en iPad
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+      });
+    }
+
+    // Polyfill seguro para roundRect en versiones antiguas de iPadOS Safari
+    if (typeof CanvasRenderingContext2D !== 'undefined' && !CanvasRenderingContext2D.prototype.roundRect) {
+      CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
+        const rad = typeof r === 'number' ? r : (Array.isArray(r) ? r[0] : 0);
+        const rr = Math.min(rad, Math.abs(w) * 0.5, Math.abs(h) * 0.5);
+        this.beginPath();
+        this.moveTo(x + rr, y);
+        this.arcTo(x + w, y, x + w, y + h, rr);
+        this.arcTo(x + w, y + h, x, y + h, rr);
+        this.arcTo(x, y + h, x, y, rr);
+        this.arcTo(x, y, x + w, y, rr);
+        this.closePath();
+        return this;
+      };
+    }
+
+    const MAP_W = 2600;
+    const MAP_H = 1950;
+    const ROAD_W = 36;
+    const SAVE_KEY = 'arquitecto_ipad_pwa_v1';
+
+    const REGIONS = {
+      valley: { id: 'valley', icon: '🌿', name: 'Valle Verde',   g1: '#5f9e49', g2: '#528c3e', water: '#0284c7', bank: '#e7d39a', trees: 32, rocks: 18, style: 'river' },
+      nordic: { id: 'nordic', icon: '🌲', name: 'Bosque Norte',  g1: '#467a52', g2: '#3a6845', water: '#0369a1', bank: '#cbd5e1', trees: 48, rocks: 22, style: 'fork' },
+      mesa:   { id: 'mesa',   icon: '🏜️', name: 'Meseta Dorada', g1: '#c29b61', g2: '#af884e', water: '#0ea5e9', bank: '#fde68a', trees: 16, rocks: 36, style: 'river' },
+      coast:  { id: 'coast',  icon: '🌊', name: 'Costa Azul',    g1: '#70a348', g2: '#61923b', water: '#0284c7', bank: '#f6df9d', trees: 26, rocks: 22, style: 'bay' }
+    };
+
+    const ERAS = {
+      1: { name: 'Era I · Medieval',   ico: '🏰', next: 'Era II', req: { pop: 16, gold: 300, wood: 80, stone: 60 } },
+      2: { name: 'Era II · Industrial',ico: '⚙️', next: 'Era III',req: { pop: 48, gold: 850, wood: 150, stone: 130 } },
+      3: { name: 'Era III · Moderna',  ico: '🏙️', next: 'Máxima', req: null }
+    };
+
+    const ROLES = {
+      wood:  { ico: '🪓', name: 'Leñadores' },
+      stone: { ico: '⛏️', name: 'Canteros' },
+      farm:  { ico: '🌾', name: 'Granjeros' },
+      guard: { ico: '⚔️', name: 'Caballeros' },
+      fire:  { ico: '🚒', name: 'Bomberos' },
+      civic: { ico: '⚕️', name: 'Cívicos' }
+    };
+
+    const ITEMS = {
+      // CALLES
+      dirt_road:   { sec: 'roads', kind: 'road', tier: 1, era: 1, ico: '🟫', name: 'Tierra',     cost: { gold: 15 } },
+      stone_road:  { sec: 'roads', kind: 'road', tier: 2, era: 1, ico: '🧱', name: 'Piedra',     cost: { gold: 25, stone: 6 } },
+      cobble_road: { sec: 'roads', kind: 'road', tier: 3, era: 2, ico: '🛤️', name: 'Adoquín',    cost: { gold: 45, stone: 12 } },
+      modern_road: { sec: 'roads', kind: 'road', tier: 4, era: 3, ico: '🛣️', name: 'Asfalto',    cost: { gold: 65, stone: 16 } },
+
+      // CASAS
+      hut:         { sec: 'houses', kind: 'bldg', era: 1, ico: '🛖', name: 'Choza',      w: 48, h: 44, cost: { gold: 50, wood: 12 }, pop: 6, tax: 7 },
+      manor:       { sec: 'houses', kind: 'bldg', era: 1, ico: '🏡', name: 'Casona',     w: 58, h: 52, cost: { gold: 110, wood: 24, stone: 10 }, pop: 14, tax: 16 },
+      brick_house: { sec: 'houses', kind: 'bldg', era: 2, ico: '🏘️', name: 'Victoriana', w: 64, h: 56, cost: { gold: 210, wood: 25, stone: 28 }, pop: 28, tax: 36 },
+      apartments:  { sec: 'houses', kind: 'bldg', era: 2, ico: '🏢', name: 'Bloque',     w: 74, h: 62, cost: { gold: 340, wood: 30, stone: 45 }, pop: 46, tax: 58 },
+      condo:       { sec: 'houses', kind: 'bldg', era: 3, ico: '🏬', name: 'Condominio', w: 78, h: 68, cost: { gold: 540, wood: 28, stone: 68 }, pop: 76, tax: 105 },
+      tower:       { sec: 'houses', kind: 'bldg', era: 3, ico: '🏙️', name: 'Torre',      w: 88, h: 80, cost: { gold: 920, wood: 36, stone: 115 }, pop: 140, tax: 200 },
+
+      // PRODUCCIÓN
+      lumber:      { sec: 'prod', kind: 'bldg', era: 1, ico: '🪓', name: 'Leñador',    w: 58, h: 50, cost: { gold: 70, wood: 10 }, role: 'wood', slots: 3, near: 'tree', outW: 6 },
+      quarry:      { sec: 'prod', kind: 'bldg', era: 1, ico: '⛏️', name: 'Cantera',    w: 64, h: 54, cost: { gold: 90, wood: 16 }, role: 'stone', slots: 3, near: 'rock', outS: 6, outG: 4 },
+      farm:        { sec: 'prod', kind: 'bldg', era: 1, ico: '🌾', name: 'Granja',     w: 82, h: 66, cost: { gold: 75, wood: 15 }, role: 'farm', slots: 3, outF: 8, outG: 6 },
+      sawmill:     { sec: 'prod', kind: 'bldg', era: 2, ico: '⚙️', name: 'Aserradero', w: 74, h: 60, cost: { gold: 230, wood: 22, stone: 28 }, role: 'wood', slots: 5, outW: 15, outG: 12 },
+      mine:        { sec: 'prod', kind: 'bldg', era: 2, ico: '🪨', name: 'Mina',       w: 76, h: 64, cost: { gold: 280, wood: 32, stone: 24 }, role: 'stone', slots: 5, near: 'rock', outS: 14, outG: 24 },
+      power:       { sec: 'prod', kind: 'bldg', era: 3, ico: '⚡', name: 'Eléctrica',  w: 90, h: 74, cost: { gold: 650, wood: 28, stone: 90 }, role: 'civic', slots: 4, outG: 40, boost: true },
+
+      // GUARDIA Y SERVICIOS
+      keep:        { sec: 'serv', kind: 'bldg', era: 1, ico: '🛡️', name: 'Cuartel',    w: 62, h: 62, cost: { gold: 120, wood: 18, stone: 25 }, role: 'guard', slots: 3 },
+      well:        { sec: 'serv', kind: 'bldg', era: 1, ico: '🪣', name: 'Bomberos',   w: 48, h: 48, cost: { gold: 80, wood: 12, stone: 14 }, role: 'fire', slots: 2 },
+      market:      { sec: 'serv', kind: 'bldg', era: 1, ico: '⚖️', name: 'Mercado',    w: 74, h: 62, cost: { gold: 135, wood: 22, stone: 14 }, role: 'farm', slots: 3, outG: 26, outF: 5 },
+      fire_hq:     { sec: 'serv', kind: 'bldg', era: 2, ico: '🚒', name: 'Estación',   w: 72, h: 58, cost: { gold: 250, wood: 24, stone: 36 }, role: 'fire', slots: 4 },
+      school:      { sec: 'serv', kind: 'bldg', era: 2, ico: '📜', name: 'Escuela',    w: 70, h: 56, cost: { gold: 230, wood: 28, stone: 28 }, role: 'civic', slots: 3 },
+      hospital:    { sec: 'serv', kind: 'bldg', era: 3, ico: '🏥', name: 'Hospital',   w: 84, h: 68, cost: { gold: 600, wood: 28, stone: 82 }, role: 'civic', slots: 5 },
+
+      // OBRAS
+      upgrade:     { sec: 'tools', kind: 'tool', tool: 'upgrade', era: 1, ico: '⬆️', name: 'Mejorar', cost: { gold: 20, stone: 5 } },
+      demolish:    { sec: 'tools', kind: 'tool', tool: 'demolish', era: 1, ico: '🚜', name: 'Demoler', cost: {} }
+    };
+
+    const dist = (ax, ay, bx, by) => Math.hypot(bx - ax, by - ay);
+
+    function projSeg(px, py, ax, ay, bx, by) {
+      const dx = bx - ax, dy = by - ay, l2 = dx * dx + dy * dy;
+      if (l2 < 1e-6) return { x: ax, y: ay, t: 0, d: dist(px, py, ax, ay) };
+      const t = Math.max(0, Math.min(1, ((px - ax) * dx + (py - ay) * dy) / l2));
+      const x = ax + t * dx, y = ay + t * dy;
+      return { x, y, t, d: dist(px, py, x, y) };
+    }
+
+    function obb(cx, cy, w, h, ang) {
+      const c = Math.cos(ang), s = Math.sin(ang), hw = w * 0.5, hh = h * 0.5;
+      return [
+        { x: cx + (-hw * c + hh * s), y: cy + (-hw * s - hh * c) },
+        { x: cx + ( hw * c + hh * s), y: cy + ( hw * s - hh * c) },
+        { x: cx + ( hw * c - hh * s), y: cy + ( hw * s + hh * c) },
+        { x: cx + (-hw * c - hh * s), y: cy + (-hw * s + hh * c) }
+      ];
+    }
+
+    function overlap(a, b) {
+      for (const poly of [a, b]) {
+        for (let i = 0; i < poly.length; i++) {
+          const p1 = poly[i], p2 = poly[(i + 1) % poly.length];
+          const nx = -(p2.y - p1.y), ny = p2.x - p1.x;
+          let minA = Infinity, maxA = -Infinity, minB = Infinity, maxB = -Infinity;
+          for (const v of a) { const p = v.x * nx + v.y * ny; if (p < minA) minA = p; if (p > maxA) maxA = p; }
+          for (const v of b) { const p = v.x * nx + v.y * ny; if (p < minB) minB = p; if (p > maxB) maxB = p; }
+          if (maxA <= minB || maxB <= minA) return false;
+        }
+      }
+      return true;
+    }
+
+    class Game {
+      constructor() {
+        this.canvas = document.getElementById('world');
+        this.ctx = this.canvas.getContext('2d');
+        this.mini = document.getElementById('minimap');
+        this.mctx = this.mini.getContext('2d');
+
+        this.bg = document.createElement('canvas');
+        this.bg.width = MAP_W;
+        this.bg.height = MAP_H;
+        this.bgCtx = this.bg.getContext('2d');
+        this.bgDirty = true;
+
+        // Cámara plana 1:1 fija (sin zoom) con desplazamiento táctil suave e inercia
+        this.cam = { x: MAP_W * 0.48, y: MAP_H * 0.5, vx: 0, vy: 0, vw: window.innerWidth, vh: window.innerHeight };
+
+        this.sec = 'roads';
+        this.item = 'dirt_road';
+        this.rot = 0;
+        this.speed = 1;
+        this.history = [];
+
+        // Estado de gestos táctiles blindado contra toques fantasma
+        this.touches = new Map();
+        this.gesture = null; // { mode: 'pan' | 'road' | 'tap', startSx, startSy, lastSx, lastSy, roadStart, roadEnd, moved }
+
+        this.initWorld('valley');
+        this.bindEvents();
+        this.resize();
+
+        if (!this.load(true)) {
+          this.openRegionModal(true);
+        }
+
+        this.renderCards();
+        this.renderWorkers();
+        this.updateHUD();
+
+        this.lastT = performance.now();
+        requestAnimationFrame(t => this.loop(t));
+      }
+
+      initWorld(regId) {
+        this.uid = 1;
+        this.regId = regId || 'valley';
+        this.era = 1;
+        this.res = { gold: 650, wood: 140, stone: 90, food: 48 };
+        this.pop = 0;
+        this.popCap = 0;
+        this.workers = { wood: 0, stone: 0, farm: 0, guard: 0, fire: 0, civic: 0 };
+        this.nodes = [];
+        this.roads = [];
+        this.bldgs = [];
+        this.agents = [];
+        this.particles = [];
+        this.history = [];
+        this.prodT = 4.5;
+        this.fireT = 90;
+        this.saveT = 15;
+
+        this.buildNature(this.regId);
+        this.cam.x = MAP_W * 0.48;
+        this.cam.y = MAP_H * 0.5;
+        this.cam.vx = 0;
+        this.cam.vy = 0;
+      }
+
+      buildNature(regId) {
+        const reg = REGIONS[regId] || REGIONS.valley;
+        this.water = [];
+        this.trees = [];
+        this.rocks = [];
+        this.coastX = null;
+
+        if (reg.style === 'river') {
+          for (let i = 0; i < 24; i++) {
+            const t1 = i / 24, t2 = (i + 1) / 24;
+            this.water.push({
+              ax: t1 * MAP_W, ay: MAP_H * 0.32 + Math.sin(t1 * 6.5) * 180 + t1 * 240,
+              bx: t2 * MAP_W, by: MAP_H * 0.32 + Math.sin(t2 * 6.5) * 180 + t2 * 240,
+              r: 36
+            });
+          }
+        } else if (reg.style === 'fork') {
+          for (let i = 0; i < 20; i++) {
+            const t1 = i / 20, t2 = (i + 1) / 20;
+            this.water.push({
+              ax: MAP_W * 0.2 + t1 * MAP_W * 0.7, ay: t1 * MAP_H,
+              bx: MAP_W * 0.2 + t2 * MAP_W * 0.7, by: t2 * MAP_H,
+              r: 36
+            });
+          }
+        } else {
+          this.coastX = MAP_W - 420;
+          for (let i = 0; i < 15; i++) {
+            const t1 = i / 15, t2 = (i + 1) / 15;
+            this.water.push({
+              ax: t1 * (this.coastX + 50), ay: 340 + Math.sin(t1 * 5) * 65,
+              bx: t2 * (this.coastX + 50), by: 340 + Math.sin(t2 * 5) * 65,
+              r: 28
+            });
+          }
+        }
+
+        let seed = regId.split('').reduce((a, c) => a + c.charCodeAt(0) * 41, 1024);
+        const rnd = () => { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
+
+        for (let i = 0; i < reg.trees; i++) {
+          const cx = 140 + rnd() * (MAP_W - 280), cy = 140 + rnd() * (MAP_H - 280);
+          if (this.inWater(cx, cy, 70) || dist(cx, cy, MAP_W * 0.48, MAP_H * 0.5) < 200) continue;
+          for (let k = 0; k < 6; k++) {
+            const tx = cx + (rnd() - 0.5) * 120, ty = cy + (rnd() - 0.5) * 120;
+            if (tx > 60 && tx < MAP_W - 60 && ty > 60 && ty < MAP_H - 60 && !this.inWater(tx, ty, 48)) {
+              this.trees.push({ x: tx, y: ty, r: 15 + rnd() * 8, s: rnd() });
+            }
+          }
+        }
+
+        for (let i = 0; i < reg.rocks; i++) {
+          const cx = 160 + rnd() * (MAP_W - 320), cy = 160 + rnd() * (MAP_H - 320);
+          if (this.inWater(cx, cy, 70) || dist(cx, cy, MAP_W * 0.48, MAP_H * 0.5) < 210) continue;
+          for (let k = 0; k < 3; k++) {
+            const rx = cx + (rnd() - 0.5) * 80, ry = cy + (rnd() - 0.5) * 80;
+            if (!this.inWater(rx, ry, 48) && !this.trees.some(t => dist(rx, ry, t.x, t.y) < 30)) {
+              this.rocks.push({ x: rx, y: ry, r: 18 + rnd() * 9, gold: rnd() < 0.45 });
+            }
+          }
+        }
+
+        this.bgDirty = true;
+      }
+
+      inWater(x, y, margin = 0) {
+        if (this.coastX && x > this.coastX - margin + Math.sin(y * 0.008) * 40) return true;
+        for (const s of this.water) {
+          if (projSeg(x, y, s.ax, s.ay, s.bx, s.by).d < s.r + margin) return true;
+        }
+        return false;
+      }
+
+      renderBg() {
+        const reg = REGIONS[this.regId] || REGIONS.valley;
+        const c = this.bgCtx;
+        const g = c.createLinearGradient(0, 0, MAP_W, MAP_H);
+        g.addColorStop(0, reg.g1);
+        g.addColorStop(1, reg.g2);
+        c.fillStyle = g;
+        c.fillRect(0, 0, MAP_W, MAP_H);
+
+        if (this.coastX) {
+          c.fillStyle = reg.bank;
+          c.beginPath(); c.moveTo(MAP_W, 0); c.lineTo(MAP_W, MAP_H);
+          for (let y = MAP_H; y >= 0; y -= 30) c.lineTo(this.coastX - 22 + Math.sin(y * 0.008) * 40, y);
+          c.closePath(); c.fill();
+
+          c.fillStyle = reg.water;
+          c.beginPath(); c.moveTo(MAP_W, 0); c.lineTo(MAP_W, MAP_H);
+          for (let y = MAP_H; y >= 0; y -= 30) c.lineTo(this.coastX + Math.sin(y * 0.008) * 40, y);
+          c.closePath(); c.fill();
+        }
+
+        c.lineCap = 'round';
+        for (const s of this.water) {
+          c.strokeStyle = reg.bank; c.lineWidth = (s.r + 10) * 2;
+          c.beginPath(); c.moveTo(s.ax, s.ay); c.lineTo(s.bx, s.by); c.stroke();
+        }
+        for (const s of this.water) {
+          c.strokeStyle = reg.water; c.lineWidth = s.r * 2;
+          c.beginPath(); c.moveTo(s.ax, s.ay); c.lineTo(s.bx, s.by); c.stroke();
+        }
+
+        for (const r of this.rocks) {
+          c.fillStyle = 'rgba(0,0,0,0.22)';
+          c.beginPath(); c.arc(r.x + 4, r.y + 4, r.r, 0, Math.PI * 2); c.fill();
+          c.fillStyle = '#64748b';
+          c.beginPath(); c.arc(r.x, r.y, r.r, 0, Math.PI * 2); c.fill();
+          c.fillStyle = '#94a3b8';
+          c.beginPath(); c.arc(r.x - r.r * 0.2, r.y - r.r * 0.25, r.r * 0.45, 0, Math.PI * 2); c.fill();
+          if (r.gold) {
+            c.fillStyle = '#facc15';
+            c.beginPath(); c.arc(r.x + r.r * 0.3, r.y + r.r * 0.1, 3.8, 0, Math.PI * 2); c.fill();
+          }
+        }
+
+        for (const t of this.trees) {
+          c.fillStyle = 'rgba(0,0,0,0.20)';
+          c.beginPath(); c.arc(t.x + 3, t.y + 4, t.r, 0, Math.PI * 2); c.fill();
+          c.fillStyle = t.s > 0.5 ? '#166534' : '#15803d';
+          c.beginPath(); c.arc(t.x, t.y, t.r, 0, Math.PI * 2); c.fill();
+          c.fillStyle = 'rgba(134,239,172,0.25)';
+          c.beginPath(); c.arc(t.x - t.r * 0.25, t.y - t.r * 0.25, t.r * 0.42, 0, Math.PI * 2); c.fill();
+        }
+
+        c.strokeStyle = 'rgba(17,24,39,0.75)';
+        c.lineWidth = 12;
+        c.strokeRect(6, 6, MAP_W - 12, MAP_H - 12);
+        this.bgDirty = false;
+      }
+
+      toWorld(sx, sy) {
+        return { x: sx - this.cam.vw * 0.5 + this.cam.x, y: sy - this.cam.vh * 0.5 + this.cam.y };
+      }
+
+      getNode(id) { return this.nodes.find(n => n.id === id) || null; }
+
+      addNode(x, y) {
+        const ex = this.nodes.find(n => dist(n.x, n.y, x, y) < 28);
+        if (ex) return ex;
+        const n = { id: this.uid++, x, y };
+        this.nodes.push(n);
+        return n;
+      }
+
+      snapPoint(wx, wy) {
+        let bestN = null, bd = 36;
+        for (const n of this.nodes) {
+          const d = dist(wx, wy, n.x, n.y);
+          if (d < bd) { bd = d; bestN = n; }
+        }
+        if (bestN) return { x: bestN.x, y: bestN.y, node: bestN, split: null };
+
+        let bestP = null, rd = 30, target = null;
+        for (const r of this.roads) {
+          const a = this.getNode(r.a), b = this.getNode(r.b);
+          if (!a || !b) continue;
+          const p = projSeg(wx, wy, a.x, a.y, b.x, b.y);
+          if (p.d < rd && p.t > 0.12 && p.t < 0.88) { rd = p.d; bestP = p; target = r; }
+        }
+        if (bestP) return { x: bestP.x, y: bestP.y, node: null, split: target };
+        return { x: wx, y: wy, node: null, split: null };
+      }
+
+      splitRoad(road, px, py) {
+        const a = this.getNode(road.a), b = this.getNode(road.b);
+        if (!a || !b) return this.addNode(px, py);
+        if (dist(px, py, a.x, a.y) < 26) return a;
+        if (dist(px, py, b.x, b.y) < 26) return b;
+        const mid = this.addNode(px, py);
+        this.roads = this.roads.filter(r => r.id !== road.id);
+        this.roads.push(
+          { id: this.uid++, a: road.a, b: mid.id, tier: road.tier, bridge: this.crossesWater(a.x, a.y, mid.x, mid.y) },
+          { id: this.uid++, a: mid.id, b: road.b, tier: road.tier, bridge: this.crossesWater(mid.x, mid.y, b.x, b.y) }
+        );
+        return mid;
+      }
+
+      crossesWater(ax, ay, bx, by) {
+        const steps = Math.max(2, Math.ceil(dist(ax, ay, bx, by) / 20));
+        for (let i = 1; i < steps; i++) {
+          const t = i / steps;
+          if (this.inWater(ax + (bx - ax) * t, ay + (by - ay) * t, -4)) return true;
+        }
+        return false;
+      }
+
+      canAfford(cost, mult = 1) {
+        return this.res.gold >= Math.round((cost.gold || 0) * mult)
+            && this.res.wood >= Math.round((cost.wood || 0) * mult)
+            && this.res.stone >= Math.round((cost.stone || 0) * mult);
+      }
+
+      pay(cost, mult = 1) {
+        this.res.gold  -= Math.round((cost.gold || 0) * mult);
+        this.res.wood  -= Math.round((cost.wood || 0) * mult);
+        this.res.stone -= Math.round((cost.stone || 0) * mult);
+      }
+
+      costText(cost, mult = 1) {
+        const p = [];
+        const g = Math.round((cost.gold || 0) * mult);
+        const w = Math.round((cost.wood || 0) * mult);
+        const s = Math.round((cost.stone || 0) * mult);
+        if (g > 0) p.push(`${g}🪙`);
+        if (w > 0) p.push(`${w}🪵`);
+        if (s > 0) p.push(`${s}🪨`);
+        return p.length ? p.join(' ') : 'Gratis';
+      }
+
+      buildRoadSegment(sSnap, eSnap, spec) {
+        const len = dist(sSnap.x, sSnap.y, eSnap.x, eSnap.y);
+        if (len < 42) return;
+        const mult = Math.max(1, (len / 120) * (this.crossesWater(sSnap.x, sSnap.y, eSnap.x, eSnap.y) ? 1.5 : 1));
+        if (!this.canAfford(spec.cost, mult)) {
+          this.showBanner(`Falta ${this.costText(spec.cost, mult)}`);
+          return;
+        }
+        const nA = sSnap.node || (sSnap.split ? this.splitRoad(sSnap.split, sSnap.x, sSnap.y) : this.addNode(sSnap.x, sSnap.y));
+        const nB = eSnap.node || (eSnap.split ? this.splitRoad(eSnap.split, eSnap.x, eSnap.y) : this.addNode(eSnap.x, eSnap.y));
+        if (nA.id === nB.id) return;
+
+        const rId = this.uid++;
+        this.roads.push({ id: rId, a: nA.id, b: nB.id, tier: spec.tier, bridge: this.crossesWater(nA.x, nA.y, nB.x, nB.y) });
+        this.pay(spec.cost, mult);
+        this.history.push({ kind: 'road', id: rId, cost: spec.cost, mult });
+        this.updateHUD();
+      }
+
+      checkBldg(key, wx, wy) {
+        const spec = ITEMS[key];
+        if (!spec || spec.kind !== 'bldg') return { ok: false, msg: '' };
+        if (spec.era > this.era) return { ok: false, msg: `🔒 ${ERAS[spec.era].name}` };
+
+        let ang = this.rot;
+        const nr = this.nearRoad(wx, wy, 150);
+        if (nr && Math.abs(this.rot) < 0.01) ang = nr.ang;
+
+        const box = obb(wx, wy, spec.w + 4, spec.h + 4, ang);
+        for (const p of [...box, { x: wx, y: wy }]) {
+          if (p.x < 40 || p.x > MAP_W - 40 || p.y < 40 || p.y > MAP_H - 40) return { ok: false, msg: 'Fuera del mapa', ang };
+          if (this.inWater(p.x, p.y, 4)) return { ok: false, msg: 'No en el agua', ang };
+        }
+        if (spec.near === 'tree' && !this.trees.some(t => dist(wx, wy, t.x, t.y) < 175)) {
+          return { ok: false, msg: 'Ponlo junto a árboles 🌲', ang };
+        }
+        if (spec.near === 'rock' && !this.rocks.some(r => dist(wx, wy, r.x, r.y) < 185)) {
+          return { ok: false, msg: 'Ponlo junto a rocas 🪨', ang };
+        }
+        for (const o of this.bldgs) {
+          if (overlap(box, obb(o.x, o.y, o.w + 4, o.h + 4, o.ang))) return { ok: false, msg: 'Choca con edificio', ang };
+        }
+        for (const r of this.roads) {
+          const a = this.getNode(r.a), b = this.getNode(r.b);
+          if (a && b && overlap(box, obb((a.x + b.x) * 0.5, (a.y + b.y) * 0.5, dist(a.x, a.y, b.x, b.y), ROAD_W + 4, Math.atan2(b.y - a.y, b.x - a.x)))) {
+            return { ok: false, msg: 'Encima de calle', ang };
+          }
+        }
+        if (!this.canAfford(spec.cost)) return { ok: false, msg: `Falta ${this.costText(spec.cost)}`, ang };
+        return { ok: true, ang, nr };
+      }
+
+      nearRoad(wx, wy, maxD = 160) {
+        let best = null, bd = maxD;
+        for (const r of this.roads) {
+          const a = this.getNode(r.a), b = this.getNode(r.b);
+          if (!a || !b) continue;
+          const p = projSeg(wx, wy, a.x, a.y, b.x, b.y);
+          if (p.d < bd) { bd = p.d; best = { x: p.x, y: p.y, road: r, ang: Math.atan2(b.y - a.y, b.x - a.x) }; }
+        }
+        return best;
+      }
+
+      placeBldg(wx, wy) {
+        const spec = ITEMS[this.item];
+        const chk = this.checkBldg(this.item, wx, wy);
+        if (!chk.ok) {
+          if (chk.msg) this.showBanner(chk.msg);
+          return;
+        }
+        this.pay(spec.cost);
+        const id = this.uid++;
+        this.bldgs.push({ id, type: this.item, x: wx, y: wy, w: spec.w, h: spec.h, ang: chk.ang, hp: 100, fire: false });
+        this.history.push({ kind: 'bldg', id, cost: spec.cost, mult: 1 });
+        this.recalcPop();
+        if (spec.pop && this.pop < 4) {
+          this.pop = Math.min(this.popCap, 4);
+          this.showBanner('👥 ¡Llegaron aldeanos! Asígnalos en 👷');
+        }
+        this.renderWorkers();
+        this.updateHUD();
+      }
+
+      undoLast() {
+        const last = this.history.pop();
+        if (!last) {
+          this.showBanner('Nada que deshacer');
+          return;
+        }
+        this.res.gold  += Math.round((last.cost.gold || 0) * last.mult);
+        this.res.wood  += Math.round((last.cost.wood || 0) * last.mult);
+        this.res.stone += Math.round((last.cost.stone || 0) * last.mult);
+
+        if (last.kind === 'bldg') {
+          this.bldgs = this.bldgs.filter(b => b.id !== last.id);
+        } else if (last.kind === 'road') {
+          this.roads = this.roads.filter(r => r.id !== last.id);
+          this.nodes = this.nodes.filter(n => this.roads.some(r => r.a === n.id || r.b === n.id));
+        }
+        this.recalcPop();
+        this.renderWorkers();
+        this.updateHUD();
+        this.showBanner('↩️ Obra deshecha');
+      }
+
+      getSlots() {
+        const s = { wood: 0, stone: 0, farm: 0, guard: 0, fire: 0, civic: 0 };
+        for (const b of this.bldgs) {
+          const sp = ITEMS[b.type];
+          if (sp && sp.role && !b.fire) s[sp.role] += sp.slots;
+        }
+        return s;
+      }
+
+      recalcPop() {
+        let cap = 0;
+        for (const b of this.bldgs) {
+          if (!b.fire && ITEMS[b.type]?.pop) cap += ITEMS[b.type].pop;
+        }
+        this.popCap = cap;
+        if (this.pop > cap) this.pop = cap;
+
+        const slots = this.getSlots();
+        for (const k of Object.keys(ROLES)) {
+          if (this.workers[k] > slots[k]) this.workers[k] = slots[k];
+        }
+        while (Object.values(this.workers).reduce((a, b) => a + b, 0) > Math.floor(this.pop)) {
+          const k = Object.keys(ROLES).sort((a, b) => this.workers[b] - this.workers[a])[0];
+          if (this.workers[k] <= 0) break;
+          this.workers[k]--;
+        }
+      }
+
+      autoWorkers() {
+        const slots = this.getSlots();
+        for (const k of Object.keys(ROLES)) this.workers[k] = 0;
+        let free = Math.floor(this.pop);
+        const order = ['farm', 'wood', 'stone', 'fire', 'guard', 'civic'];
+        let moved = true;
+        while (free > 0 && moved) {
+          moved = false;
+          for (const r of order) {
+            if (free > 0 && this.workers[r] < slots[r]) {
+              this.workers[r]++;
+              free--;
+              moved = true;
+            }
+          }
+        }
+        this.renderWorkers();
+        this.updateHUD();
+      }
+
+      sim(dt) {
+        this.recalcPop();
+        if (this.pop < this.popCap && this.res.food > 0) {
+          const prev = Math.floor(this.pop);
+          this.pop = Math.min(this.popCap, this.pop + dt * 1.2);
+          if (Math.floor(this.pop) > prev) this.renderWorkers();
+        }
+
+        this.prodT -= dt;
+        if (this.prodT <= 0) {
+          this.prodT = 4.5;
+          const slots = this.getSlots();
+          const ratio = r => slots[r] ? Math.min(1, this.workers[r] / slots[r]) : 0;
+          const civicMult = 1 + ratio('civic') * 0.25 + (this.bldgs.some(b => b.type === 'power' && !b.fire) && ratio('civic') > 0 ? 0.35 : 0);
+
+          let dg = 0, dw = 0, ds = 0, df = 0;
+          for (const b of this.bldgs) {
+            if (b.fire) continue;
+            const sp = ITEMS[b.type];
+            if (sp.pop && this.pop > 0) dg += sp.tax * Math.min(1, this.pop / Math.max(1, this.popCap));
+            if (sp.role && ratio(sp.role) > 0) {
+              const f = ratio(sp.role) * civicMult;
+              if (sp.outW) dw += sp.outW * f;
+              if (sp.outS) ds += sp.outS * f;
+              if (sp.outF) df += sp.outF * f;
+              if (sp.outG) dg += sp.outG * f;
+            }
+          }
+          this.res.gold  += Math.round(dg);
+          this.res.wood  += Math.round(dw);
+          this.res.stone += Math.round(ds);
+          this.res.food   = Math.max(0, this.res.food + Math.round(df) - Math.floor(this.pop * 0.12));
+        }
+
+        if (this.bldgs.length >= 4 && this.pop >= 12) {
+          this.fireT -= dt;
+          if (this.fireT <= 0) {
+            this.fireT = 100;
+            this.triggerFire();
+          }
+        }
+
+        for (let i = this.bldgs.length - 1; i >= 0; i--) {
+          const b = this.bldgs[i];
+          if (!b.fire) continue;
+          b.hp -= dt * 3;
+          if (this.workers.fire > 0 && !this.agents.some(a => a.kind === 'fire' && a.target === b.id)) {
+            this.sendFirefighter(b);
+          }
+          if (b.hp <= 0) {
+            this.bldgs.splice(i, 1);
+            this.showBanner('🔥 Edificio quemado · Asigna 🚒 Bomberos');
+          }
+        }
+
+        this.updateAgents(dt);
+      }
+
+      triggerFire() {
+        const list = this.bldgs.filter(b => !b.fire);
+        if (!list.length) return;
+        const b = list[Math.floor(Math.random() * list.length)];
+        b.fire = true;
+        b.hp = 100;
+        this.showBanner(this.workers.fire > 0 ? '🔥 ¡Incendio! Bomberos en camino' : '🔥 ¡Incendio! Asigna Bomberos en 👷');
+      }
+
+      sendFirefighter(target) {
+        const st = this.bldgs.find(b => (b.type === 'well' || b.type === 'fire_hq') && !b.fire) || this.bldgs[0];
+        if (!st) return;
+        this.agents.push({ kind: 'fire', x: st.x, y: st.y, target: target.id, spd: this.era === 1 ? 80 : 125, ang: 0 });
+      }
+
+      updateAgents(dt) {
+        const want = Math.min(30, Math.floor(this.pop * 0.4 + this.workers.guard * 2));
+        if (this.roads.length && this.agents.length < want && Math.random() < dt * 2.5) {
+          const r = this.roads[Math.floor(Math.random() * this.roads.length)];
+          const a = this.getNode(r.a), b = this.getNode(r.b);
+          if (a && b) {
+            const k = this.workers.guard > 0 && Math.random() < 0.3 ? 'guard' : (this.era === 3 ? 'car' : 'walk');
+            this.agents.push({ kind: k, ax: a.x, ay: a.y, bx: b.x, by: b.y, t: 0, spd: k === 'car' ? 95 : 42, ang: Math.atan2(b.y - a.y, b.x - a.x) });
+          }
+        }
+
+        for (let i = this.agents.length - 1; i >= 0; i--) {
+          const ag = this.agents[i];
+          if (ag.kind === 'fire') {
+            const b = this.bldgs.find(x => x.id === ag.target);
+            if (!b || !b.fire) { this.agents.splice(i, 1); continue; }
+            ag.ang = Math.atan2(b.y - ag.y, b.x - ag.x);
+            if (dist(ag.x, ag.y, b.x, b.y) < 22) {
+              b.fire = false;
+              b.hp = 100;
+              this.showBanner('💦 ¡Fuego apagado!');
+              this.agents.splice(i, 1);
+            } else {
+              ag.x += Math.cos(ag.ang) * ag.spd * dt;
+              ag.y += Math.sin(ag.ang) * ag.spd * dt;
+            }
+            continue;
+          }
+          const len = Math.max(1, dist(ag.ax, ag.ay, ag.bx, ag.by));
+          ag.t += (ag.spd * dt) / len;
+          if (ag.t >= 1) { this.agents.splice(i, 1); continue; }
+          ag.x = ag.ax + (ag.bx - ag.ax) * ag.t;
+          ag.y = ag.ay + (ag.by - ag.ay) * ag.t;
+        }
+      }
+
+      loop(now) {
+        try {
+          const dt = Math.min(0.05, (now - this.lastT) / 1000);
+          this.lastT = now;
+
+          // Inercia suave del desplazamiento táctil plano
+          if (!this.gesture || this.gesture.mode !== 'pan') {
+            this.cam.x += this.cam.vx * dt;
+            this.cam.y += this.cam.vy * dt;
+            this.cam.vx *= Math.pow(0.06, dt);
+            this.cam.vy *= Math.pow(0.06, dt);
+          }
+
+          this.cam.x = Math.max(200, Math.min(MAP_W - 200, this.cam.x));
+          this.cam.y = Math.max(150, Math.min(MAP_H - 150, this.cam.y));
+
+          if (this.speed > 0) this.sim(dt * this.speed);
+
+          this.saveT -= dt;
+          if (this.saveT <= 0) {
+            this.saveT = 15;
+            if (this.bldgs.length || this.roads.length) this.save(true);
+          }
+
+          this.hudT = (this.hudT || 0) + dt;
+          if (this.hudT >= 0.25) {
+            this.hudT = 0;
+            this.updateHUD();
+            this.drawMini();
+          }
+
+          this.draw();
+        } catch (err) {
+          console.error(err);
+        }
+        requestAnimationFrame(t => this.loop(t));
+      }
+
+      draw() {
+        if (this.bgDirty) this.renderBg();
+        const c = this.ctx;
+        c.fillStyle = '#111827';
+        c.fillRect(0, 0, this.cam.vw, this.cam.vh);
+
+        c.save();
+        c.translate(Math.round(this.cam.vw * 0.5 - this.cam.x), Math.round(this.cam.vh * 0.5 - this.cam.y));
+        c.drawImage(this.bg, 0, 0);
+
+        // Calles
+        c.lineCap = 'round';
+        for (const r of this.roads) {
+          const a = this.getNode(r.a), b = this.getNode(r.b);
+          if (!a || !b) continue;
+          if (r.bridge) {
+            c.strokeStyle = '#78350f'; c.lineWidth = ROAD_W + 10;
+            c.beginPath(); c.moveTo(a.x, a.y); c.lineTo(b.x, b.y); c.stroke();
+          }
+          c.strokeStyle = r.tier === 1 ? '#855834' : (r.tier === 2 ? '#64748b' : (r.tier === 3 ? '#4b5563' : '#1e293b'));
+          c.lineWidth = ROAD_W;
+          c.beginPath(); c.moveTo(a.x, a.y); c.lineTo(b.x, b.y); c.stroke();
+
+          if (r.tier === 4) {
+            c.save(); c.strokeStyle = '#facc15'; c.lineWidth = 2; c.setLineDash([10, 10]);
+            c.beginPath(); c.moveTo(a.x, a.y); c.lineTo(b.x, b.y); c.stroke(); c.restore();
+          }
+        }
+
+        // Edificios
+        for (const b of this.bldgs) {
+          const sp = ITEMS[b.type];
+          if (!sp) continue;
+          c.save();
+          c.translate(b.x, b.y);
+          c.rotate(b.ang);
+          const hw = b.w * 0.5, hh = b.h * 0.5;
+          c.fillStyle = 'rgba(0,0,0,0.28)';
+          c.roundRect(-hw + 4, -hh + 4, b.w, b.h, 7); c.fill();
+
+          c.fillStyle = sp.era === 1 ? '#92400e' : (sp.era === 2 ? '#475569' : '#0284c7');
+          c.roundRect(-hw, -hh, b.w, b.h, 7); c.fill();
+          c.fillStyle = sp.era === 1 ? '#d97706' : (sp.era === 2 ? '#94a3b8' : '#38bdf8');
+          c.roundRect(-hw + 5, -hh + 5, b.w - 10, b.h - 10, 5); c.fill();
+
+          c.rotate(-b.ang);
+          c.font = '20px sans-serif';
+          c.textAlign = 'center';
+          c.textBaseline = 'middle';
+          c.fillText(sp.ico, 0, 1);
+
+          if (sp.role && this.workers[sp.role] === 0) {
+            c.fillStyle = '#fbbf24';
+            c.beginPath(); c.arc(hw - 4, -hh + 4, 6, 0, Math.PI * 2); c.fill();
+          }
+          if (b.fire) {
+            c.font = '22px sans-serif';
+            c.fillText('🔥', 0, -hh - 8);
+          }
+          c.restore();
+        }
+
+        // Agentes
+        for (const ag of this.agents) {
+          c.save();
+          c.translate(ag.x, ag.y);
+          c.rotate(ag.ang);
+          if (ag.kind === 'fire') {
+            c.fillStyle = '#ef4444'; c.beginPath(); c.arc(0, 0, 6, 0, Math.PI * 2); c.fill();
+          } else if (ag.kind === 'guard') {
+            c.fillStyle = '#2563eb'; c.beginPath(); c.arc(0, 0, 5, 0, Math.PI * 2); c.fill();
+          } else if (ag.kind === 'car') {
+            c.fillStyle = '#facc15'; c.roundRect(-9, -4.5, 18, 9, 3); c.fill();
+          } else {
+            c.fillStyle = '#f9fafb'; c.beginPath(); c.arc(0, 0, 3.5, 0, Math.PI * 2); c.fill();
+          }
+          c.restore();
+        }
+
+        // Vista previa de camino mientras se arrastra el dedo
+        if (this.gesture && this.gesture.mode === 'road' && this.gesture.roadStart && this.gesture.roadEnd) {
+          const s = this.gesture.roadStart, e = this.gesture.roadEnd;
+          c.strokeStyle = 'rgba(52, 211, 153, 0.8)';
+          c.lineWidth = ROAD_W;
+          c.lineCap = 'round';
+          c.beginPath(); c.moveTo(s.x, s.y); c.lineTo(e.x, e.y); c.stroke();
+
+          c.fillStyle = '#fbbf24';
+          c.beginPath(); c.arc(s.x, s.y, 9, 0, Math.PI * 2); c.fill();
+          c.beginPath(); c.arc(e.x, e.y, 9, 0, Math.PI * 2); c.fill();
+        }
+
+        c.restore();
+      }
+
+      drawMini() {
+        const m = this.mctx, mw = this.mini.width, mh = this.mini.height;
+        const sx = mw / MAP_W, sy = mh / MAP_H;
+        m.clearRect(0, 0, mw, mh);
+        m.drawImage(this.bg, 0, 0, mw, mh);
+
+        m.strokeStyle = '#f3f4f6'; m.lineWidth = 1.5;
+        for (const r of this.roads) {
+          const a = this.getNode(r.a), b = this.getNode(r.b);
+          if (!a || !b) continue;
+          m.beginPath(); m.moveTo(a.x * sx, a.y * sy); m.lineTo(b.x * sx, b.y * sy); m.stroke();
+        }
+        for (const b of this.bldgs) {
+          m.fillStyle = b.fire ? '#ef4444' : '#fbbf24';
+          m.fillRect(b.x * sx - 2, b.y * sy - 2, 4, 4);
+        }
+        m.strokeStyle = '#38bdf8'; m.lineWidth = 1.8;
+        m.strokeRect((this.cam.x - this.cam.vw * 0.5) * sx, (this.cam.y - this.cam.vh * 0.5) * sy, this.cam.vw * sx, this.cam.vh * sy);
+      }
+
+      renderCards() {
+        const box = document.getElementById('cards');
+        box.innerHTML = '';
+        for (const [k, it] of Object.entries(ITEMS)) {
+          if (it.sec !== this.sec) continue;
+          const lock = it.era > this.era;
+          const b = document.createElement('button');
+          b.className = 'card' + (this.item === k ? ' active' : '') + (lock ? ' locked' : '');
+          b.innerHTML = `
+            <span class="card-ico">${lock ? '🔒' : it.ico}</span>
+            <span class="card-lbl">${it.name}</span>
+            <span class="card-prc">${this.costText(it.cost)}</span>
+          `;
+          b.onclick = () => {
+            if (lock) { this.showBanner(`🔒 ${ERAS[it.era].name}`); return; }
+            this.item = k;
+            this.renderCards();
+          };
+          box.appendChild(b);
+        }
+      }
+
+      renderWorkers() {
+        const list = document.getElementById('roles-list');
+        list.innerHTML = '';
+        const slots = this.getSlots();
+        const free = Math.max(0, Math.floor(this.pop) - Object.values(this.workers).reduce((a, b) => a + b, 0));
+        document.getElementById('w-free').textContent = String(free);
+
+        for (const [k, r] of Object.entries(ROLES)) {
+          const cur = this.workers[k] || 0, max = slots[k] || 0;
+          const row = document.createElement('div');
+          row.className = 'role-row';
+          row.innerHTML = `
+            <span>${r.ico} ${r.name}</span>
+            <div class="stepper">
+              <button class="step-btn" data-r="${k}" data-d="-1" ${cur <= 0 ? 'disabled' : ''}>−</button>
+              <span style="min-width:36px;text-align:center;">${cur}/${max}</span>
+              <button class="step-btn" data-r="${k}" data-d="1" ${(cur >= max || free <= 0) ? 'disabled' : ''}>+</button>
+            </div>
+          `;
+          list.appendChild(row);
+        }
+      }
+
+      updateHUD() {
+        const e = ERAS[this.era];
+        document.getElementById('era-pill').textContent = `${e.ico} Era ${this.era === 1 ? 'I' : (this.era === 2 ? 'II' : 'III')}`;
+        document.getElementById('v-gold').textContent  = Math.floor(this.res.gold);
+        document.getElementById('v-wood').textContent  = Math.floor(this.res.wood);
+        document.getElementById('v-stone').textContent = Math.floor(this.res.stone);
+        document.getElementById('v-food').textContent  = Math.floor(this.res.food);
+        document.getElementById('v-pop').textContent   = `${Math.floor(this.pop)}/${this.popCap}`;
+        const free = Math.max(0, Math.floor(this.pop) - Object.values(this.workers).reduce((a, b) => a + b, 0));
+        document.getElementById('v-free').textContent = String(free);
+        document.getElementById('btn-era').textContent = e.req ? `⚔️ ${e.next}` : '✨ III';
+      }
+
+      showBanner(msg) {
+        const el = document.getElementById('banner');
+        el.textContent = msg;
+        el.classList.add('show');
+        clearTimeout(this.bannerTimer);
+        this.bannerTimer = setTimeout(() => el.classList.remove('show'), 2600);
+      }
+
+      openRegionModal(boot = false) {
+        const m = document.getElementById('modal');
+        document.getElementById('modal-title').textContent = '🗺️ Elige tu Región';
+        let sel = this.regId;
+        const draw = () => {
+          document.getElementById('modal-body').innerHTML = `<div class="reg-grid">${Object.values(REGIONS).map(r => `
+            <button type="button" class="reg-btn ${sel === r.id ? 'selected' : ''}" data-id="${r.id}">
+              <span style="font-size:32px;">${r.icon}</span>
+              <span>${r.name}</span>
+            </button>
+          `).join('')}</div>`;
+          document.querySelectorAll('.reg-btn').forEach(b => {
+            b.onclick = () => { sel = b.dataset.id; draw(); };
+          });
+        };
+        draw();
+        document.getElementById('modal-cancel').style.display = boot ? 'none' : 'inline-flex';
+        document.getElementById('modal-ok').textContent = '¡Empezar!';
+        document.getElementById('modal-ok').onclick = () => {
+          localStorage.removeItem(SAVE_KEY);
+          this.initWorld(sel);
+          this.sec = 'roads';
+          this.item = 'dirt_road';
+          this.renderCards();
+          this.renderWorkers();
+          this.updateHUD();
+          m.classList.add('hidden');
+        };
+        m.classList.remove('hidden');
+      }
+
+      openEraModal() {
+        const e = ERAS[this.era];
+        if (!e.req) return;
+        const ok = Math.floor(this.pop) >= e.req.pop && this.canAfford(e.req);
+        document.getElementById('modal-title').textContent = `⚔️ Avanzar a ${e.next}`;
+        document.getElementById('modal-body').innerHTML = `
+          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px;font-size:16px;font-weight:800;text-align:center;">
+            <div style="background:rgba(255,255,255,0.06);padding:12px;border-radius:12px;">👥 ${Math.floor(this.pop)} / ${e.req.pop}</div>
+            <div style="background:rgba(255,255,255,0.06);padding:12px;border-radius:12px;">🪙 ${Math.floor(this.res.gold)} / ${e.req.gold}</div>
+            <div style="background:rgba(255,255,255,0.06);padding:12px;border-radius:12px;">🪵 ${Math.floor(this.res.wood)} / ${e.req.wood}</div>
+            <div style="background:rgba(255,255,255,0.06);padding:12px;border-radius:12px;">🪨 ${Math.floor(this.res.stone)} / ${e.req.stone}</div>
+          </div>
+        `;
+        document.getElementById('modal-cancel').style.display = 'inline-flex';
+        document.getElementById('modal-ok').textContent = ok ? `¡Evolucionar!` : 'Faltan recursos';
+        document.getElementById('modal-ok').onclick = () => {
+          if (!ok) { this.showBanner('Aún faltan recursos o población'); return; }
+          this.pay(e.req);
+          this.era++;
+          document.getElementById('modal').classList.add('hidden');
+          this.renderCards();
+          this.updateHUD();
+          this.showBanner(`🎉 ¡Bienvenido a ${ERAS[this.era].name}!`);
+        };
+        document.getElementById('modal').classList.remove('hidden');
+      }
+
+      save(silent = false) {
+        try {
+          const data = {
+            uid: this.uid, regId: this.regId, era: this.era, res: this.res, pop: this.pop,
+            workers: this.workers, nodes: this.nodes, roads: this.roads, bldgs: this.bldgs,
+            cx: this.cam.x, cy: this.cam.y
+          };
+          localStorage.setItem(SAVE_KEY, JSON.stringify(data));
+          if (!silent) this.showBanner('💾 Ciudad guardada en el iPad');
+        } catch (e) {}
+      }
+
+      load(silent = false) {
+        try {
+          const raw = localStorage.getItem(SAVE_KEY);
+          if (!raw) return false;
+          const d = JSON.parse(raw);
+          if (!d || !d.regId) return false;
+          this.initWorld(d.regId);
+          this.uid = d.uid || 100;
+          this.era = d.era || 1;
+          this.res = d.res || this.res;
+          this.pop = d.pop || 0;
+          this.workers = d.workers || this.workers;
+          this.nodes = d.nodes || [];
+          this.roads = d.roads || [];
+          this.bldgs = d.bldgs || [];
+          if (d.cx) this.cam.x = d.cx;
+          if (d.cy) this.cam.y = d.cy;
+          document.getElementById('modal').classList.add('hidden');
+          this.recalcPop();
+          this.renderCards();
+          this.renderWorkers();
+          this.updateHUD();
+          if (!silent) this.showBanner('📂 Ciudad cargada');
+          return true;
+        } catch (e) { return false; }
+      }
+
+      resize() {
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        const w = window.innerWidth, h = window.innerHeight;
+        this.canvas.width = Math.floor(w * dpr);
+        this.canvas.height = Math.floor(h * dpr);
+        this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        this.cam.vw = w;
+        this.cam.vh = h;
+      }
+
+      bindEvents() {
+        window.addEventListener('resize', () => this.resize());
+
+        // Limpieza total ante cualquier cancelación de toque en Safari iPadOS
+        const clearTouch = (id) => {
+          this.touches.delete(id);
+          if (this.touches.size === 0) this.gesture = null;
+        };
+
+        this.canvas.addEventListener('pointerdown', e => {
+          const rect = this.canvas.getBoundingClientRect();
+          const sx = e.clientX - rect.left, sy = e.clientY - rect.top;
+          this.touches.set(e.pointerId, { sx, sy });
+          this.cam.vx = 0;
+          this.cam.vy = 0;
+
+          if (this.touches.size >= 2) {
+            // Dos dedos siempre mueven el mapa sin construir
+            this.gesture = { mode: 'pan', lastSx: sx, lastSy: sy };
+            return;
+          }
+
+          const spec = ITEMS[this.item];
+          const wpt = this.toWorld(sx, sy);
+
+          if (spec && spec.kind === 'road' && e.button !== 2) {
+            const snap = this.snapPoint(wpt.x, wpt.y);
+            this.gesture = { mode: 'road', startSx: sx, startSy: sy, lastSx: sx, lastSy: sy, roadStart: snap, roadEnd: snap, moved: false };
+          } else {
+            this.gesture = { mode: 'tap_or_pan', startSx: sx, startSy: sy, lastSx: sx, lastSy: sy, moved: false };
+          }
+        });
+
+        window.addEventListener('pointermove', e => {
+          if (!this.touches.has(e.pointerId) || !this.gesture) return;
+          const rect = this.canvas.getBoundingClientRect();
+          const sx = e.clientX - rect.left, sy = e.clientY - rect.top;
+          this.touches.set(e.pointerId, { sx, sy });
+
+          const dx = sx - this.gesture.lastSx;
+          const dy = sy - this.gesture.lastSy;
+          this.gesture.lastSx = sx;
+          this.gesture.lastSy = sy;
+
+          if (this.gesture.mode === 'road') {
+            const wpt = this.toWorld(sx, sy);
+            this.gesture.roadEnd = this.snapPoint(wpt.x, wpt.y);
+            if (dist(sx, sy, this.gesture.startSx, this.gesture.startSy) > 10) this.gesture.moved = true;
+            return;
+          }
+
+          if (this.gesture.mode === 'tap_or_pan' && dist(sx, sy, this.gesture.startSx, this.gesture.startSy) > 9) {
+            this.gesture.mode = 'pan';
+            this.gesture.moved = true;
+          }
+
+          if (this.gesture.mode === 'pan') {
+            this.cam.x -= dx;
+            this.cam.y -= dy;
+            this.cam.vx = -dx * 28;
+            this.cam.vy = -dy * 28;
+          }
+        });
+
+        const finishGesture = (e) => {
+          if (!this.touches.has(e.pointerId)) return;
+          const g = this.gesture;
+          const rect = this.canvas.getBoundingClientRect();
+          const sx = e.clientX - rect.left, sy = e.clientY - rect.top;
+          const wpt = this.toWorld(sx, sy);
+
+          if (g && this.touches.size === 1) {
+            if (g.mode === 'road' && g.moved && g.roadStart && g.roadEnd) {
+              this.buildRoadSegment(g.roadStart, g.roadEnd, ITEMS[this.item]);
+            } else if (g.mode === 'tap_or_pan' && !g.moved) {
+              const spec = ITEMS[this.item];
+              if (spec?.kind === 'bldg') this.placeBldg(wpt.x, wpt.y);
+              else if (spec?.tool === 'demolish') this.demolishAt(wpt.x, wpt.y);
+              else if (spec?.tool === 'upgrade') this.upgradeAt(wpt.x, wpt.y);
+            }
+          }
+          clearTouch(e.pointerId);
+        };
+
+        window.addEventListener('pointerup', finishGesture);
+        window.addEventListener('pointercancel', e => clearTouch(e.pointerId));
+        window.addEventListener('lostpointercapture', e => clearTouch(e.pointerId));
+
+        // Minimapa táctil para saltar rápido
+        this.mini.addEventListener('pointerdown', e => {
+          const r = this.mini.getBoundingClientRect();
+          this.cam.x = ((e.clientX - r.left) / r.width) * MAP_W;
+          this.cam.y = ((e.clientY - r.top) / r.height) * MAP_H;
+          this.cam.vx = 0; this.cam.vy = 0;
+        });
+
+        // Pestañas inferiores
+        document.getElementById('tabs').addEventListener('click', e => {
+          const btn = e.target.closest('.tab-btn');
+          if (!btn) return;
+          this.sec = btn.dataset.sec;
+          document.querySelectorAll('.tab-btn').forEach(t => t.classList.toggle('active', t === btn));
+          const first = Object.keys(ITEMS).find(k => ITEMS[k].sec === this.sec && ITEMS[k].era <= this.era);
+          if (first) this.item = first;
+          this.renderCards();
+        });
+
+        // Panel trabajadores
+        document.getElementById('btn-workers').onclick = () => {
+          document.getElementById('workers-drawer').classList.toggle('open');
+        };
+        document.getElementById('btn-auto').onclick = () => this.autoWorkers();
+        document.getElementById('roles-list').addEventListener('click', e => {
+          const b = e.target.closest('.step-btn');
+          if (!b) return;
+          const r = b.dataset.r, d = parseInt(b.dataset.d, 10);
+          const slots = this.getSlots()[r] || 0;
+          const free = Math.floor(this.pop) - Object.values(this.workers).reduce((a, x) => a + x, 0);
+          if (d > 0 && free > 0 && this.workers[r] < slots) this.workers[r]++;
+          if (d < 0 && this.workers[r] > 0) this.workers[r]--;
+          this.renderWorkers();
+          this.updateHUD();
+        });
+
+        document.getElementById('btn-era').onclick = () => this.openEraModal();
+        document.getElementById('btn-undo').onclick = () => this.undoLast();
+        document.getElementById('btn-rotate').onclick = () => {
+          this.rot = (this.rot + Math.PI / 4) % (Math.PI * 2);
+          this.showBanner('↻ Rotado 45°');
+        };
+        document.getElementById('btn-fire').onclick = () => {
+          if (!this.bldgs.length) { this.showBanner('Construye una casa primero'); return; }
+          this.triggerFire();
+        };
+        document.getElementById('btn-speed').onclick = e => {
+          this.speed = this.speed === 1 ? 2 : (this.speed === 2 ? 0 : 1);
+          e.currentTarget.textContent = this.speed === 0 ? '⏸️' : (this.speed === 1 ? '▶️' : '⏩');
+        };
+        document.getElementById('btn-export').onclick = () => this.save(false);
+        document.getElementById('btn-region').onclick = () => this.openRegionModal(false);
+        document.getElementById('modal-cancel').onclick = () => document.getElementById('modal').classList.add('hidden');
+      }
+
+      demolishAt(wx, wy) {
+        for (let i = this.bldgs.length - 1; i >= 0; i--) {
+          const b = this.bldgs[i];
+          if (dist(wx, wy, b.x, b.y) < Math.max(b.w, b.h) * 0.6) {
+            this.bldgs.splice(i, 1);
+            this.recalcPop();
+            this.renderWorkers();
+            this.updateHUD();
+            return;
+          }
+        }
+        const nr = this.nearRoad(wx, wy, 28);
+        if (nr) {
+          this.roads = this.roads.filter(r => r.id !== nr.road.id);
+          this.nodes = this.nodes.filter(n => this.roads.some(r => r.a === n.id || r.b === n.id));
+        }
+      }
+
+      upgradeAt(wx, wy) {
+        const nr = this.nearRoad(wx, wy, 28);
+        if (!nr) return;
+        const maxT = this.era === 1 ? 2 : (this.era === 2 ? 3 : 4);
+        if (nr.road.tier >= maxT) { this.showBanner('Ya está al máximo de esta Era'); return; }
+        if (!this.canAfford(ITEMS.upgrade.cost)) { this.showBanner('Falta 20🪙 5🪨'); return; }
+        this.pay(ITEMS.upgrade.cost);
+        nr.road.tier = maxT;
+        this.updateHUD();
+      }
+    }
+
+    window.addEventListener('load', () => {
+      window.game = new Game();
+    });
+  </script>
+</body>
+</html>
