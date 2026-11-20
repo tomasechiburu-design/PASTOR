@@ -71,7 +71,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 8px;
+      gap: 6px;
       pointer-events: none;
       z-index: 20;
       flex-wrap: wrap;
@@ -80,42 +80,43 @@
     .pill-group {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
       background: var(--bg-panel);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       border: 1px solid var(--border);
       border-radius: 16px;
-      padding: 6px 10px;
+      padding: 5px 8px;
       pointer-events: auto;
       box-shadow: 0 8px 24px rgba(0,0,0,0.45);
+      flex-wrap: wrap;
     }
 
     .stat {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
-      font-size: 13px;
+      gap: 3px;
+      font-size: 12px;
       font-weight: 800;
-      padding: 4px 8px;
+      padding: 4px 7px;
       background: rgba(255,255,255,0.06);
-      border-radius: 10px;
+      border-radius: 9px;
     }
 
     .icon-btn {
-      min-width: 40px;
-      height: 38px;
-      padding: 0 10px;
-      border-radius: 12px;
+      min-width: 38px;
+      height: 36px;
+      padding: 0 9px;
+      border-radius: 11px;
       border: 1px solid var(--border);
       background: var(--bg-card);
       color: var(--text);
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 800;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 5px;
+      gap: 4px;
       cursor: pointer;
     }
     .icon-btn:active { transform: scale(0.95); }
@@ -131,7 +132,7 @@
 
     #minimap-wrap {
       position: absolute;
-      top: calc(max(10px, env(safe-area-inset-top)) + 60px);
+      top: calc(max(10px, env(safe-area-inset-top)) + 64px);
       right: max(10px, env(safe-area-inset-right));
       background: var(--bg-panel);
       border: 1px solid var(--border);
@@ -149,9 +150,9 @@
 
     #workers-drawer {
       position: absolute;
-      top: calc(max(10px, env(safe-area-inset-top)) + 60px);
+      top: calc(max(10px, env(safe-area-inset-top)) + 64px);
       left: max(10px, env(safe-area-inset-left));
-      width: 280px;
+      width: 285px;
       background: var(--bg-panel);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
@@ -189,13 +190,13 @@
       gap: 6px;
     }
     .step-btn {
-      width: 32px;
-      height: 32px;
-      border-radius: 10px;
+      width: 30px;
+      height: 30px;
+      border-radius: 9px;
       border: 1px solid var(--border);
       background: var(--bg-card);
       color: #fff;
-      font-size: 18px;
+      font-size: 17px;
       font-weight: 900;
     }
     .step-btn:disabled { opacity: 0.3; }
@@ -268,13 +269,13 @@
 
     .tab-btn {
       flex: 1;
-      min-width: 90px;
-      height: 38px;
+      min-width: 88px;
+      height: 36px;
       border-radius: 12px;
       border: 1px solid transparent;
       background: rgba(255,255,255,0.06);
       color: var(--muted);
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 800;
       display: inline-flex;
       align-items: center;
@@ -312,13 +313,13 @@
       border-color: var(--gold);
     }
     .card.locked { opacity: 0.42; }
-    .card-ico { font-size: 26px; line-height: 1; }
+    .card-ico { font-size: 25px; line-height: 1; }
     .card-lbl { font-size: 12px; font-weight: 800; text-align: center; }
     .card-prc { font-size: 11px; font-weight: 700; color: #fbbf24; }
 
     #banner {
       position: absolute;
-      top: calc(max(10px, env(safe-area-inset-top)) + 60px);
+      top: calc(max(10px, env(safe-area-inset-top)) + 64px);
       left: 50%;
       transform: translateX(-50%);
       background: rgba(17, 24, 39, 0.92);
@@ -357,6 +358,8 @@
       border-radius: 22px;
       padding: 20px;
       box-shadow: 0 20px 48px rgba(0,0,0,0.7);
+      max-height: 85vh;
+      overflow-y: auto;
     }
     .modal-title {
       font-size: 19px;
@@ -387,6 +390,18 @@
       border-color: var(--gold);
       background: var(--bg-card-active);
     }
+    .trade-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255,255,255,0.06);
+      padding: 10px 12px;
+      border-radius: 12px;
+      margin-bottom: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      gap: 8px;
+    }
   </style>
 </head>
 <body>
@@ -396,19 +411,22 @@
     <div id="hud-top">
       <div class="pill-group">
         <span id="era-pill" class="stat">🏰 Era I</span>
-        <span id="season-pill" class="stat" title="Estación y Temperatura">🌿 20°C</span>
-        <span class="stat">🪙 <span id="v-gold">700</span></span>
-        <span class="stat">🪵 <span id="v-wood">150</span></span>
-        <span class="stat">🪨 <span id="v-stone">100</span></span>
-        <span class="stat">🌾 <span id="v-food">50</span></span>
-        <span class="stat">👥 <span id="v-pop">0/0</span></span>
+        <span id="time-pill" class="stat" title="Hora y Estación">☀️ 12:00 · 🌿 20°C</span>
+        <span class="stat" title="Oro">🪙 <span id="v-gold">700</span></span>
+        <span class="stat" title="Madera">🪵 <span id="v-wood">150</span></span>
+        <span class="stat" title="Piedra">🪨 <span id="v-stone">100</span></span>
+        <span class="stat" title="Metal">⚙️ <span id="v-metal">25</span></span>
+        <span class="stat" title="Cobre">🟠 <span id="v-copper">25</span></span>
+        <span class="stat" title="Comida">🌾 <span id="v-food">60</span></span>
+        <span class="stat" title="Población">👥 <span id="v-pop">0/0</span></span>
       </div>
 
       <div class="pill-group">
         <button id="btn-workers" class="icon-btn">👷 <span id="v-free">0</span></button>
         <button id="btn-era" class="icon-btn gold">⚔️ Era II</button>
+        <button id="btn-trade" class="icon-btn" title="Comercio entre Regiones">🌐 Comercio</button>
         <button id="btn-weather" class="icon-btn" title="Alternar Clima">☀️ Clima</button>
-        <button id="btn-disasters" class="icon-btn" title="Panel de Desastres">⚡ Desastres</button>
+        <button id="btn-disasters" class="icon-btn" title="Panel de Desastres">⚡</button>
         <button id="btn-undo" class="icon-btn" title="Deshacer">↩️</button>
         <button id="btn-rotate" class="icon-btn" title="Rotar">↻</button>
         <button id="btn-speed" class="icon-btn">▶️</button>
@@ -454,7 +472,7 @@
     <aside id="workers-drawer">
       <div class="drawer-head">
         <span>👷 Trabajadores (<span id="w-free">0</span> libres)</span>
-        <button id="btn-auto" class="icon-btn gold" style="height:32px;font-size:13px;">⚡ Auto</button>
+        <button id="btn-auto" class="icon-btn gold" style="height:30px;font-size:12px;">⚡ Auto</button>
       </div>
       <div id="roles-list"></div>
     </aside>
@@ -464,7 +482,7 @@
         <button class="tab-btn active" data-sec="roads">🛣️ Calles</button>
         <button class="tab-btn" data-sec="houses">🏡 Casas</button>
         <button class="tab-btn" data-sec="prod">⚒️ Recursos</button>
-        <button class="tab-btn" data-sec="serv">🛡️ Guardia</button>
+        <button class="tab-btn" data-sec="serv">🛡️ Servicios</button>
         <button class="tab-btn" data-sec="tools">🚜 Obras</button>
       </div>
       <div id="cards" class="cards"></div>
@@ -475,8 +493,8 @@
         <div id="modal-title" class="modal-title">🗺️ Elige tu Región</div>
         <div id="modal-body"></div>
         <div style="display:flex;gap:10px;justify-content:center;">
-          <button id="modal-cancel" class="icon-btn" style="flex:1;height:46px;">Cerrar</button>
-          <button id="modal-ok" class="icon-btn gold" style="flex:2;height:46px;font-size:16px;">¡Empezar!</button>
+          <button id="modal-cancel" class="icon-btn" style="flex:1;height:44px;">Cerrar</button>
+          <button id="modal-ok" class="icon-btn gold" style="flex:2;height:44px;font-size:16px;">¡Empezar!</button>
         </div>
       </div>
     </div>
@@ -488,7 +506,7 @@
         navigator.serviceWorker.getRegistrations().then(regs => {
           for (const reg of regs) reg.update();
         }).catch(() => {});
-        navigator.serviceWorker.register('./sw.js?v=4').catch(() => {});
+        navigator.serviceWorker.register('./sw.js?v=5').catch(() => {});
       });
     }
 
@@ -510,13 +528,13 @@
     const MAP_W = 2600;
     const MAP_H = 1950;
     const ROAD_W = 36;
-    const SAVE_KEY = 'arquitecto_ipad_pwa_v4';
+    const SAVE_KEY = 'arquitecto_ipad_pwa_v5';
 
     const REGIONS = {
-      valley: { id: 'valley', icon: '🌿', name: 'Valle Verde',   g1: '#5f9e49', g2: '#528c3e', water: '#0284c7', bank: '#e7d39a', trees: 32, rocks: 18, style: 'river', risks: { tornado: 0.45, quake: 0.30, sand: 0.15, tsunami: 0.10 } },
-      nordic: { id: 'nordic', icon: '🌲', name: 'Bosque Norte',  g1: '#467a52', g2: '#3a6845', water: '#0369a1', bank: '#cbd5e1', trees: 48, rocks: 22, style: 'fork',  risks: { quake: 0.45, tornado: 0.35, tsunami: 0.15, sand: 0.05 } },
-      mesa:   { id: 'mesa',   icon: '🏜️', name: 'Meseta Dorada', g1: '#c29b61', g2: '#af884e', water: '#0ea5e9', bank: '#fde68a', trees: 16, rocks: 36, style: 'river', risks: { sand: 0.55, quake: 0.25, tornado: 0.15, tsunami: 0.05 } },
-      coast:  { id: 'coast',  icon: '🌊', name: 'Costa Azul',    g1: '#70a348', g2: '#61923b', water: '#0284c7', bank: '#f6df9d', trees: 26, rocks: 22, style: 'bay',   risks: { tsunami: 0.50, quake: 0.25, tornado: 0.15, sand: 0.10 } }
+      valley: { id: 'valley', icon: '🌿', name: 'Valle Verde',   g1: '#5f9e49', g2: '#528c3e', water: '#0284c7', bank: '#e7d39a', trees: 32, rocks: 18, deer: 14, style: 'river', risks: { tornado: 0.45, quake: 0.30, sand: 0.15, tsunami: 0.10 } },
+      nordic: { id: 'nordic', icon: '🌲', name: 'Bosque Norte',  g1: '#467a52', g2: '#3a6845', water: '#0369a1', bank: '#cbd5e1', trees: 48, rocks: 22, deer: 20, style: 'fork',  risks: { quake: 0.45, tornado: 0.35, tsunami: 0.15, sand: 0.05 } },
+      mesa:   { id: 'mesa',   icon: '🏜️', name: 'Meseta Dorada', g1: '#c29b61', g2: '#af884e', water: '#0ea5e9', bank: '#fde68a', trees: 16, rocks: 36, deer: 8,  style: 'river', risks: { sand: 0.55, quake: 0.25, tornado: 0.15, tsunami: 0.05 } },
+      coast:  { id: 'coast',  icon: '🌊', name: 'Costa Azul',    g1: '#70a348', g2: '#61923b', water: '#0284c7', bank: '#f6df9d', trees: 26, rocks: 22, deer: 12, style: 'bay',   risks: { tsunami: 0.50, quake: 0.25, tornado: 0.15, sand: 0.10 } }
     };
 
     const SEASONS = [
@@ -526,53 +544,63 @@
       { id: 'winter', ico: '❄️', name: 'Invierno',  temp: 2,  tint: 'rgba(186, 230, 253, 0.16)',leaf1: '#334155', leaf2: '#475569', snow: true  }
     ];
 
+    // Progresión de 4 Eras basada únicamente en población: 100 -> 500 -> 1000 -> Era IV Futura
     const ERAS = {
-      1: { name: 'Era I · Medieval',   ico: '🏰', next: 'Era II', req: { pop: 12, gold: 200, wood: 50, stone: 40 } },
-      2: { name: 'Era II · Industrial',ico: '⚙️', next: 'Era III',req: { pop: 32, gold: 520, wood: 100, stone: 85 } },
-      3: { name: 'Era III · Moderna',  ico: '🏙️', next: 'Máxima', req: null }
+      1: { name: 'Era I · Medieval',    ico: '🏰', next: 'Era II',  reqPop: 100 },
+      2: { name: 'Era II · Industrial', ico: '⚙️', next: 'Era III', reqPop: 500 },
+      3: { name: 'Era III · Moderna',   ico: '🏙️', next: 'Era IV',  reqPop: 1000 },
+      4: { name: 'Era IV · Futura',     ico: '🚀', next: 'Máxima',  reqPop: null }
     };
 
     const ROLES = {
-      wood:  { ico: '🪓', name: 'Leñadores' },
-      stone: { ico: '⛏️', name: 'Canteros' },
-      farm:  { ico: '🌾', name: 'Granjeros' },
-      eng:   { ico: '👷‍♂️', name: 'Ingenieros' },
-      guard: { ico: '⚔️', name: 'Caballeros' },
-      fire:  { ico: '🚒', name: 'Bomberos' },
-      civic: { ico: '⚕️', name: 'Cívicos' }
+      wood:   { ico: '🪓', name: 'Leñadores' },
+      stone:  { ico: '⛏️', name: 'Mineros' },
+      farm:   { ico: '🌾', name: 'Granjeros' },
+      hunter: { ico: '🏹', name: 'Cazadores' },
+      eng:    { ico: '👷‍♂️', name: 'Ingenieros' },
+      guard:  { ico: '⚔️', name: 'Guardias' },
+      fire:   { ico: '🚒', name: 'Bomberos' },
+      civic:  { ico: '⚕️', name: 'Cívicos' }
     };
 
     const ITEMS = {
       // CALLES
-      dirt_road:   { sec: 'roads', kind: 'road', tier: 1, era: 1, ico: '🟫', name: 'Tierra',     cost: { gold: 15 } },
-      stone_road:  { sec: 'roads', kind: 'road', tier: 2, era: 1, ico: '🧱', name: 'Piedra',     cost: { gold: 25, stone: 6 } },
-      cobble_road: { sec: 'roads', kind: 'road', tier: 3, era: 2, ico: '🛤️', name: 'Adoquín',    cost: { gold: 45, stone: 12 } },
-      modern_road: { sec: 'roads', kind: 'road', tier: 4, era: 3, ico: '🛣️', name: 'Asfalto',    cost: { gold: 65, stone: 16 } },
+      dirt_road:   { sec: 'roads', kind: 'road', tier: 1, era: 1, ico: '🟫', name: 'Tierra',      cost: { gold: 15 } },
+      stone_road:  { sec: 'roads', kind: 'road', tier: 2, era: 1, ico: '🧱', name: 'Piedra',      cost: { gold: 25, stone: 6 } },
+      cobble_road: { sec: 'roads', kind: 'road', tier: 3, era: 2, ico: '🛤️', name: 'Adoquín',     cost: { gold: 45, stone: 12, metal: 4 } },
+      modern_road: { sec: 'roads', kind: 'road', tier: 4, era: 3, ico: '🛣️', name: 'Asfalto',     cost: { gold: 65, stone: 16, metal: 8 } },
+      maglev_road: { sec: 'roads', kind: 'road', tier: 5, era: 4, ico: '🚄', name: 'Vía Maglev',  cost: { gold: 120, metal: 20, copper: 18 } },
 
-      // CASAS
-      hut:         { sec: 'houses', kind: 'bldg', era: 1, ico: '🛖', name: 'Choza',      w: 50, h: 46, cost: { gold: 50, wood: 12 }, pop: 6, tax: 8 },
-      manor:       { sec: 'houses', kind: 'bldg', era: 1, ico: '🏡', name: 'Casona',     w: 62, h: 54, cost: { gold: 110, wood: 24, stone: 10 }, pop: 14, tax: 18 },
-      brick_house: { sec: 'houses', kind: 'bldg', era: 2, ico: '🏘️', name: 'Victoriana', w: 68, h: 58, cost: { gold: 210, wood: 25, stone: 28 }, pop: 28, tax: 38 },
-      apartments:  { sec: 'houses', kind: 'bldg', era: 2, ico: '🏢', name: 'Bloque',     w: 78, h: 64, cost: { gold: 340, wood: 30, stone: 45 }, pop: 46, tax: 62 },
-      condo:       { sec: 'houses', kind: 'bldg', era: 3, ico: '🏬', name: 'Condominio', w: 82, h: 70, cost: { gold: 540, wood: 28, stone: 68 }, pop: 76, tax: 110 },
-      tower:       { sec: 'houses', kind: 'bldg', era: 3, ico: '🏙️', name: 'Torre',      w: 92, h: 82, cost: { gold: 920, wood: 36, stone: 115 }, pop: 140, tax: 210 },
+      // CASAS (escaladas para llegar a 100, 500 y 1000 habitantes)
+      hut:         { sec: 'houses', kind: 'bldg', era: 1, ico: '🛖', name: 'Choza',       w: 50, h: 46, cost: { gold: 45, wood: 10 }, pop: 18, tax: 12 },
+      manor:       { sec: 'houses', kind: 'bldg', era: 1, ico: '🏡', name: 'Casona',      w: 62, h: 54, cost: { gold: 95, wood: 20, stone: 10 }, pop: 42, tax: 26 },
+      brick_house: { sec: 'houses', kind: 'bldg', era: 2, ico: '🏘️', name: 'Victoriana',  w: 68, h: 58, cost: { gold: 190, wood: 22, stone: 25, metal: 6 }, pop: 95, tax: 55 },
+      apartments:  { sec: 'houses', kind: 'bldg', era: 2, ico: '🏢', name: 'Bloque',      w: 78, h: 64, cost: { gold: 320, wood: 25, stone: 40, metal: 12 }, pop: 180, tax: 95 },
+      condo:       { sec: 'houses', kind: 'bldg', era: 3, ico: '🏬', name: 'Condominio',  w: 82, h: 70, cost: { gold: 520, stone: 60, metal: 22, copper: 14 }, pop: 320, tax: 160 },
+      tower:       { sec: 'houses', kind: 'bldg', era: 3, ico: '🏙️', name: 'Rascacielos', w: 92, h: 82, cost: { gold: 850, stone: 95, metal: 38, copper: 26 }, pop: 550, tax: 280 },
+      arcology:    { sec: 'houses', kind: 'bldg', era: 4, ico: '🛸', name: 'Arcología',   w: 104, h: 92, cost: { gold: 1500, metal: 75, copper: 60 }, pop: 1200, tax: 620 },
 
-      // PRODUCCIÓN E INGENIERÍA
-      lumber:      { sec: 'prod', kind: 'bldg', era: 1, ico: '🪓', name: 'Leñador',    w: 64, h: 54, cost: { gold: 70, wood: 10 }, role: 'wood', slots: 3, near: 'tree', outW: 7 },
-      quarry:      { sec: 'prod', kind: 'bldg', era: 1, ico: '⛏️', name: 'Cantera',    w: 70, h: 58, cost: { gold: 90, wood: 16 }, role: 'stone', slots: 3, near: 'rock', outS: 7, outG: 5 },
-      farm:        { sec: 'prod', kind: 'bldg', era: 1, ico: '🌾', name: 'Granja',     w: 86, h: 68, cost: { gold: 75, wood: 15 }, role: 'farm', slots: 3, outF: 9, outG: 7 },
-      workshop:    { sec: 'prod', kind: 'bldg', era: 1, ico: '🏗️', name: 'Ingeniería', w: 68, h: 58, cost: { gold: 100, wood: 16, stone: 14 }, role: 'eng', slots: 3 },
-      sawmill:     { sec: 'prod', kind: 'bldg', era: 2, ico: '⚙️', name: 'Aserradero', w: 78, h: 64, cost: { gold: 230, wood: 22, stone: 28 }, role: 'wood', slots: 5, outW: 16, outG: 14 },
-      mine:        { sec: 'prod', kind: 'bldg', era: 2, ico: '🪨', name: 'Mina',       w: 80, h: 66, cost: { gold: 280, wood: 32, stone: 24 }, role: 'stone', slots: 5, near: 'rock', outS: 15, outG: 26 },
-      power:       { sec: 'prod', kind: 'bldg', era: 3, ico: '⚡', name: 'Eléctrica',  w: 94, h: 76, cost: { gold: 650, wood: 28, stone: 90 }, role: 'civic', slots: 4, outG: 45, boost: true },
+      // PRODUCCIÓN, CAZA Y MINERÍA (Oro, Metal, Cobre)
+      lumber:      { sec: 'prod', kind: 'bldg', era: 1, ico: '🪓', name: 'Leñador',     w: 64, h: 54, cost: { gold: 65, wood: 10 }, role: 'wood', slots: 4, near: 'tree', outW: 9 },
+      quarry:      { sec: 'prod', kind: 'bldg', era: 1, ico: '⛏️', name: 'Cantera',     w: 70, h: 58, cost: { gold: 85, wood: 15 }, role: 'stone', slots: 4, near: 'rock', outS: 9, outG: 6, outC: 3 },
+      farm:        { sec: 'prod', kind: 'bldg', era: 1, ico: '🌾', name: 'Granja',      w: 86, h: 68, cost: { gold: 70, wood: 14 }, role: 'farm', slots: 4, outF: 14, outG: 8 },
+      hunter_post: { sec: 'prod', kind: 'bldg', era: 1, ico: '🏹', name: 'Cazadores',   w: 62, h: 54, cost: { gold: 75, wood: 16 }, role: 'hunter', slots: 4, outF: 12, outG: 6 },
+      workshop:    { sec: 'prod', kind: 'bldg', era: 1, ico: '🏗️', name: 'Ingeniería',  w: 68, h: 58, cost: { gold: 95, wood: 16, stone: 14 }, role: 'eng', slots: 4 },
+      sawmill:     { sec: 'prod', kind: 'bldg', era: 2, ico: '⚙️', name: 'Aserradero',  w: 78, h: 64, cost: { gold: 210, wood: 22, stone: 25 }, role: 'wood', slots: 6, outW: 20, outG: 16 },
+      mine:        { sec: 'prod', kind: 'bldg', era: 2, ico: '🪨', name: 'Mina Metales',w: 80, h: 66, cost: { gold: 260, wood: 28, stone: 24 }, role: 'stone', slots: 6, near: 'rock', outS: 14, outG: 24, outM: 12, outC: 10 },
+      power:       { sec: 'prod', kind: 'bldg', era: 3, ico: '⚡', name: 'Eléctrica',   w: 94, h: 76, cost: { gold: 600, stone: 75, metal: 30, copper: 28 }, role: 'civic', slots: 5, outG: 50, boost: true },
+      fusion:      { sec: 'prod', kind: 'bldg', era: 4, ico: '⚛️', name: 'Reactor Fusión',w: 102, h: 84, cost: { gold: 1400, metal: 65, copper: 55 }, role: 'civic', slots: 6, outG: 140, outM: 18, outC: 18, boost: true },
 
-      // GUARDIA Y SERVICIOS
-      keep:        { sec: 'serv', kind: 'bldg', era: 1, ico: '🛡️', name: 'Cuartel',    w: 68, h: 68, cost: { gold: 120, wood: 18, stone: 25 }, role: 'guard', slots: 3 },
-      well:        { sec: 'serv', kind: 'bldg', era: 1, ico: '🪣', name: 'Bomberos',   w: 54, h: 54, cost: { gold: 80, wood: 12, stone: 14 }, role: 'fire', slots: 2 },
-      market:      { sec: 'serv', kind: 'bldg', era: 1, ico: '⚖️', name: 'Mercado',    w: 78, h: 66, cost: { gold: 135, wood: 22, stone: 14 }, role: 'farm', slots: 3, outG: 28, outF: 6 },
-      fire_hq:     { sec: 'serv', kind: 'bldg', era: 2, ico: '🚒', name: 'Estación',   w: 76, h: 62, cost: { gold: 250, wood: 24, stone: 36 }, role: 'fire', slots: 4 },
-      school:      { sec: 'serv', kind: 'bldg', era: 2, ico: '📜', name: 'Escuela',    w: 74, h: 60, cost: { gold: 230, wood: 28, stone: 28 }, role: 'civic', slots: 3 },
-      hospital:    { sec: 'serv', kind: 'bldg', era: 3, ico: '🏥', name: 'Hospital',   w: 88, h: 72, cost: { gold: 600, wood: 28, stone: 82 }, role: 'civic', slots: 5 },
+      // SERVICIOS, POSTES DE LUZ Y COMERCIO REGIONAL
+      keep:        { sec: 'serv', kind: 'bldg', era: 1, ico: '🛡️', name: 'Cuartel',     w: 68, h: 68, cost: { gold: 110, wood: 18, stone: 22 }, role: 'guard', slots: 4 },
+      well:        { sec: 'serv', kind: 'bldg', era: 1, ico: '🪣', name: 'Bomberos',    w: 54, h: 54, cost: { gold: 75, wood: 12, stone: 12 }, role: 'fire', slots: 3 },
+      market:      { sec: 'serv', kind: 'bldg', era: 1, ico: '⚖️', name: 'Mercado',     w: 78, h: 66, cost: { gold: 130, wood: 20, stone: 14 }, role: 'farm', slots: 4, outG: 32, outF: 8 },
+      trade_post:  { sec: 'serv', kind: 'bldg', era: 1, ico: '🌐', name: 'Ruta Regional',w: 76, h: 62, cost: { gold: 150, wood: 24, stone: 18 }, role: 'civic', slots: 3, outG: 25 },
+      fire_hq:     { sec: 'serv', kind: 'bldg', era: 2, ico: '🚒', name: 'Estación',    w: 76, h: 62, cost: { gold: 240, wood: 22, stone: 32, metal: 8 }, role: 'fire', slots: 5 },
+      school:      { sec: 'serv', kind: 'bldg', era: 2, ico: '📜', name: 'Escuela',     w: 74, h: 60, cost: { gold: 220, wood: 25, stone: 25 }, role: 'civic', slots: 4 },
+      street_light:{ sec: 'serv', kind: 'bldg', era: 3, ico: '💡', name: 'Poste de Luz',w: 26, h: 26, cost: { gold: 40, metal: 4, copper: 5 }, light: true },
+      hospital:    { sec: 'serv', kind: 'bldg', era: 3, ico: '🏥', name: 'Hospital',    w: 88, h: 72, cost: { gold: 560, stone: 75, metal: 24, copper: 16 }, role: 'civic', slots: 6 },
+      shield_dome: { sec: 'serv', kind: 'bldg', era: 4, ico: '🔮', name: 'Domo Clima',  w: 90, h: 90, cost: { gold: 1350, metal: 55, copper: 50 }, role: 'eng', slots: 5, dome: true },
 
       // OBRAS
       repair:      { sec: 'tools', kind: 'tool', tool: 'repair',  era: 1, ico: '🔨', name: 'Reparar / Sellar', cost: { gold: 15, wood: 5 } },
@@ -658,15 +686,19 @@
         this.uid = 1;
         this.regId = regId || 'valley';
         this.era = 1;
-        this.res = { gold: 700, wood: 150, stone: 100, food: 50 };
+        this.res = { gold: 700, wood: 150, stone: 100, metal: 25, copper: 25, food: 60 };
         this.pop = 0;
         this.popCap = 0;
-        this.workers = { wood: 0, stone: 0, farm: 0, eng: 0, guard: 0, fire: 0, civic: 0 };
+        this.workers = { wood: 0, stone: 0, farm: 0, hunter: 0, eng: 0, guard: 0, fire: 0, civic: 0 };
         this.nodes = [];
         this.roads = [];
         this.bldgs = [];
         this.agents = [];
+        this.deers = [];
         this.history = [];
+
+        // Ciclo Día y Noche (0..24 horas, inicia a las 10:00 AM)
+        this.timeOfDay = 10.0;
 
         this.seasonIdx = 0;
         this.seasonTimer = 75;
@@ -716,10 +748,29 @@
         this.surpriseTimer = 280 + Math.random() * 40;
 
         this.buildNature(this.regId);
+        this.spawnDeers();
         this.cam.x = MAP_W * 0.48;
         this.cam.y = MAP_H * 0.5;
         this.cam.vx = 0;
         this.cam.vy = 0;
+      }
+
+      spawnDeers() {
+        const reg = REGIONS[this.regId] || REGIONS.valley;
+        this.deers = [];
+        for (let i = 0; i < (reg.deer || 14); i++) {
+          let x = 200 + Math.random() * (MAP_W - 400);
+          let y = 200 + Math.random() * (MAP_H - 400);
+          if (this.inWater(x, y, 30)) { x = MAP_W * 0.4; y = MAP_H * 0.4; }
+          this.deers.push({
+            id: this.uid++,
+            x, y,
+            tx: x + (Math.random() - 0.5) * 300,
+            ty: y + (Math.random() - 0.5) * 300,
+            ang: Math.random() * Math.PI * 2,
+            wait: Math.random() * 3
+          });
+        }
       }
 
       buildNature(regId) {
@@ -779,7 +830,9 @@
           for (let k = 0; k < 3; k++) {
             const rx = cx + (rnd() - 0.5) * 80, ry = cy + (rnd() - 0.5) * 80;
             if (!this.inWater(rx, ry, 48) && !this.trees.some(t => dist(rx, ry, t.x, t.y) < 30)) {
-              this.rocks.push({ x: rx, y: ry, r: 18 + rnd() * 9, gold: rnd() < 0.45 });
+              const v = rnd();
+              const ore = v < 0.35 ? 'gold' : (v < 0.68 ? 'copper' : 'metal');
+              this.rocks.push({ x: rx, y: ry, r: 18 + rnd() * 9, ore });
             }
           }
         }
@@ -856,10 +909,11 @@
           c.beginPath(); c.arc(r.x, r.y, r.r, 0, Math.PI * 2); c.fill();
           c.fillStyle = '#94a3b8';
           c.beginPath(); c.arc(r.x - r.r * 0.2, r.y - r.r * 0.25, r.r * 0.45, 0, Math.PI * 2); c.fill();
-          if (r.gold) {
-            c.fillStyle = '#facc15';
-            c.beginPath(); c.arc(r.x + r.r * 0.3, r.y + r.r * 0.1, 3.8, 0, Math.PI * 2); c.fill();
-          }
+
+          // Vetas de Oro, Cobre o Metal
+          c.fillStyle = r.ore === 'gold' ? '#facc15' : (r.ore === 'copper' ? '#fb923c' : '#e2e8f0');
+          c.beginPath(); c.arc(r.x + r.r * 0.3, r.y + r.r * 0.1, 4, 0, Math.PI * 2); c.fill();
+
           if (season.snow) {
             c.fillStyle = 'rgba(248, 250, 252, 0.78)';
             c.beginPath(); c.arc(r.x - 2, r.y - 3, r.r * 0.65, Math.PI, Math.PI * 2); c.fill();
@@ -952,15 +1006,19 @@
       }
 
       canAfford(cost, mult = 1) {
-        return this.res.gold >= Math.round((cost.gold || 0) * mult)
-            && this.res.wood >= Math.round((cost.wood || 0) * mult)
-            && this.res.stone >= Math.round((cost.stone || 0) * mult);
+        return this.res.gold   >= Math.round((cost.gold || 0) * mult)
+            && this.res.wood   >= Math.round((cost.wood || 0) * mult)
+            && this.res.stone  >= Math.round((cost.stone || 0) * mult)
+            && this.res.metal  >= Math.round((cost.metal || 0) * mult)
+            && this.res.copper >= Math.round((cost.copper || 0) * mult);
       }
 
       pay(cost, mult = 1) {
-        this.res.gold  -= Math.round((cost.gold || 0) * mult);
-        this.res.wood  -= Math.round((cost.wood || 0) * mult);
-        this.res.stone -= Math.round((cost.stone || 0) * mult);
+        this.res.gold   -= Math.round((cost.gold || 0) * mult);
+        this.res.wood   -= Math.round((cost.wood || 0) * mult);
+        this.res.stone  -= Math.round((cost.stone || 0) * mult);
+        this.res.metal  -= Math.round((cost.metal || 0) * mult);
+        this.res.copper -= Math.round((cost.copper || 0) * mult);
       }
 
       costText(cost, mult = 1) {
@@ -968,9 +1026,13 @@
         const g = Math.round((cost.gold || 0) * mult);
         const w = Math.round((cost.wood || 0) * mult);
         const s = Math.round((cost.stone || 0) * mult);
+        const m = Math.round((cost.metal || 0) * mult);
+        const c = Math.round((cost.copper || 0) * mult);
         if (g > 0) p.push(`${g}🪙`);
         if (w > 0) p.push(`${w}🪵`);
         if (s > 0) p.push(`${s}🪨`);
+        if (m > 0) p.push(`${m}⚙️`);
+        if (c > 0) p.push(`${c}🟠`);
         return p.length ? p.join(' ') : 'Gratis';
       }
 
@@ -1054,8 +1116,8 @@
         this.bldgs.push({ id, type: this.item, x: wx, y: wy, w: spec.w, h: spec.h, ang: chk.ang, hp: 100, fire: false, damaged: false, dusty: false });
         this.history.push({ kind: 'bldg', id, cost: spec.cost, mult: 1 });
         this.recalcPop();
-        if (spec.pop && this.pop < 4) {
-          this.pop = Math.min(this.popCap, 4);
+        if (spec.pop && this.pop < 8) {
+          this.pop = Math.min(this.popCap, 8);
           this.showBanner('👥 ¡Llegaron aldeanos! Asígnalos en 👷');
         }
         this.renderWorkers();
@@ -1115,7 +1177,7 @@
             if (d < rd) { rd = d; targetR = r; }
           }
           if (!targetR) { this.showBanner('Toca una calle para mejorarla'); return; }
-          if (targetR.tier >= 4) { this.showBanner('Calle ya está al máximo'); return; }
+          if (targetR.tier >= 5) { this.showBanner('Calle ya está al máximo'); return; }
           if (!this.canAfford(spec.cost)) { this.showBanner(`Falta ${this.costText(spec.cost)}`); return; }
           this.pay(spec.cost);
           targetR.tier++;
@@ -1155,9 +1217,11 @@
           this.showBanner('Nada que deshacer');
           return;
         }
-        this.res.gold  += Math.round((last.cost.gold || 0) * last.mult);
-        this.res.wood  += Math.round((last.cost.wood || 0) * last.mult);
-        this.res.stone += Math.round((last.cost.stone || 0) * last.mult);
+        this.res.gold   += Math.round((last.cost.gold || 0) * last.mult);
+        this.res.wood   += Math.round((last.cost.wood || 0) * last.mult);
+        this.res.stone  += Math.round((last.cost.stone || 0) * last.mult);
+        this.res.metal  += Math.round((last.cost.metal || 0) * last.mult);
+        this.res.copper += Math.round((last.cost.copper || 0) * last.mult);
 
         if (last.kind === 'bldg') {
           this.bldgs = this.bldgs.filter(b => b.id !== last.id);
@@ -1172,7 +1236,7 @@
       }
 
       getSlots() {
-        const s = { wood: 0, stone: 0, farm: 0, eng: 0, guard: 0, fire: 0, civic: 0 };
+        const s = { wood: 0, stone: 0, farm: 0, hunter: 0, eng: 0, guard: 0, fire: 0, civic: 0 };
         for (const b of this.bldgs) {
           const sp = ITEMS[b.type];
           if (sp && sp.role && !b.fire) s[sp.role] += sp.slots;
@@ -1205,7 +1269,7 @@
         const slots = this.getSlots();
         for (const k of Object.keys(ROLES)) this.workers[k] = 0;
         let free = Math.floor(this.pop);
-        const order = ['farm', 'wood', 'stone', 'eng', 'fire', 'guard', 'civic'];
+        const order = ['farm', 'hunter', 'wood', 'stone', 'eng', 'fire', 'guard', 'civic'];
         let moved = true;
         while (free > 0 && moved) {
           moved = false;
@@ -1388,16 +1452,9 @@
         const ty = Math.max(200, Math.min(MAP_H - 200, cy + (Math.random() - 0.5) * 750));
 
         this.tornado = {
-          x: cx,
-          y: cy,
-          tx,
-          ty,
-          isSand: false,
-          strong: isStrong,
-          life: isStrong ? 24 : 18,
-          angle: 0,
-          scarTimer: 0,
-          hitIds: new Set()
+          x: cx, y: cy, tx, ty,
+          isSand: false, strong: isStrong,
+          life: isStrong ? 24 : 18, angle: 0, scarTimer: 0, hitIds: new Set()
         };
 
         this.showBanner(
@@ -1415,16 +1472,9 @@
         const ty = Math.max(200, Math.min(MAP_H - 200, cy + (Math.random() - 0.5) * 800));
 
         this.tornado = {
-          x: cx,
-          y: cy,
-          tx,
-          ty,
-          isSand: true,
-          strong: true,
-          life: 26,
-          angle: 0,
-          scarTimer: 0,
-          hitIds: new Set()
+          x: cx, y: cy, tx, ty,
+          isSand: true, strong: true,
+          life: 26, angle: 0, scarTimer: 0, hitIds: new Set()
         };
         this.showBanner('🌪️🏜️ ¡Tornado de Arena! Cubre la ciudad de polvo');
         this.updateHUD();
@@ -1441,6 +1491,9 @@
       }
 
       updateWeatherAndDisasters(dt) {
+        // Ciclo Día y Noche (24h cada ~2.5 minutos reales)
+        this.timeOfDay = (this.timeOfDay + dt * 0.16) % 24;
+
         this.seasonTimer -= dt;
         if (this.seasonTimer <= 0) {
           this.seasonTimer = 75;
@@ -1451,8 +1504,9 @@
         }
 
         const baseTemp = SEASONS[this.seasonIdx].temp;
+        const nightDrop = (this.timeOfDay >= 20 || this.timeOfDay <= 5) ? -4 : 0;
         const weatherOffset = (this.weather.state === 'rain' || this.weather.state === 'storm') ? -5 : (this.weather.state === 'sand' ? 4 : 0);
-        this.temperature += ((baseTemp + weatherOffset) - this.temperature) * Math.min(1, dt * 0.4);
+        this.temperature += ((baseTemp + nightDrop + weatherOffset) - this.temperature) * Math.min(1, dt * 0.4);
 
         if (this.weather.mode === 'auto' && this.bldgs.length >= 3 && !this.activeDisaster && !this.tornado && this.windWarning <= 0) {
           this.surpriseTimer -= dt;
@@ -1639,13 +1693,48 @@
         }
       }
 
+      updateDeers(dt) {
+        const reg = REGIONS[this.regId] || REGIONS.valley;
+        if (this.deers.length < (reg.deer || 14) && Math.random() < dt * 0.25) {
+          const x = 200 + Math.random() * (MAP_W - 400);
+          const y = 200 + Math.random() * (MAP_H - 400);
+          if (!this.inWater(x, y, 30)) {
+            this.deers.push({ id: this.uid++, x, y, tx: x + 120, ty: y + 80, ang: 0, wait: 1 });
+          }
+        }
+
+        for (const d of this.deers) {
+          if (d.wait > 0) {
+            d.wait -= dt;
+            continue;
+          }
+          const dd = dist(d.x, d.y, d.tx, d.ty);
+          if (dd < 20) {
+            d.wait = 1.5 + Math.random() * 3;
+            d.tx = Math.max(120, Math.min(MAP_W - 120, d.x + (Math.random() - 0.5) * 340));
+            d.ty = Math.max(120, Math.min(MAP_H - 120, d.y + (Math.random() - 0.5) * 340));
+          } else {
+            d.ang = Math.atan2(d.ty - d.y, d.tx - d.x);
+            const nx = d.x + Math.cos(d.ang) * 24 * dt;
+            const ny = d.y + Math.sin(d.ang) * 24 * dt;
+            if (!this.inWater(nx, ny, 14)) {
+              d.x = nx;
+              d.y = ny;
+            } else {
+              d.wait = 1;
+            }
+          }
+        }
+      }
+
       sim(dt) {
         this.updateWeatherAndDisasters(dt);
+        this.updateDeers(dt);
         this.recalcPop();
 
         if (this.pop < this.popCap && this.res.food > 0) {
           const prev = Math.floor(this.pop);
-          this.pop = Math.min(this.popCap, this.pop + dt * 1.35);
+          this.pop = Math.min(this.popCap, this.pop + dt * 3.8);
           if (Math.floor(this.pop) > prev) this.renderWorkers();
         }
 
@@ -1656,12 +1745,12 @@
           const ratio = r => slots[r] ? Math.min(1, this.workers[r] / slots[r]) : 0;
 
           const extremeTemp = this.temperature <= 6 || this.temperature >= 31;
-          const climateProtection = ratio('civic') >= 0.4 || this.bldgs.some(b => b.type === 'power' && !b.fire);
+          const climateProtection = ratio('civic') >= 0.4 || this.bldgs.some(b => (b.type === 'power' || b.type === 'fusion' || b.type === 'shield_dome') && !b.fire);
           const climateMult = (extremeTemp && !climateProtection) ? 0.72 : 1.0;
 
-          const civicMult = (1 + ratio('civic') * 0.25 + (this.bldgs.some(b => b.type === 'power' && !b.fire) && ratio('civic') > 0 ? 0.35 : 0)) * climateMult;
+          const civicMult = (1 + ratio('civic') * 0.25 + (this.bldgs.some(b => (b.type === 'power' || b.type === 'fusion') && !b.fire) && ratio('civic') > 0 ? 0.35 : 0)) * climateMult;
 
-          let dg = 0, dw = 0, ds = 0, df = 0;
+          let dg = 0, dw = 0, ds = 0, dm = 0, dc = 0, df = 0;
           for (const b of this.bldgs) {
             if (b.fire) continue;
             const dmgMult = b.damaged ? 0.45 : (b.dusty ? 0.75 : 1.0);
@@ -1671,17 +1760,24 @@
               const f = ratio(sp.role) * civicMult * dmgMult;
               if (sp.outW) dw += sp.outW * f;
               if (sp.outS) ds += sp.outS * f;
-              if (sp.outF) df += sp.outF * f;
+              if (sp.outM) dm += sp.outM * f;
+              if (sp.outC) dc += sp.outC * f;
+              if (sp.outF) {
+                const deerBonus = sp.role === 'hunter' ? Math.min(1.5, 0.5 + this.deers.length * 0.08) : 1;
+                df += sp.outF * f * deerBonus;
+              }
               if (sp.outG) dg += sp.outG * f;
             }
           }
-          this.res.gold  += Math.round(dg);
-          this.res.wood  += Math.round(dw);
-          this.res.stone += Math.round(ds);
-          this.res.food   = Math.max(0, this.res.food + Math.round(df) - Math.floor(this.pop * 0.12));
+          this.res.gold   += Math.round(dg);
+          this.res.wood   += Math.round(dw);
+          this.res.stone  += Math.round(ds);
+          this.res.metal  += Math.round(dm);
+          this.res.copper += Math.round(dc);
+          this.res.food    = Math.max(0, this.res.food + Math.round(df) - Math.floor(this.pop * 0.06));
         }
 
-        if (this.bldgs.length >= 4 && this.pop >= 12 && !this.activeDisaster) {
+        if (this.bldgs.length >= 4 && this.pop >= 20 && !this.activeDisaster) {
           this.fireT -= dt;
           if (this.fireT <= 0) {
             this.fireT = 135;
@@ -1707,7 +1803,7 @@
       }
 
       triggerFire() {
-        const list = this.bldgs.filter(b => !b.fire);
+        const list = this.bldgs.filter(b => !b.fire && !ITEMS[b.type]?.light);
         if (!list.length) return;
         const b = list[Math.floor(Math.random() * list.length)];
         b.fire = true;
@@ -1722,13 +1818,21 @@
       }
 
       updateAgents(dt) {
-        const want = Math.min(30, Math.floor(this.pop * 0.4 + this.workers.guard * 2));
-        if (this.roads.length && this.agents.length < want && Math.random() < dt * 2.5) {
-          const r = this.roads[Math.floor(Math.random() * this.roads.length)];
-          const a = this.getNode(r.a), b = this.getNode(r.b);
-          if (a && b) {
-            const k = this.workers.guard > 0 && Math.random() < 0.3 ? 'guard' : (this.era === 3 ? 'car' : 'walk');
-            this.agents.push({ kind: k, ax: a.x, ay: a.y, bx: b.x, by: b.y, t: 0, spd: k === 'car' ? 95 : 42, ang: Math.atan2(b.y - a.y, b.x - a.x) });
+        const want = Math.min(34, Math.floor(this.pop * 0.25 + this.workers.guard * 2 + this.workers.hunter * 2));
+        if (this.agents.length < want && Math.random() < dt * 2.5) {
+          if (this.workers.hunter > 0 && this.deers.length > 0 && Math.random() < 0.35) {
+            const post = this.bldgs.find(b => b.type === 'hunter_post' && !b.fire);
+            const targetDeer = this.deers[Math.floor(Math.random() * this.deers.length)];
+            if (post && targetDeer) {
+              this.agents.push({ kind: 'hunter', x: post.x, y: post.y, deerId: targetDeer.id, spd: 55, ang: 0 });
+            }
+          } else if (this.roads.length) {
+            const r = this.roads[Math.floor(Math.random() * this.roads.length)];
+            const a = this.getNode(r.a), b = this.getNode(r.b);
+            if (a && b) {
+              const k = this.workers.guard > 0 && Math.random() < 0.3 ? 'guard' : (this.era >= 3 ? 'car' : 'walk');
+              this.agents.push({ kind: k, ax: a.x, ay: a.y, bx: b.x, by: b.y, t: 0, spd: k === 'car' ? 105 : 44, ang: Math.atan2(b.y - a.y, b.x - a.x) });
+            }
           }
         }
 
@@ -1749,12 +1853,35 @@
             }
             continue;
           }
+          if (ag.kind === 'hunter') {
+            const dObj = this.deers.find(d => d.id === ag.deerId);
+            if (!dObj) { this.agents.splice(i, 1); continue; }
+            ag.ang = Math.atan2(dObj.y - ag.y, dObj.x - ag.x);
+            if (dist(ag.x, ag.y, dObj.x, dObj.y) < 16) {
+              this.res.food += 18;
+              this.deers = this.deers.filter(d => d.id !== dObj.id);
+              this.agents.splice(i, 1);
+            } else {
+              ag.x += Math.cos(ag.ang) * ag.spd * dt;
+              ag.y += Math.sin(ag.ang) * ag.spd * dt;
+            }
+            continue;
+          }
           const len = Math.max(1, dist(ag.ax, ag.ay, ag.bx, ag.by));
           ag.t += (ag.spd * dt) / len;
           if (ag.t >= 1) { this.agents.splice(i, 1); continue; }
           ag.x = ag.ax + (ag.bx - ag.ax) * ag.t;
           ag.y = ag.ay + (ag.by - ag.ay) * ag.t;
         }
+      }
+
+      getNightFactor() {
+        // 0 = mediodía pleno, 1 = medianoche oscura
+        const h = this.timeOfDay;
+        if (h >= 7 && h <= 17) return 0;
+        if (h > 17 && h < 20.5) return (h - 17) / 3.5;
+        if (h >= 20.5 || h <= 4.5) return 1;
+        return 1 - (h - 4.5) / 2.5;
       }
 
       loop(now) {
@@ -1798,6 +1925,16 @@
         const hw = b.w * 0.5, hh = b.h * 0.5;
         const isWinter = SEASONS[this.seasonIdx]?.snow;
 
+        if (b.type === 'street_light') {
+          c.fillStyle = 'rgba(0,0,0,0.35)';
+          c.beginPath(); c.arc(3, 3, 7, 0, Math.PI * 2); c.fill();
+          c.fillStyle = '#334155';
+          c.beginPath(); c.arc(0, 0, 6, 0, Math.PI * 2); c.fill();
+          c.fillStyle = '#fef08a';
+          c.beginPath(); c.arc(0, 0, 3.5, 0, Math.PI * 2); c.fill();
+          return;
+        }
+
         c.fillStyle = 'rgba(0,0,0,0.28)';
         c.roundRect(-hw + 4, -hh + 4, b.w, b.h, 6);
         c.fill();
@@ -1808,14 +1945,6 @@
             c.roundRect(-hw, -hh, b.w, b.h, 10); c.fill();
             c.fillStyle = '#d97706';
             c.beginPath(); c.arc(0, 0, Math.min(hw, hh) * 0.84, 0, Math.PI * 2); c.fill();
-            c.strokeStyle = '#92400e';
-            c.lineWidth = 1.6;
-            for (let a = 0; a < Math.PI * 2; a += Math.PI / 5) {
-              c.beginPath();
-              c.moveTo(Math.cos(a) * 4, Math.sin(a) * 4);
-              c.lineTo(Math.cos(a) * (Math.min(hw, hh) * 0.82), Math.sin(a) * (Math.min(hw, hh) * 0.82));
-              c.stroke();
-            }
             c.fillStyle = '#fef3c7';
             c.beginPath(); c.arc(0, 0, 4, 0, Math.PI * 2); c.fill();
             break;
@@ -1826,14 +1955,6 @@
             c.roundRect(-hw, -hh, b.w, b.h, 5); c.fill();
             c.fillStyle = '#b91c1c';
             c.fillRect(-hw + 4, -hh + 4, b.w - 8, b.h - 8);
-            c.strokeStyle = '#7f1d1d';
-            c.lineWidth = 2;
-            for (let y = -hh + 8; y < hh - 6; y += 6) {
-              c.beginPath(); c.moveTo(-hw + 5, y); c.lineTo(hw - 5, y); c.stroke();
-            }
-            c.strokeStyle = '#fca5a5';
-            c.lineWidth = 2.5;
-            c.beginPath(); c.moveTo(-hw + 4, 0); c.lineTo(hw - 4, 0); c.stroke();
             break;
           }
 
@@ -1847,9 +1968,14 @@
             }
             c.fillStyle = '#991b1b';
             c.fillRect(hw - 20, -hh + 6, 14, b.h - 12);
-            c.strokeStyle = '#fef08a';
-            c.lineWidth = 1.5;
-            c.strokeRect(hw - 20, -hh + 6, 14, b.h - 12);
+            break;
+          }
+
+          case 'hunter_post': {
+            c.fillStyle = '#3f6212';
+            c.roundRect(-hw, -hh, b.w, b.h, 8); c.fill();
+            c.fillStyle = '#92400e';
+            c.beginPath(); c.moveTo(0, -hh + 6); c.lineTo(hw - 8, hh - 8); c.lineTo(-hw + 8, hh - 8); c.closePath(); c.fill();
             break;
           }
 
@@ -1858,159 +1984,58 @@
             c.roundRect(-hw, -hh, b.w, b.h, 6); c.fill();
             c.fillStyle = '#d97706';
             c.fillRect(-hw + 5, -hh + 5, b.w - 10, b.h - 10);
-            c.strokeStyle = '#fef08a';
-            c.lineWidth = 2.5;
-            c.beginPath(); c.moveTo(-hw + 8, -hh + 8); c.lineTo(hw - 8, hh - 8); c.stroke();
-            c.beginPath(); c.moveTo(hw - 8, -hh + 8); c.lineTo(-hw + 8, hh - 8); c.stroke();
             break;
           }
 
           case 'lumber': {
             c.fillStyle = '#78350f';
             c.roundRect(-hw, -hh, b.w * 0.64, b.h, 5); c.fill();
-            c.strokeStyle = '#b45309';
-            c.lineWidth = 2;
-            for (let y = -hh + 6; y < hh - 4; y += 7) {
-              c.beginPath(); c.moveTo(-hw + 3, y); c.lineTo(-hw + b.w * 0.64 - 3, y); c.stroke();
-            }
             c.fillStyle = '#92400e';
             for (let row = -hh + 9; row <= hh - 9; row += 11) {
               c.fillRect(hw - 19, row - 4, 15, 8);
-              c.fillStyle = '#fde68a';
-              c.beginPath(); c.arc(hw - 19, row, 3.5, 0, Math.PI * 2); c.fill();
-              c.fillStyle = '#92400e';
             }
             break;
           }
 
-          case 'quarry': {
+          case 'quarry':
+          case 'mine': {
             c.fillStyle = '#475569';
             c.roundRect(-hw, -hh, b.w, b.h, 6); c.fill();
             c.fillStyle = '#94a3b8';
             c.fillRect(-hw + 6, -hh + 6, 18, 14);
-            c.fillRect(-hw + 28, -hh + 8, 16, 12);
-            c.fillRect(-hw + 8, hh - 20, 20, 14);
-            c.strokeStyle = '#d97706';
-            c.lineWidth = 3.5;
-            c.beginPath(); c.moveTo(4, 6); c.lineTo(hw - 6, -hh + 8); c.stroke();
+            c.fillStyle = '#fb923c';
+            c.beginPath(); c.arc(10, 4, 6, 0, Math.PI * 2); c.fill();
             break;
           }
 
-          case 'keep': {
-            c.fillStyle = '#64748b';
-            c.fillRect(-hw, -hh, b.w, b.h);
-            c.fillStyle = '#1e3a8a';
-            c.fillRect(-hw + 11, -hh + 11, b.w - 22, b.h - 22);
-            c.fillStyle = '#cbd5e1';
-            for (const [cx, cy] of [[-hw + 3, -hh + 3], [hw - 15, -hh + 3], [-hw + 3, hh - 15], [hw - 15, hh - 15]]) {
-              c.fillRect(cx, cy, 12, 12);
-            }
-            c.strokeStyle = '#facc15';
-            c.lineWidth = 2;
-            c.strokeRect(-hw + 11, -hh + 11, b.w - 22, b.h - 22);
-            break;
-          }
-
-          case 'well': {
-            c.fillStyle = '#78716c';
-            c.beginPath(); c.arc(0, 0, hw * 0.85, 0, Math.PI * 2); c.fill();
-            c.fillStyle = '#0284c7';
-            c.beginPath(); c.arc(0, 0, hw * 0.54, 0, Math.PI * 2); c.fill();
-            c.strokeStyle = '#b45309';
-            c.lineWidth = 4;
-            c.beginPath(); c.moveTo(-hw * 0.8, 0); c.lineTo(hw * 0.8, 0); c.stroke();
-            break;
-          }
-
-          case 'market': {
-            c.fillStyle = '#d6d3d1';
-            c.roundRect(-hw, -hh, b.w, b.h, 6); c.fill();
-            const awnings = ['#dc2626', '#2563eb', '#d97706', '#059669'];
-            const positions = [[-hw + 6, -hh + 6], [4, -hh + 6], [-hw + 6, 4], [4, 4]];
-            positions.forEach(([px, py], idx) => {
-              c.fillStyle = awnings[idx];
-              c.fillRect(px, py, hw - 10, hh - 10);
-              c.strokeStyle = '#fef9c3';
-              c.lineWidth = 2;
-              c.beginPath(); c.moveTo(px + 4, py); c.lineTo(px + 4, py + hh - 10); c.stroke();
-            });
-            break;
-          }
-
-          case 'brick_house':
-          case 'apartments': {
-            c.fillStyle = '#7f1d1d';
-            c.roundRect(-hw, -hh, b.w, b.h, 5); c.fill();
-            c.fillStyle = '#b91c1c';
-            c.fillRect(-hw + 5, -hh + 5, b.w - 10, b.h - 10);
-            c.fillStyle = '#bae6fd';
-            for (let x = -hw + 12; x < hw - 14; x += 18) {
-              c.fillRect(x, -8, 10, 16);
-            }
-            c.fillStyle = '#1f2937';
-            c.beginPath(); c.arc(hw - 12, -hh + 12, 4.5, 0, Math.PI * 2); c.fill();
-            break;
-          }
-
-          case 'sawmill':
-          case 'mine': {
-            c.fillStyle = '#334155';
-            c.roundRect(-hw, -hh, b.w, b.h, 5); c.fill();
-            c.strokeStyle = '#94a3b8';
-            c.lineWidth = 2.5;
-            for (let x = -hw + 8; x < hw - 6; x += 8) {
-              c.beginPath(); c.moveTo(x, -hh + 5); c.lineTo(x, hh - 5); c.stroke();
-            }
-            c.fillStyle = '#f59e0b';
-            c.fillRect(-10, -10, 20, 20);
-            break;
-          }
-
-          case 'fire_hq': {
-            c.fillStyle = '#991b1b';
-            c.roundRect(-hw, -hh, b.w, b.h, 6); c.fill();
-            c.fillStyle = '#ef4444';
-            c.fillRect(-hw + 4, -hh + 4, b.w - 8, b.h - 8);
-            c.fillStyle = '#f8fafc';
-            c.fillRect(-hw + 4, -5, b.w - 8, 10);
-            break;
-          }
-
-          case 'school':
-          case 'hospital': {
-            c.fillStyle = '#cbd5e1';
+          case 'trade_post': {
+            c.fillStyle = '#0f766e';
             c.roundRect(-hw, -hh, b.w, b.h, 7); c.fill();
-            c.fillStyle = '#f8fafc';
-            c.fillRect(-hw + 6, -hh + 6, b.w - 12, b.h - 12);
-            c.fillStyle = b.type === 'hospital' ? '#ef4444' : '#2563eb';
-            c.fillRect(-4, -13, 8, 26);
-            c.fillRect(-13, -4, 26, 8);
+            c.strokeStyle = '#5eead4';
+            c.lineWidth = 2.5;
+            c.beginPath(); c.arc(0, 0, 16, 0, Math.PI * 2); c.stroke();
+            c.beginPath(); c.moveTo(-16, 0); c.lineTo(16, 0); c.moveTo(0, -16); c.lineTo(0, 16); c.stroke();
             break;
           }
 
-          case 'power': {
-            c.fillStyle = '#1e293b';
-            c.roundRect(-hw, -hh, b.w, b.h, 6); c.fill();
-            c.fillStyle = '#64748b';
-            c.beginPath(); c.arc(-hw * 0.42, 0, hh * 0.55, 0, Math.PI * 2); c.fill();
+          case 'arcology':
+          case 'fusion':
+          case 'shield_dome': {
             c.fillStyle = '#0f172a';
-            c.beginPath(); c.arc(-hw * 0.42, 0, hh * 0.32, 0, Math.PI * 2); c.fill();
-            c.strokeStyle = '#facc15';
-            c.lineWidth = 3;
-            c.strokeRect(4, -hh + 10, hw - 12, b.h - 20);
+            c.beginPath(); c.arc(0, 0, Math.min(hw, hh), 0, Math.PI * 2); c.fill();
+            c.fillStyle = b.type === 'fusion' ? '#a855f7' : (b.type === 'shield_dome' ? '#10b981' : '#38bdf8');
+            c.beginPath(); c.arc(0, 0, Math.min(hw, hh) * 0.72, 0, Math.PI * 2); c.fill();
+            c.strokeStyle = '#f8fafc';
+            c.lineWidth = 2.5;
+            c.beginPath(); c.arc(0, 0, Math.min(hw, hh) * 0.4, 0, Math.PI * 2); c.stroke();
             break;
           }
 
           default: {
-            c.fillStyle = '#0f172a';
-            c.roundRect(-hw, -hh, b.w, b.h, 8); c.fill();
+            c.fillStyle = '#1e293b';
+            c.roundRect(-hw, -hh, b.w, b.h, 7); c.fill();
             c.fillStyle = '#0284c7';
-            c.roundRect(-hw + 6, -hh + 6, b.w - 12, b.h - 12, 6); c.fill();
-            c.fillStyle = '#38bdf8';
-            c.roundRect(-hw + 14, -hh + 14, b.w - 28, b.h - 28, 4); c.fill();
-            c.strokeStyle = '#e0f2fe';
-            c.lineWidth = 2;
-            c.beginPath(); c.arc(0, 0, 12, 0, Math.PI * 2); c.stroke();
+            c.roundRect(-hw + 6, -hh + 6, b.w - 12, b.h - 12, 5); c.fill();
             break;
           }
         }
@@ -2025,9 +2050,6 @@
           c.fillStyle = 'rgba(230, 200, 150, 0.55)';
           c.roundRect(-hw, -hh, b.w, b.h, 6);
           c.fill();
-          c.strokeStyle = 'rgba(250, 230, 190, 0.7)';
-          c.lineWidth = 1.5;
-          c.strokeRect(-hw, -hh, b.w, b.h);
         }
 
         if (b.damaged) {
@@ -2037,8 +2059,6 @@
           c.moveTo(-hw * 0.6, -hh * 0.4);
           c.lineTo(0, 2);
           c.lineTo(hw * 0.5, -hh * 0.3);
-          c.moveTo(0, 2);
-          c.lineTo(-hw * 0.2, hh * 0.6);
           c.stroke();
         }
       }
@@ -2047,6 +2067,7 @@
         if (this.bgDirty) this.renderBg();
         const c = this.ctx;
         const reg = REGIONS[this.regId] || REGIONS.valley;
+        const night = this.getNightFactor();
 
         c.fillStyle = '#111827';
         c.fillRect(0, 0, this.cam.vw, this.cam.vh);
@@ -2083,10 +2104,6 @@
           c.globalAlpha = alpha;
           c.fillStyle = sc.crater ? '#5c3a21' : '#784b2a';
           c.beginPath(); c.arc(sc.x, sc.y, sc.r, 0, Math.PI * 2); c.fill();
-          if (sc.crater) {
-            c.fillStyle = '#3f2614';
-            c.beginPath(); c.arc(sc.x + 4, sc.y + 3, sc.r * 0.55, 0, Math.PI * 2); c.fill();
-          }
           c.restore();
         }
 
@@ -2116,17 +2133,31 @@
             c.strokeStyle = '#78350f'; c.lineWidth = ROAD_W + 10;
             c.beginPath(); c.moveTo(a.x, a.y); c.lineTo(b.x, b.y); c.stroke();
           }
-          c.strokeStyle = r.tier === 1 ? '#855834' : (r.tier === 2 ? '#64748b' : (r.tier === 3 ? '#4b5563' : '#1e293b'));
+          c.strokeStyle = r.tier === 1 ? '#855834' : (r.tier === 2 ? '#64748b' : (r.tier === 3 ? '#4b5563' : (r.tier === 4 ? '#1e293b' : '#0284c7')));
           c.lineWidth = ROAD_W;
           c.beginPath(); c.moveTo(a.x, a.y); c.lineTo(b.x, b.y); c.stroke();
 
-          if (r.tier === 2) {
-            c.save(); c.strokeStyle = '#94a3b8'; c.lineWidth = ROAD_W - 10; c.setLineDash([6, 6]);
+          if (r.tier === 5) {
+            c.save(); c.strokeStyle = '#38bdf8'; c.lineWidth = 4;
             c.beginPath(); c.moveTo(a.x, a.y); c.lineTo(b.x, b.y); c.stroke(); c.restore();
           } else if (r.tier === 4) {
             c.save(); c.strokeStyle = '#facc15'; c.lineWidth = 2; c.setLineDash([10, 10]);
             c.beginPath(); c.moveTo(a.x, a.y); c.lineTo(b.x, b.y); c.stroke(); c.restore();
           }
+        }
+
+        // Dibujar Mini Ciervos
+        for (const d of this.deers) {
+          c.save();
+          c.translate(d.x, d.y);
+          c.rotate(d.ang);
+          c.fillStyle = '#b45309';
+          c.beginPath(); c.ellipse(0, 0, 7, 4, 0, 0, Math.PI * 2); c.fill();
+          c.fillStyle = '#fef3c7';
+          c.beginPath(); c.arc(-6, 0, 2, 0, Math.PI * 2); c.fill();
+          c.fillStyle = '#78350f';
+          c.beginPath(); c.arc(7, 0, 3, 0, Math.PI * 2); c.fill();
+          c.restore();
         }
 
         for (const b of this.bldgs) {
@@ -2165,6 +2196,8 @@
             c.fillStyle = '#ef4444'; c.beginPath(); c.arc(0, 0, 6, 0, Math.PI * 2); c.fill();
           } else if (ag.kind === 'guard') {
             c.fillStyle = '#2563eb'; c.beginPath(); c.arc(0, 0, 5, 0, Math.PI * 2); c.fill();
+          } else if (ag.kind === 'hunter') {
+            c.fillStyle = '#15803d'; c.beginPath(); c.arc(0, 0, 5, 0, Math.PI * 2); c.fill();
           } else if (ag.kind === 'car') {
             c.fillStyle = '#facc15'; c.roundRect(-9, -4.5, 18, 9, 3); c.fill();
           } else {
@@ -2179,10 +2212,6 @@
           c.lineWidth = ROAD_W;
           c.lineCap = 'round';
           c.beginPath(); c.moveTo(s.x, s.y); c.lineTo(e.x, e.y); c.stroke();
-
-          c.fillStyle = '#fbbf24';
-          c.beginPath(); c.arc(s.x, s.y, 9, 0, Math.PI * 2); c.fill();
-          c.beginPath(); c.arc(e.x, e.y, 9, 0, Math.PI * 2); c.fill();
         }
 
         if (this.tornado) {
@@ -2190,57 +2219,62 @@
           const maxR = t.strong ? (t.isSand ? 90 : 68) : 46;
           c.save();
           c.translate(t.x, t.y);
-
-          c.fillStyle = t.isSand ? 'rgba(217, 119, 6, 0.25)' : 'rgba(17, 24, 39, 0.25)';
-          c.beginPath(); c.arc(10, 12, maxR * 0.9, 0, Math.PI * 2); c.fill();
-
           c.rotate(t.angle);
           const arms = t.strong ? 12 : 7;
           for (let a = 0; a < arms; a++) {
             c.save();
             c.rotate((a * Math.PI * 2) / arms);
-            c.strokeStyle = t.isSand
-              ? (a % 2 === 0 ? 'rgba(252, 211, 77, 0.85)' : 'rgba(217, 119, 6, 0.78)')
-              : (a % 2 === 0 ? 'rgba(226, 232, 240, 0.85)' : 'rgba(148, 163, 184, 0.78)');
+            c.strokeStyle = t.isSand ? 'rgba(252, 211, 77, 0.85)' : 'rgba(226, 232, 240, 0.85)';
             c.lineWidth = t.strong ? 3.8 : 2.4;
             c.beginPath();
             for (let r = 8; r <= maxR; r += 6) {
               const theta = r * 0.075;
-              const px = Math.cos(theta) * r;
-              const py = Math.sin(theta) * r;
-              if (r === 8) c.moveTo(px, py);
-              else c.lineTo(px, py);
+              if (r === 8) c.moveTo(Math.cos(theta) * r, Math.sin(theta) * r);
+              else c.lineTo(Math.cos(theta) * r, Math.sin(theta) * r);
             }
             c.stroke();
             c.restore();
           }
-
-          c.fillStyle = t.isSand ? '#d97706' : '#0f172a';
-          c.beginPath(); c.arc(0, 0, t.strong ? 18 : 10, 0, Math.PI * 2); c.fill();
           c.restore();
         }
 
         if (this.tsunamiWave) {
           const w = this.tsunamiWave;
-          c.save();
           c.fillStyle = 'rgba(2, 132, 199, 0.85)';
           c.fillRect(w.x, 0, w.width, MAP_H);
           c.fillStyle = 'rgba(224, 242, 254, 0.95)';
           c.fillRect(w.x, 0, 24, MAP_H);
-          c.fillStyle = 'rgba(14, 165, 233, 0.35)';
-          c.fillRect(w.x - 60, 0, 60, MAP_H);
-          c.restore();
         }
 
         for (const b of this.weather.bolts) {
           c.save();
           c.strokeStyle = `rgba(254, 249, 195, ${Math.min(1, b.life * 3.5)})`;
           c.lineWidth = 4;
-          c.shadowColor = '#38bdf8';
-          c.shadowBlur = 16;
           c.beginPath();
           b.pts.forEach((p, idx) => idx === 0 ? c.moveTo(p.x, p.y) : c.lineTo(p.x, p.y));
           c.stroke();
+          c.restore();
+        }
+
+        // Ciclo Día y Noche + Iluminación de Postes de Luz y Edificios
+        if (night > 0.02) {
+          c.save();
+          c.fillStyle = `rgba(10, 15, 35, ${night * 0.58})`;
+          c.fillRect(0, 0, MAP_W, MAP_H);
+
+          c.globalCompositeOperation = 'lighter';
+          for (const b of this.bldgs) {
+            if (b.fire) continue;
+            const isLamp = b.type === 'street_light';
+            const radius = isLamp ? 155 : (this.era >= 3 ? 65 : 35);
+            const grad = c.createRadialGradient(b.x, b.y, 4, b.x, b.y, radius);
+            grad.addColorStop(0, isLamp ? `rgba(254, 240, 138, ${night * 0.65})` : `rgba(253, 224, 71, ${night * 0.25})`);
+            grad.addColorStop(1, 'rgba(253, 224, 71, 0)');
+            c.fillStyle = grad;
+            c.beginPath();
+            c.arc(b.x, b.y, radius, 0, Math.PI * 2);
+            c.fill();
+          }
           c.restore();
         }
 
@@ -2260,7 +2294,6 @@
         if (this.weather.state === 'rain' || this.weather.state === 'storm') {
           c.fillStyle = this.weather.state === 'storm' ? 'rgba(15, 23, 42, 0.28)' : 'rgba(15, 23, 42, 0.15)';
           c.fillRect(0, 0, this.cam.vw, this.cam.vh);
-
           c.strokeStyle = 'rgba(186, 230, 253, 0.65)';
           c.lineWidth = 1.6;
           c.beginPath();
@@ -2274,7 +2307,6 @@
         if (this.sandIntensity > 0.05) {
           c.fillStyle = `rgba(217, 119, 6, ${this.sandIntensity * 0.35})`;
           c.fillRect(0, 0, this.cam.vw, this.cam.vh);
-
           c.fillStyle = 'rgba(251, 191, 36, 0.65)';
           for (const p of this.weather.sandParticles) {
             c.beginPath(); c.arc(p.x, p.y, p.size, 0, Math.PI * 2); c.fill();
@@ -2293,13 +2325,6 @@
         m.clearRect(0, 0, mw, mh);
         m.drawImage(this.bg, 0, 0, mw, mh);
 
-        m.strokeStyle = '#1c1917'; m.lineWidth = 2;
-        for (const f of this.fissures) {
-          m.beginPath();
-          f.pts.forEach((p, idx) => idx === 0 ? m.moveTo(p.x * sx, p.y * sy) : m.lineTo(p.x * sx, p.y * sy));
-          m.stroke();
-        }
-
         m.strokeStyle = '#f3f4f6'; m.lineWidth = 1.5;
         for (const r of this.roads) {
           const a = this.getNode(r.a), b = this.getNode(r.b);
@@ -2309,14 +2334,6 @@
         for (const b of this.bldgs) {
           m.fillStyle = b.fire ? '#ef4444' : (b.damaged ? '#f97316' : '#fbbf24');
           m.fillRect(b.x * sx - 2, b.y * sy - 2, 4, 4);
-        }
-        if (this.tornado) {
-          m.fillStyle = this.tornado.isSand ? '#f59e0b' : '#e2e8f0';
-          m.beginPath(); m.arc(this.tornado.x * sx, this.tornado.y * sy, 5, 0, Math.PI * 2); m.fill();
-        }
-        if (this.tsunamiWave) {
-          m.fillStyle = '#0284c7';
-          m.fillRect(this.tsunamiWave.x * sx, 0, Math.max(2, this.tsunamiWave.width * sx), mh);
         }
         m.strokeStyle = '#38bdf8'; m.lineWidth = 1.8;
         m.strokeRect((this.cam.x - this.cam.vw * 0.5) * sx, (this.cam.y - this.cam.vh * 0.5) * sy, this.cam.vw * sx, this.cam.vh * sy);
@@ -2370,36 +2387,26 @@
       updateHUD() {
         const e = ERAS[this.era];
         const s = SEASONS[this.seasonIdx] || SEASONS[0];
-        document.getElementById('era-pill').textContent = `${e.ico} Era ${this.era === 1 ? 'I' : (this.era === 2 ? 'II' : 'III')}`;
-        document.getElementById('season-pill').textContent = `${s.ico} ${Math.round(this.temperature)}°C`;
-        document.getElementById('v-gold').textContent  = Math.floor(this.res.gold);
-        document.getElementById('v-wood').textContent  = Math.floor(this.res.wood);
-        document.getElementById('v-stone').textContent = Math.floor(this.res.stone);
-        document.getElementById('v-food').textContent  = Math.floor(this.res.food);
-        document.getElementById('v-pop').textContent   = `${Math.floor(this.pop)}/${this.popCap}`;
+        const hr = Math.floor(this.timeOfDay).toString().padStart(2, '0');
+        const min = Math.floor((this.timeOfDay % 1) * 60).toString().padStart(2, '0');
+        const dayIco = this.getNightFactor() > 0.4 ? '🌙' : '☀️';
+
+        document.getElementById('era-pill').textContent = `${e.ico} Era ${['I','II','III','IV'][this.era - 1]}`;
+        document.getElementById('time-pill').textContent = `${dayIco} ${hr}:${min} · ${s.ico} ${Math.round(this.temperature)}°C`;
+        document.getElementById('v-gold').textContent   = Math.floor(this.res.gold);
+        document.getElementById('v-wood').textContent   = Math.floor(this.res.wood);
+        document.getElementById('v-stone').textContent  = Math.floor(this.res.stone);
+        document.getElementById('v-metal').textContent  = Math.floor(this.res.metal);
+        document.getElementById('v-copper').textContent = Math.floor(this.res.copper);
+        document.getElementById('v-food').textContent   = Math.floor(this.res.food);
+        document.getElementById('v-pop').textContent    = `${Math.floor(this.pop)}/${this.popCap}`;
         const free = Math.max(0, Math.floor(this.pop) - Object.values(this.workers).reduce((a, b) => a + b, 0));
         document.getElementById('v-free').textContent = String(free);
-        document.getElementById('btn-era').textContent = e.req ? `⚔️ ${e.next}` : '✨ III';
+        document.getElementById('btn-era').textContent = e.reqPop ? `⚔️ ${e.next}` : '🚀 IV';
 
         const wBtn = document.getElementById('btn-weather');
         wBtn.classList.toggle('active', this.weather.mode === 'manual' || this.activeDisaster !== null);
         wBtn.textContent = this.activeDisaster ? '⚡ Activo' : (this.weather.mode === 'manual' ? '🔧 Manual' : '☀️ Clima');
-
-        const disMap = {
-          'rain': 'db-rain',
-          'storm': 'db-storm',
-          'tor_soft': 'db-tor-soft',
-          'tor_strong': 'db-tor-strong',
-          'sand': 'db-sand',
-          'sand_tor': 'db-sand-tor',
-          'tsunami': 'db-tsunami',
-          'quake_soft': 'db-quake-soft',
-          'quake_strong': 'db-quake-strong'
-        };
-        Object.entries(disMap).forEach(([k, btnId]) => {
-          const btn = document.getElementById(btnId);
-          if (btn) btn.classList.toggle('active', this.activeDisaster === k);
-        });
       }
 
       showBanner(msg) {
@@ -2443,22 +2450,18 @@
 
       openEraModal() {
         const e = ERAS[this.era];
-        if (!e.req) return;
-        const ok = Math.floor(this.pop) >= e.req.pop && this.canAfford(e.req);
+        if (!e.reqPop) return;
+        const ok = Math.floor(this.pop) >= e.reqPop;
         document.getElementById('modal-title').textContent = `⚔️ Avanzar a ${e.next}`;
         document.getElementById('modal-body').innerHTML = `
-          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px;font-size:16px;font-weight:800;text-align:center;">
-            <div style="background:rgba(255,255,255,0.06);padding:12px;border-radius:12px;">👥 ${Math.floor(this.pop)} / ${e.req.pop}</div>
-            <div style="background:rgba(255,255,255,0.06);padding:12px;border-radius:12px;">🪙 ${Math.floor(this.res.gold)} / ${e.req.gold}</div>
-            <div style="background:rgba(255,255,255,0.06);padding:12px;border-radius:12px;">🪵 ${Math.floor(this.res.wood)} / ${e.req.wood}</div>
-            <div style="background:rgba(255,255,255,0.06);padding:12px;border-radius:12px;">🪨 ${Math.floor(this.res.stone)} / ${e.req.stone}</div>
+          <div style="background:rgba(255,255,255,0.06);padding:18px;border-radius:14px;margin-bottom:16px;font-size:18px;font-weight:900;text-align:center;">
+            👥 Población requerida: ${Math.floor(this.pop)} / ${e.reqPop} habitantes
           </div>
         `;
         document.getElementById('modal-cancel').style.display = 'inline-flex';
-        document.getElementById('modal-ok').textContent = ok ? `¡Evolucionar!` : 'Faltan recursos';
+        document.getElementById('modal-ok').textContent = ok ? '¡Evolucionar!' : 'Faltan habitantes';
         document.getElementById('modal-ok').onclick = () => {
-          if (!ok) { this.showBanner('Aún faltan recursos o población'); return; }
-          this.pay(e.req);
+          if (!ok) { this.showBanner(`Necesitas ${e.reqPop} habitantes`); return; }
           this.era++;
           document.getElementById('modal').classList.add('hidden');
           this.renderCards();
@@ -2468,12 +2471,60 @@
         m.classList.remove('hidden');
       }
 
+      openTradeModal() {
+        const m = document.getElementById('modal');
+        document.getElementById('modal-title').textContent = '🌐 Comercio Libre entre Regiones';
+        const hasPort = this.bldgs.some(b => b.type === 'trade_post' && !b.fire);
+        const offers = [
+          { reg: '🌲 Bosque Norte', give: 'wood',   giveAmt: 40, get: 'gold',   getAmt: 120, label: 'Vender 40 🪵 por 120 🪙' },
+          { reg: '🏜️ Meseta Dorada', give: 'stone',  giveAmt: 35, get: 'copper', getAmt: 25,  label: 'Cambiar 35 🪨 por 25 🟠' },
+          { reg: '🌊 Costa Azul',    give: 'food',   giveAmt: 40, get: 'metal',  getAmt: 25,  label: 'Cambiar 40 🌾 por 25 ⚙️' },
+          { reg: '🌲 Bosque Norte',  give: 'gold',   giveAmt: 160,get: 'metal',  getAmt: 30,  label: 'Comprar 30 ⚙️ por 160 🪙' },
+          { reg: '🏜️ Meseta Dorada', give: 'gold',   giveAmt: 160,get: 'copper', getAmt: 30,  label: 'Comprar 30 🟠 por 160 🪙' },
+          { reg: '🌊 Costa Azul',    give: 'copper', giveAmt: 20, get: 'gold',   getAmt: 180, label: 'Exportar 20 🟠 por 180 🪙' }
+        ];
+
+        const renderBody = () => {
+          document.getElementById('modal-body').innerHTML = `
+            <div style="font-size:13px;color:#9ca3af;text-align:center;margin-bottom:12px;">
+              ${hasPort ? '✅ Ruta Regional activa (precios preferenciales)' : '💡 Consejo: Construye una 🌐 Ruta Regional en Servicios para ganar oro pasivo'}
+            </div>
+            ${offers.map((o, idx) => `
+              <div class="trade-row">
+                <div>
+                  <div style="color:#fbbf24;font-size:12px;">${o.reg}</div>
+                  <div>${o.label}</div>
+                </div>
+                <button type="button" class="icon-btn gold" data-idx="${idx}" ${this.res[o.give] < o.giveAmt ? 'disabled style="opacity:0.4;"' : ''}>Intercambiar</button>
+              </div>
+            `).join('')}
+          `;
+          document.querySelectorAll('#modal-body button[data-idx]').forEach(btn => {
+            btn.onclick = () => {
+              const o = offers[Number(btn.dataset.idx)];
+              if (this.res[o.give] < o.giveAmt) return;
+              this.res[o.give] -= o.giveAmt;
+              this.res[o.get]  += o.getAmt;
+              this.updateHUD();
+              this.showBanner(`🌐 Intercambio completado con ${o.reg}`);
+              renderBody();
+            };
+          });
+        };
+        renderBody();
+        document.getElementById('modal-cancel').style.display = 'inline-flex';
+        document.getElementById('modal-ok').textContent = 'Listo';
+        document.getElementById('modal-ok').onclick = () => m.classList.add('hidden');
+        m.classList.remove('hidden');
+      }
+
       save(silent = false) {
         try {
           const data = {
             uid: this.uid,
             regId: this.regId,
             era: this.era,
+            timeOfDay: this.timeOfDay,
             seasonIdx: this.seasonIdx,
             res: this.res,
             pop: this.pop,
@@ -2499,10 +2550,11 @@
           this.initWorld(d.regId);
           this.uid = d.uid || 1;
           this.era = d.era || 1;
+          this.timeOfDay = d.timeOfDay ?? 10.0;
           this.seasonIdx = d.seasonIdx || 0;
-          this.res = d.res || { gold: 700, wood: 150, stone: 100, food: 50 };
+          this.res = Object.assign({ gold: 700, wood: 150, stone: 100, metal: 25, copper: 25, food: 60 }, d.res || {});
           this.pop = d.pop || 0;
-          this.workers = Object.assign({ wood: 0, stone: 0, farm: 0, eng: 0, guard: 0, fire: 0, civic: 0 }, d.workers || {});
+          this.workers = Object.assign({ wood: 0, stone: 0, farm: 0, hunter: 0, eng: 0, guard: 0, fire: 0, civic: 0 }, d.workers || {});
           this.nodes = d.nodes || [];
           this.roads = d.roads || [];
           this.bldgs = d.bldgs || [];
@@ -2561,6 +2613,7 @@
         };
 
         document.getElementById('btn-era').onclick = () => this.openEraModal();
+        document.getElementById('btn-trade').onclick = () => this.openTradeModal();
         document.getElementById('btn-weather').onclick = () => this.toggleWeatherMode();
 
         document.getElementById('btn-disasters').onclick = () => {
