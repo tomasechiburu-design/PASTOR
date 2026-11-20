@@ -206,31 +206,34 @@
     /* BARRA DE DESASTRES ACTIVA / PANEL */
     #disasters-bar {
       position: absolute;
-      bottom: max(120px, env(safe-area-inset-bottom) + 110px);
+      bottom: max(124px, env(safe-area-inset-bottom) + 114px);
       left: 50%;
       transform: translateX(-50%);
       background: rgba(17, 24, 39, 0.94);
       backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
       border: 1px solid var(--danger);
       border-radius: 18px;
-      padding: 8px 12px;
+      padding: 10px 14px;
       z-index: 22;
-      box-shadow: 0 12px 36px rgba(239, 68, 68, 0.3);
+      box-shadow: 0 12px 36px rgba(239, 68, 68, 0.35);
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 7px;
+      max-width: calc(100vw - 24px);
     }
     .disaster-row {
       display: flex;
       align-items: center;
       gap: 8px;
+      flex-wrap: wrap;
     }
-    .dis-lbl { font-size: 13px; font-weight: 800; color: #fecaca; min-width: 140px; }
+    .dis-lbl { font-size: 13px; font-weight: 800; color: #fecaca; min-width: 145px; }
     .dis-btn {
       height: 36px;
-      padding: 0 14px;
+      padding: 0 12px;
       border-radius: 10px;
-      border: 1px solid rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.18);
       background: #7f1d1d;
       color: #fee2e2;
       font-size: 13px;
@@ -422,9 +425,9 @@
 
     <!-- PANEL DE DESASTRES MANUALES -->
     <aside id="disasters-bar" style="display:none;">
-      <div style="font-size:14px;font-weight:900;color:#fca5a5;margin-bottom:6px;display:flex;justify-content:space-between;">
+      <div style="font-size:14px;font-weight:900;color:#fca5a5;margin-bottom:4px;display:flex;justify-content:space-between;align-items:center;">
         <span>🔥 Panel Maestro de Desastres</span>
-        <span style="font-size:11px;opacity:0.8;cursor:pointer;" onclick="document.getElementById('disasters-bar').style.display='none';">[Cerrar]</span>
+        <button id="btn-close-disasters" class="icon-btn" style="height:28px;min-width:32px;font-size:12px;">✕</button>
       </div>
       <div class="disaster-row">
         <span class="dis-lbl">🌧️ Lluvia & Marea</span>
@@ -484,8 +487,6 @@
     </div>
   </div>
 
-  <script src="./sw.js"></script>
-
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
@@ -511,7 +512,7 @@
     const MAP_W = 2600;
     const MAP_H = 1950;
     const ROAD_W = 36;
-    const SAVE_KEY = 'arquitecto_ipad_pwa_v1';
+    const SAVE_KEY = 'arquitecto_ipad_pwa_v2';
 
     const REGIONS = {
       valley: { id: 'valley', icon: '🌿', name: 'Valle Verde',   g1: '#5f9e49', g2: '#528c3e', water: '#0284c7', bank: '#e7d39a', trees: 32, rocks: 18, style: 'river' },
@@ -660,12 +661,11 @@
         this.agents = [];
         this.history = [];
 
-        // Sistema de clima dinámico masivo (Sol, Lluvia/Marea, Tormenta/Rayos, Tornados Viento, Temp/Tornados Arena, Tsunami)
         this.weather = {
-          mode: 'auto',   // 'auto' | 'manual'
-          state: 'clear', // 'clear' | 'rain' | 'storm' | 'sand'
+          mode: 'auto',
+          state: 'clear',
           timer: 45,
-          tide: 0,        // 0..1 subida suave de marea
+          tide: 0,
           lightningFlash: 0,
           bolts: [],
           drops: Array.from({ length: 180 }, () => ({
@@ -683,12 +683,11 @@
           }))
         };
 
-        this.activeDisaster = null; // 'tor_soft' | 'tor_strong' | 'sand_tor' | 'tsunami'
-        this.disasterData = null;  // Datos específicos del desastre activo
-
-        this.brownScars = [];      // Huellas café en el suelo
-        this.tsunamiWave = null;   // { x, w, h, stage }
-        this.sandIntensity = 0;    // 0..1
+        this.activeDisaster = null;
+        this.tornado = null;
+        this.brownScars = [];
+        this.tsunamiWave = null;
+        this.sandIntensity = 0;
 
         this.prodT = 4.5;
         this.fireT = 105;
@@ -931,7 +930,7 @@
           return;
         }
         const nA = sSnap.node || (sSnap.split ? this.splitRoad(sSnap.split, sSnap.x, sSnap.y) : this.addNode(sSnap.x, sSnap.y));
-        const nB = eSnap.node || (eSnap.split ? this.splitRoad(eSnap.split, sSnap.x, sSnap.y) : this.addNode(sSnap.x, sSnap.y));
+        const nB = eSnap.node || (eSnap.split ? this.splitRoad(eSnap.split, eSnap.x, eSnap.y) : this.addNode(eSnap.x, eSnap.y));
         if (nA.id === nB.id) return;
 
         const rId = this.uid++;
@@ -1003,6 +1002,74 @@
         }
         this.renderWorkers();
         this.updateHUD();
+      }
+
+      useTool(wx, wy) {
+        const spec = ITEMS[this.item];
+        if (!spec || spec.kind !== 'tool') return;
+
+        let targetB = null, bd = 60;
+        for (const b of this.bldgs) {
+          const d = dist(wx, wy, b.x, b.y);
+          if (d < bd) { bd = d; targetB = b; }
+        }
+
+        if (spec.tool === 'repair') {
+          if (!targetB) { this.showBanner('Toca un edificio dañado o con polvo'); return; }
+          if (!targetB.damaged && !targetB.dusty && !targetB.fire) { this.showBanner('Este edificio está impecable'); return; }
+          if (!this.canAfford(spec.cost)) { this.showBanner(`Falta ${this.costText(spec.cost)}`); return; }
+          this.pay(spec.cost);
+          targetB.damaged = false;
+          targetB.dusty = false;
+          targetB.fire = false;
+          targetB.hp = 100;
+          this.recalcPop();
+          this.updateHUD();
+          this.showBanner('✨ ¡Edificio reparado y limpio!');
+          return;
+        }
+
+        if (spec.tool === 'upgrade') {
+          let targetR = null, rd = 36;
+          for (const r of this.roads) {
+            const a = this.getNode(r.a), b = this.getNode(r.b);
+            if (!a || !b) continue;
+            const d = projSeg(wx, wy, a.x, a.y, b.x, b.y).d;
+            if (d < rd) { rd = d; targetR = r; }
+          }
+          if (!targetR) { this.showBanner('Toca una calle para mejorarla'); return; }
+          if (targetR.tier >= 4) { this.showBanner('Calle ya está al máximo'); return; }
+          if (!this.canAfford(spec.cost)) { this.showBanner(`Falta ${this.costText(spec.cost)}`); return; }
+          this.pay(spec.cost);
+          targetR.tier++;
+          this.updateHUD();
+          this.showBanner('⬆️ ¡Calle mejorada!');
+          return;
+        }
+
+        if (spec.tool === 'demolish') {
+          if (targetB) {
+            this.bldgs = this.bldgs.filter(b => b.id !== targetB.id);
+            this.recalcPop();
+            this.renderWorkers();
+            this.updateHUD();
+            this.showBanner('🚜 Edificio demolido');
+            return;
+          }
+          let targetR = null, rd = 36;
+          for (const r of this.roads) {
+            const a = this.getNode(r.a), b = this.getNode(r.b);
+            if (!a || !b) continue;
+            const d = projSeg(wx, wy, a.x, a.y, b.x, b.y).d;
+            if (d < rd) { rd = d; targetR = r; }
+          }
+          if (targetR) {
+            this.roads = this.roads.filter(r => r.id !== targetR.id);
+            this.nodes = this.nodes.filter(n => this.roads.some(r => r.a === n.id || r.b === n.id));
+            this.updateHUD();
+            this.showBanner('🚜 Calle demolida');
+          }
+        }
       }
 
       undoLast() {
@@ -1211,14 +1278,13 @@
         this.tsunamiWave = {
           x: MAP_W + 150,
           width: 320,
-          speed: 180,
+          speed: 190,
           stage: 'approaching'
         };
-        this.showBanner('🌊⚠️ ¡ALERTA DE TSUNAMI! Una ola gigante se acerca a la costa');
+        this.showBanner('🌊⚠️ ¡ALERTA DE TSUNAMI! Una ola gigante avanza desde el este');
       }
 
       updateWeatherAndDisasters(dt) {
-        // Transición automática del clima si está en modo auto
         if (this.weather.mode === 'auto') {
           if (!this.activeDisaster) {
             this.weather.timer -= dt;
@@ -1240,7 +1306,6 @@
             }
           }
 
-          // Aparición natural de desastres si hay ciudad grande
           if (this.bldgs.length >= 4 && !this.activeDisaster) {
             this.tornadoTimer -= dt;
             if (this.tornadoTimer <= 0) {
@@ -1254,15 +1319,12 @@
           }
         }
 
-        // Marea suave cuando llueve o hay tormenta
         const targetTide = (this.weather.state === 'rain' || this.weather.state === 'storm') ? 1 : 0;
         this.weather.tide += (targetTide - this.weather.tide) * Math.min(1, dt * 0.45);
 
-        // Intensidad del polvo en tormenta de arena
         const targetSand = this.weather.state === 'sand' ? 1 : 0;
         this.sandIntensity += (targetSand - this.sandIntensity) * Math.min(1, dt * 0.5);
 
-        // Gotas de lluvia
         if (this.weather.state === 'rain' || this.weather.state === 'storm') {
           for (const d of this.weather.drops) {
             d.x -= d.s * 0.22 * dt;
@@ -1274,7 +1336,6 @@
           }
         }
 
-        // Partículas de arena
         if (this.sandIntensity > 0.05) {
           for (const p of this.weather.sandParticles) {
             p.x -= p.vx * (0.5 + this.sandIntensity * 0.6) * dt;
@@ -1284,9 +1345,12 @@
               p.y = Math.random() * this.cam.vh;
             }
           }
+          if (Math.random() < dt * 0.4 && this.bldgs.length > 0) {
+            const b = this.bldgs[Math.floor(Math.random() * this.bldgs.length)];
+            b.dusty = true;
+          }
         }
 
-        // Rayos ocasionales durante tormenta
         if (this.weather.state === 'storm' && Math.random() < dt * 0.4) {
           this.spawnLightningBolt();
         }
@@ -1298,7 +1362,6 @@
           if (this.weather.bolts[i].life <= 0) this.weather.bolts.splice(i, 1);
         }
 
-        // Movimiento y efecto del Tornado (Viento o Arena)
         if (this.tornado) {
           const t = this.tornado;
           t.life -= dt;
@@ -1315,12 +1378,10 @@
             t.y += Math.sin(ang) * spd * dt;
           }
 
-          // Dejar rastro café en el suelo o cubrir edificios de polvo
           t.scarTimer -= dt;
           if (t.scarTimer <= 0) {
             t.scarTimer = t.isSand ? 0.3 : 0.22;
             if (t.isSand) {
-              // El tornado de arena cubre edificios cercanos de polvo
               for (const b of this.bldgs) {
                 if (dist(t.x, t.y, b.x, b.y) < 160) b.dusty = true;
               }
@@ -1336,7 +1397,6 @@
             }
           }
 
-          // Efecto destructivo sobre edificios
           const hitRadius = t.strong ? 58 : 46;
           for (let i = this.bldgs.length - 1; i >= 0; i--) {
             const b = this.bldgs[i];
@@ -1359,27 +1419,24 @@
 
           if (t.life <= 0) {
             this.tornado = null;
-            if (this.activeDisaster && !['tor_soft', 'tor_strong', 'sand_tor'].includes(this.activeDisaster)) {
-              // No apagar si es un modo manual continuo
-            } else {
+            if (['tor_soft', 'tor_strong', 'sand_tor'].includes(this.activeDisaster)) {
               this.activeDisaster = null;
             }
             this.updateHUD();
           }
         }
 
-        // Simulación del Megatsunami Costero
         if (this.tsunamiWave) {
           const w = this.tsunamiWave;
+          const impactLine = this.coastX ? (this.coastX + 80) : (MAP_W - 650);
           if (w.stage === 'approaching') {
             w.x -= w.speed * dt;
-            if (w.x <= this.coastX + 80) {
+            if (w.x <= impactLine) {
               w.stage = 'crashing';
-              this.showBanner('🌊 ¡EL TSUNAMI GOLPEA LA COSTA!');
-              // Inundar y destruir edificios costeros
+              this.showBanner('🌊 ¡EL TSUNAMI INUNDA LA ZONA ORIENTAL!');
               for (let i = this.bldgs.length - 1; i >= 0; i--) {
                 const b = this.bldgs[i];
-                if (b.x > this.coastX - 60 || this.inWater(b.x, b.y, 40)) {
+                if (b.x > impactLine - 280 || this.inWater(b.x, b.y, 40)) {
                   this.brownScars.push({ x: b.x, y: b.y, r: Math.max(b.w, b.h) * 0.8, life: 140, maxLife: 140, crater: true });
                   this.bldgs.splice(i, 1);
                 }
@@ -1391,13 +1448,13 @@
             w.width += w.speed * 2.5 * dt;
             if (w.width > 1200) {
               this.tsunamiWave = null;
-              if (!['tsunami'].includes(this.activeDisaster)) this.activeDisaster = null;
+              if (this.activeDisaster === 'tsunami') this.activeDisaster = null;
               this.showBanner('🌊 El agua del tsunami se retira poco a poco');
+              this.updateHUD();
             }
           }
         }
 
-        // Regeneración gradual del pasto sobre las huellas café
         for (let i = this.brownScars.length - 1; i >= 0; i--) {
           this.brownScars[i].life -= dt;
           if (this.brownScars[i].life <= 0) this.brownScars.splice(i, 1);
@@ -1555,9 +1612,9 @@
       }
 
       // =========================================================================
-      // DIBUJO DETALLADO DE EDIFICIOS (CON POLVO Y GRIETAS)
+      // DIBUJO DETALLADO DE EDIFICIOS
       // =========================================================================
-      drawDetailedBuilding(c, b, sp) {
+      drawDetailedBuilding(c, b) {
         const hw = b.w * 0.5, hh = b.h * 0.5;
 
         c.fillStyle = 'rgba(0,0,0,0.28)';
@@ -1765,7 +1822,6 @@
           }
         }
 
-        // Capa de polvo o ceniza si fue alcanzado por tormenta de arena
         if (b.dusty) {
           c.fillStyle = 'rgba(230, 200, 150, 0.55)';
           c.roundRect(-hw, -hh, b.w, b.h, 6);
@@ -1775,7 +1831,6 @@
           c.strokeRect(-hw, -hh, b.w, b.h);
         }
 
-        // Grietas visuales si fue dañado por un tornado suave
         if (b.damaged) {
           c.strokeStyle = '#1c1917';
           c.lineWidth = 2.6;
@@ -1801,7 +1856,6 @@
         c.translate(Math.round(this.cam.vw * 0.5 - this.cam.x), Math.round(this.cam.vh * 0.5 - this.cam.y));
         c.drawImage(this.bg, 0, 0);
 
-        // Subida suave de la marea
         if (this.weather.tide > 0.02) {
           const extra = this.weather.tide * 12;
           c.save();
@@ -1822,7 +1876,6 @@
           c.restore();
         }
 
-        // Huellas café dejadas por tornados o destrucción
         for (const sc of this.brownScars) {
           const alpha = Math.min(0.85, (sc.life / sc.maxLife) * 0.95);
           c.save();
@@ -1836,7 +1889,6 @@
           c.restore();
         }
 
-        // Calles
         c.lineCap = 'round';
         for (const r of this.roads) {
           const a = this.getNode(r.a), b = this.getNode(r.b);
@@ -1858,7 +1910,6 @@
           }
         }
 
-        // Edificios
         for (const b of this.bldgs) {
           const sp = ITEMS[b.type];
           if (!sp) continue;
@@ -1866,7 +1917,7 @@
           c.translate(b.x, b.y);
           c.rotate(b.ang);
 
-          this.drawDetailedBuilding(c, b, sp);
+          this.drawDetailedBuilding(c, b);
 
           c.rotate(-b.ang);
           const hh = b.h * 0.5, hw = b.w * 0.5;
@@ -1874,7 +1925,7 @@
             c.fillStyle = '#fbbf24';
             c.beginPath(); c.arc(hw - 4, -hh + 4, 6, 0, Math.PI * 2); c.fill();
           }
-          if (b.damaged) {
+          if (b.damaged || b.dusty) {
             c.font = '18px sans-serif';
             c.textAlign = 'center';
             c.fillText('🔨', 0, -hh - 6);
@@ -1887,7 +1938,6 @@
           c.restore();
         }
 
-        // Agentes
         for (const ag of this.agents) {
           c.save();
           c.translate(ag.x, ag.y);
@@ -1904,7 +1954,6 @@
           c.restore();
         }
 
-        // Vista previa de camino
         if (this.gesture && this.gesture.mode === 'road' && this.gesture.roadStart && this.gesture.roadEnd) {
           const s = this.gesture.roadStart, e = this.gesture.roadEnd;
           c.strokeStyle = 'rgba(52, 211, 153, 0.8)';
@@ -1917,7 +1966,6 @@
           c.beginPath(); c.arc(e.x, e.y, 9, 0, Math.PI * 2); c.fill();
         }
 
-        // Torbellinos (Viento o Arena)
         if (this.tornado) {
           const t = this.tornado;
           const maxR = t.strong ? (t.isSand ? 90 : 68) : 46;
@@ -1953,7 +2001,6 @@
           c.restore();
         }
 
-        // Megatsunami
         if (this.tsunamiWave) {
           const w = this.tsunamiWave;
           c.save();
@@ -1966,7 +2013,6 @@
           c.restore();
         }
 
-        // Rayos
         for (const b of this.weather.bolts) {
           c.save();
           c.strokeStyle = `rgba(254, 249, 195, ${Math.min(1, b.life * 3.5)})`;
@@ -1981,7 +2027,6 @@
 
         c.restore();
 
-        // Capa Lluviosa
         if (this.weather.state === 'rain' || this.weather.state === 'storm') {
           c.fillStyle = this.weather.state === 'storm' ? 'rgba(15, 23, 42, 0.28)' : 'rgba(15, 23, 42, 0.15)';
           c.fillRect(0, 0, this.cam.vw, this.cam.vh);
@@ -1996,7 +2041,6 @@
           c.stroke();
         }
 
-        // Capa Tormenta de Arena
         if (this.sandIntensity > 0.05) {
           c.fillStyle = `rgba(217, 119, 6, ${this.sandIntensity * 0.35})`;
           c.fillRect(0, 0, this.cam.vw, this.cam.vh);
@@ -2007,7 +2051,6 @@
           }
         }
 
-        // Destello relámpago
         if (this.weather.lightningFlash > 0) {
           c.fillStyle = `rgba(255, 255, 255, ${this.weather.lightningFlash * 0.85})`;
           c.fillRect(0, 0, this.cam.vw, this.cam.vh);
@@ -2103,8 +2146,15 @@
         wBtn.classList.toggle('active', this.weather.mode === 'manual' || this.activeDisaster !== null);
         wBtn.textContent = this.activeDisaster ? '⚡ Activo' : (this.weather.mode === 'manual' ? '🔧 Manual' : '☀️ Clima');
 
-        // Actualizar estado botones desastres
-        const disMap = { 'rain': 'db-rain', 'storm': 'db-storm', 'tor_soft': 'db-tor-soft', 'tor_strong': 'db-tor-strong', 'sand': 'db-sand', 'sand_tor': 'db-sand-tor', 'tsunami': 'db-tsunami' };
+        const disMap = {
+          'rain': 'db-rain',
+          'storm': 'db-storm',
+          'tor_soft': 'db-tor-soft',
+          'tor_strong': 'db-tor-strong',
+          'sand': 'db-sand',
+          'sand_tor': 'db-sand-tor',
+          'tsunami': 'db-tsunami'
+        };
         Object.entries(disMap).forEach(([k, btnId]) => {
           const btn = document.getElementById(btnId);
           if (btn) btn.classList.toggle('active', this.activeDisaster === k);
@@ -2180,5 +2230,249 @@
       save(silent = false) {
         try {
           const data = {
-            uid: this.uid, regId: this.regId, era: this.era, res: this.res, pop: this.pop,
-            workers: this.workers, nodes: this.nodes, roads: this.roadsorigen, extendiéndose según el diseño que traces en el mapa.
+            uid: this.uid,
+            regId: this.regId,
+            era: this.era,
+            res: this.res,
+            pop: this.pop,
+            workers: this.workers,
+            nodes: this.nodes,
+            roads: this.roads,
+            bldgs: this.bldgs
+          };
+          localStorage.setItem(SAVE_KEY, JSON.stringify(data));
+          if (!silent) this.showBanner('💾 ¡Ciudad guardada!');
+        } catch (err) {
+          console.error(err);
+        }
+      }
+
+      load(silent = false) {
+        try {
+          const raw = localStorage.getItem(SAVE_KEY);
+          if (!raw) return false;
+          const d = JSON.parse(raw);
+          if (!d || !d.regId) return false;
+          this.initWorld(d.regId);
+          this.uid = d.uid || 1;
+          this.era = d.era || 1;
+          this.res = d.res || { gold: 650, wood: 140, stone: 90, food: 48 };
+          this.pop = d.pop || 0;
+          this.workers = d.workers || { wood: 0, stone: 0, farm: 0, guard: 0, fire: 0, civic: 0 };
+          this.nodes = d.nodes || [];
+          this.roads = d.roads || [];
+          this.bldgs = d.bldgs || [];
+          this.recalcPop();
+          if (!silent) this.showBanner('📂 Ciudad cargada');
+          return true;
+        } catch (err) {
+          console.error(err);
+          return false;
+        }
+      }
+
+      resize() {
+        const dpr = Math.min(2, window.devicePixelRatio || 1);
+        this.cam.vw = window.innerWidth;
+        this.cam.vh = window.innerHeight;
+        this.canvas.width = Math.round(this.cam.vw * dpr);
+        this.canvas.height = Math.round(this.cam.vh * dpr);
+        this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+
+      bindEvents() {
+        window.addEventListener('resize', () => this.resize());
+
+        // Tabs inferiores
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+          btn.onclick = () => {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            this.sec = btn.dataset.sec;
+            const first = Object.keys(ITEMS).find(k => ITEMS[k].sec === this.sec && ITEMS[k].era <= this.era);
+            if (first) this.item = first;
+            this.renderCards();
+          };
+        });
+
+        // Botones superiores
+        document.getElementById('btn-workers').onclick = () => {
+          document.getElementById('workers-drawer').classList.toggle('open');
+          this.renderWorkers();
+        };
+
+        document.getElementById('btn-auto').onclick = () => this.autoWorkers();
+
+        document.getElementById('roles-list').onclick = e => {
+          const btn = e.target.closest('.step-btn');
+          if (!btn || btn.disabled) return;
+          const r = btn.dataset.r;
+          const d = parseInt(btn.dataset.d, 10);
+          const slots = this.getSlots();
+          const free = Math.max(0, Math.floor(this.pop) - Object.values(this.workers).reduce((a, b) => a + b, 0));
+          if (d > 0 && free > 0 && this.workers[r] < slots[r]) this.workers[r]++;
+          if (d < 0 && this.workers[r] > 0) this.workers[r]--;
+          this.renderWorkers();
+          this.updateHUD();
+        };
+
+        document.getElementById('btn-era').onclick = () => this.openEraModal();
+        document.getElementById('btn-weather').onclick = () => this.toggleWeatherMode();
+
+        document.getElementById('btn-disasters').onclick = () => {
+          const bar = document.getElementById('disasters-bar');
+          bar.style.display = bar.style.display === 'none' ? 'flex' : 'none';
+        };
+
+        document.getElementById('btn-close-disasters').onclick = () => {
+          document.getElementById('disasters-bar').style.display = 'none';
+        };
+
+        document.getElementById('btn-undo').onclick = () => this.undoLast();
+        document.getElementById('btn-rotate').onclick = () => {
+          this.rot = (this.rot + Math.PI * 0.25) % (Math.PI * 2);
+          this.showBanner('↻ Edificio rotado');
+        };
+
+        document.getElementById('btn-speed').onclick = e => {
+          this.speed = this.speed === 1 ? 2 : (this.speed === 2 ? 0 : 1);
+          e.currentTarget.textContent = this.speed === 0 ? '⏸️' : (this.speed === 2 ? '⏩' : '▶️');
+        };
+
+        document.getElementById('btn-export').onclick = () => this.save(false);
+        document.getElementById('btn-region').onclick = () => this.openRegionModal(false);
+        document.getElementById('modal-cancel').onclick = () => document.getElementById('modal').classList.add('hidden');
+
+        // Minimapa táctil
+        const jumpMini = e => {
+          const rect = this.mini.getBoundingClientRect();
+          const cx = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+          const cy = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+          this.cam.x = Math.max(200, Math.min(MAP_W - 200, (cx / rect.width) * MAP_W));
+          this.cam.y = Math.max(150, Math.min(MAP_H - 150, (cy / rect.height) * MAP_H));
+          this.cam.vx = 0;
+          this.cam.vy = 0;
+        };
+        this.mini.addEventListener('pointerdown', e => {
+          e.stopPropagation();
+          jumpMini(e);
+        });
+
+        // Gestos táctiles y ratón en el mundo (1 dedo construye o desplaza, 2 dedos desplazan cámara)
+        this.canvas.addEventListener('pointerdown', e => {
+          this.canvas.setPointerCapture(e.pointerId);
+          this.touches.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+          if (this.touches.size >= 2) {
+            const pts = Array.from(this.touches.values());
+            this.gesture = {
+              mode: 'pan',
+              cx: (pts[0].x + pts[1].x) * 0.5,
+              cy: (pts[0].y + pts[1].y) * 0.5
+            };
+            return;
+          }
+
+          const w = this.toWorld(e.clientX, e.clientY);
+          const spec = ITEMS[this.item];
+
+          if (e.button === 2 || e.shiftKey) {
+            this.gesture = { mode: 'pan', cx: e.clientX, cy: e.clientY, lastT: performance.now() };
+          } else if (spec && spec.kind === 'road') {
+            const snap = this.snapPoint(w.x, w.y);
+            this.gesture = {
+              mode: 'road',
+              sx: e.clientX,
+              sy: e.clientY,
+              roadStart: snap,
+              roadEnd: snap
+            };
+          } else {
+            this.gesture = {
+              mode: 'tap_or_pan',
+              sx: e.clientX,
+              sy: e.clientY,
+              cx: e.clientX,
+              cy: e.clientY,
+              moved: false,
+              lastT: performance.now()
+            };
+          }
+        });
+
+        this.canvas.addEventListener('pointermove', e => {
+          if (!this.touches.has(e.pointerId) || !this.gesture) return;
+          this.touches.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+          if (this.touches.size >= 2) {
+            const pts = Array.from(this.touches.values());
+            const ncx = (pts[0].x + pts[1].x) * 0.5;
+            const ncy = (pts[0].y + pts[1].y) * 0.5;
+            if (this.gesture.mode === 'pan') {
+              this.cam.x -= (ncx - this.gesture.cx);
+              this.cam.y -= (ncy - this.gesture.cy);
+            }
+            this.gesture = { mode: 'pan', cx: ncx, cy: ncy };
+            return;
+          }
+
+          if (this.gesture.mode === 'road') {
+            const w = this.toWorld(e.clientX, e.clientY);
+            this.gesture.roadEnd = this.snapPoint(w.x, w.y);
+          } else if (this.gesture.mode === 'pan' || this.gesture.mode === 'tap_or_pan') {
+            const dx = e.clientX - this.gesture.cx;
+            const dy = e.clientY - this.gesture.cy;
+            if (dist(e.clientX, e.clientY, this.gesture.sx, this.gesture.sy) > 12) {
+              this.gesture.moved = true;
+              this.gesture.mode = 'pan';
+            }
+            if (this.gesture.mode === 'pan') {
+              const now = performance.now();
+              const dt = Math.max(0.008, (now - (this.gesture.lastT || now)) / 1000);
+              this.cam.x -= dx;
+              this.cam.y -= dy;
+              this.cam.vx = -dx / dt * 0.35;
+              this.cam.vy = -dy / dt * 0.35;
+              this.gesture.cx = e.clientX;
+              this.gesture.cy = e.clientY;
+              this.gesture.lastT = now;
+            }
+          }
+        });
+
+        const endPointer = e => {
+          this.touches.delete(e.pointerId);
+          if (!this.gesture) return;
+
+          if (this.gesture.mode === 'road' && this.gesture.roadStart && this.gesture.roadEnd) {
+            const spec = ITEMS[this.item];
+            if (spec && spec.kind === 'road') {
+              this.buildRoadSegment(this.gesture.roadStart, this.gesture.roadEnd, spec);
+            }
+          } else if (this.gesture.mode === 'tap_or_pan' && !this.gesture.moved) {
+            const w = this.toWorld(e.clientX, e.clientY);
+            const spec = ITEMS[this.item];
+            if (spec && spec.kind === 'bldg') {
+              this.placeBldg(w.x, w.y);
+            } else if (spec && spec.kind === 'tool') {
+              this.useTool(w.x, w.y);
+            }
+          }
+
+          if (this.touches.size === 0) {
+            this.gesture = null;
+          }
+        };
+
+        this.canvas.addEventListener('pointerup', endPointer);
+        this.canvas.addEventListener('pointercancel', endPointer);
+        this.canvas.addEventListener('contextmenu', e => e.preventDefault());
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      window.game = new Game();
+    });
+  </script>
+</body>
+</html>
