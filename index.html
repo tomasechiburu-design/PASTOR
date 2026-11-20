@@ -63,7 +63,6 @@
       touch-action: none;
     }
 
-    /* BARRA SUPERIOR COMPACTA PARA IPAD */
     #hud-top {
       position: absolute;
       top: max(10px, env(safe-area-inset-top));
@@ -96,7 +95,7 @@
       display: inline-flex;
       align-items: center;
       gap: 4px;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 800;
       padding: 4px 8px;
       background: rgba(255,255,255,0.06);
@@ -104,14 +103,14 @@
     }
 
     .icon-btn {
-      min-width: 42px;
-      height: 40px;
-      padding: 0 11px;
+      min-width: 40px;
+      height: 38px;
+      padding: 0 10px;
       border-radius: 12px;
       border: 1px solid var(--border);
       background: var(--bg-card);
       color: var(--text);
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 800;
       display: inline-flex;
       align-items: center;
@@ -130,7 +129,6 @@
       border: none;
     }
 
-    /* MINIMAPA TÁCTIL SUPERIOR DERECHO */
     #minimap-wrap {
       position: absolute;
       top: calc(max(10px, env(safe-area-inset-top)) + 60px);
@@ -149,12 +147,11 @@
       border-radius: 9px;
     }
 
-    /* PANEL DESPLEGABLE DE TRABAJADORES */
     #workers-drawer {
       position: absolute;
       top: calc(max(10px, env(safe-area-inset-top)) + 60px);
       left: max(10px, env(safe-area-inset-left));
-      width: 270px;
+      width: 280px;
       background: var(--bg-panel);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
@@ -180,9 +177,9 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 6px 0;
+      padding: 5px 0;
       border-bottom: 1px solid rgba(255,255,255,0.08);
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 700;
     }
 
@@ -192,8 +189,8 @@
       gap: 6px;
     }
     .step-btn {
-      width: 34px;
-      height: 34px;
+      width: 32px;
+      height: 32px;
       border-radius: 10px;
       border: 1px solid var(--border);
       background: var(--bg-card);
@@ -203,7 +200,6 @@
     }
     .step-btn:disabled { opacity: 0.3; }
 
-    /* BARRA DE DESASTRES ACTIVA / PANEL */
     #disasters-bar {
       position: absolute;
       bottom: max(124px, env(safe-area-inset-bottom) + 114px);
@@ -230,13 +226,13 @@
     }
     .dis-lbl { font-size: 13px; font-weight: 800; color: #fecaca; min-width: 145px; }
     .dis-btn {
-      height: 36px;
-      padding: 0 12px;
+      height: 34px;
+      padding: 0 11px;
       border-radius: 10px;
       border: 1px solid rgba(255,255,255,0.18);
       background: #7f1d1d;
       color: #fee2e2;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 800;
       cursor: pointer;
     }
@@ -247,7 +243,6 @@
       box-shadow: 0 0 12px #f87171;
     }
 
-    /* BARRA INFERIOR DE CONSTRUCCIÓN VISUAL */
     #dock {
       position: absolute;
       bottom: max(10px, env(safe-area-inset-bottom));
@@ -321,7 +316,6 @@
     .card-lbl { font-size: 12px; font-weight: 800; text-align: center; }
     .card-prc { font-size: 11px; font-weight: 700; color: #fbbf24; }
 
-    /* BANNER FLOTANTE CORTO */
     #banner {
       position: absolute;
       top: calc(max(10px, env(safe-area-inset-top)) + 60px);
@@ -342,7 +336,6 @@
     }
     #banner.show { opacity: 1; }
 
-    /* MODAL SIMPLE DE REGIÓN / ERA */
     #modal {
       position: fixed;
       inset: 0;
@@ -403,18 +396,19 @@
     <div id="hud-top">
       <div class="pill-group">
         <span id="era-pill" class="stat">🏰 Era I</span>
-        <span class="stat">🪙 <span id="v-gold">650</span></span>
-        <span class="stat">🪵 <span id="v-wood">140</span></span>
-        <span class="stat">🪨 <span id="v-stone">90</span></span>
-        <span class="stat">🌾 <span id="v-food">48</span></span>
+        <span id="season-pill" class="stat" title="Estación y Temperatura">🌿 20°C</span>
+        <span class="stat">🪙 <span id="v-gold">700</span></span>
+        <span class="stat">🪵 <span id="v-wood">150</span></span>
+        <span class="stat">🪨 <span id="v-stone">100</span></span>
+        <span class="stat">🌾 <span id="v-food">50</span></span>
         <span class="stat">👥 <span id="v-pop">0/0</span></span>
       </div>
 
       <div class="pill-group">
         <button id="btn-workers" class="icon-btn">👷 <span id="v-free">0</span></button>
         <button id="btn-era" class="icon-btn gold">⚔️ Era II</button>
-        <button id="btn-weather" class="icon-btn" title="Alternar Clima Automático">☀️ Clima</button>
-        <button id="btn-disasters" class="icon-btn" title="Panel de Desastres Manuales">⚡ Desastres</button>
+        <button id="btn-weather" class="icon-btn" title="Alternar Clima">☀️ Clima</button>
+        <button id="btn-disasters" class="icon-btn" title="Panel de Desastres">⚡ Desastres</button>
         <button id="btn-undo" class="icon-btn" title="Deshacer">↩️</button>
         <button id="btn-rotate" class="icon-btn" title="Rotar">↻</button>
         <button id="btn-speed" class="icon-btn">▶️</button>
@@ -423,30 +417,31 @@
       </div>
     </div>
 
-    <!-- PANEL DE DESASTRES MANUALES -->
     <aside id="disasters-bar" style="display:none;">
       <div style="font-size:14px;font-weight:900;color:#fca5a5;margin-bottom:4px;display:flex;justify-content:space-between;align-items:center;">
         <span>🔥 Panel Maestro de Desastres</span>
         <button id="btn-close-disasters" class="icon-btn" style="height:28px;min-width:32px;font-size:12px;">✕</button>
       </div>
       <div class="disaster-row">
-        <span class="dis-lbl">🌧️ Lluvia & Marea</span>
+        <span class="dis-lbl">🌧️ Lluvia & Rayos</span>
         <button class="dis-btn" id="db-rain" onclick="window.game.toggleManualDisaster('rain')">Lluvia Suave</button>
         <button class="dis-btn" id="db-storm" onclick="window.game.toggleManualDisaster('storm')">Tormenta Rayos</button>
       </div>
       <div class="disaster-row">
-        <span class="dis-lbl">🌪️ Tornados de Viento</span>
+        <span class="dis-lbl">🌪️ Tornados Viento</span>
         <button class="dis-btn" id="db-tor-soft" onclick="window.game.toggleManualDisaster('tor_soft')">Tornado Suave</button>
         <button class="dis-btn" id="db-tor-strong" onclick="window.game.toggleManualDisaster('tor_strong')">Tornado Fuerte</button>
       </div>
       <div class="disaster-row">
-        <span class="dis-lbl">🏜️ Tormentas de Arena</span>
+        <span class="dis-lbl">🏜️ Arena & Tsunami</span>
         <button class="dis-btn" id="db-sand" onclick="window.game.toggleManualDisaster('sand')">Tormenta Arena</button>
         <button class="dis-btn" id="db-sand-tor" onclick="window.game.toggleManualDisaster('sand_tor')">Tornado Arena</button>
+        <button class="dis-btn" id="db-tsunami" onclick="window.game.toggleManualDisaster('tsunami')">Tsunami</button>
       </div>
       <div class="disaster-row">
-        <span class="dis-lbl">🌊 Megatsunami Costero</span>
-        <button class="dis-btn" id="db-tsunami" onclick="window.game.toggleManualDisaster('tsunami')">Lanzar Tsunami</button>
+        <span class="dis-lbl">🌋 Actividad Sísmica</span>
+        <button class="dis-btn" id="db-quake-soft" onclick="window.game.toggleManualDisaster('quake_soft')">Sismo Moderado</button>
+        <button class="dis-btn" id="db-quake-strong" onclick="window.game.toggleManualDisaster('quake_strong')">Terremoto + Grietas</button>
       </div>
     </aside>
 
@@ -512,18 +507,27 @@
     const MAP_W = 2600;
     const MAP_H = 1950;
     const ROAD_W = 36;
-    const SAVE_KEY = 'arquitecto_ipad_pwa_v2';
+    const SAVE_KEY = 'arquitecto_ipad_pwa_v3';
 
+    // Regiones con riesgos geográficos propios (tsunami, sand, quake, tornado)
     const REGIONS = {
-      valley: { id: 'valley', icon: '🌿', name: 'Valle Verde',   g1: '#5f9e49', g2: '#528c3e', water: '#0284c7', bank: '#e7d39a', trees: 32, rocks: 18, style: 'river' },
-      nordic: { id: 'nordic', icon: '🌲', name: 'Bosque Norte',  g1: '#467a52', g2: '#3a6845', water: '#0369a1', bank: '#cbd5e1', trees: 48, rocks: 22, style: 'fork' },
-      mesa:   { id: 'mesa',   icon: '🏜️', name: 'Meseta Dorada', g1: '#c29b61', g2: '#af884e', water: '#0ea5e9', bank: '#fde68a', trees: 16, rocks: 36, style: 'river' },
-      coast:  { id: 'coast',  icon: '🌊', name: 'Costa Azul',    g1: '#70a348', g2: '#61923b', water: '#0284c7', bank: '#f6df9d', trees: 26, rocks: 22, style: 'bay' }
+      valley: { id: 'valley', icon: '🌿', name: 'Valle Verde',   g1: '#5f9e49', g2: '#528c3e', water: '#0284c7', bank: '#e7d39a', trees: 32, rocks: 18, style: 'river', risks: { tornado: 0.45, quake: 0.30, sand: 0.15, tsunami: 0.10 } },
+      nordic: { id: 'nordic', icon: '🌲', name: 'Bosque Norte',  g1: '#467a52', g2: '#3a6845', water: '#0369a1', bank: '#cbd5e1', trees: 48, rocks: 22, style: 'fork',  risks: { quake: 0.45, tornado: 0.35, tsunami: 0.15, sand: 0.05 } },
+      mesa:   { id: 'mesa',   icon: '🏜️', name: 'Meseta Dorada', g1: '#c29b61', g2: '#af884e', water: '#0ea5e9', bank: '#fde68a', trees: 16, rocks: 36, style: 'river', risks: { sand: 0.55, quake: 0.25, tornado: 0.15, tsunami: 0.05 } },
+      coast:  { id: 'coast',  icon: '🌊', name: 'Costa Azul',    g1: '#70a348', g2: '#61923b', water: '#0284c7', bank: '#f6df9d', trees: 26, rocks: 22, style: 'bay',   risks: { tsunami: 0.50, quake: 0.25, tornado: 0.15, sand: 0.10 } }
     };
 
+    const SEASONS = [
+      { id: 'spring', ico: '🌿', name: 'Primavera', temp: 20, tint: 'rgba(52, 211, 153, 0.04)', leaf1: '#166534', leaf2: '#15803d', snow: false },
+      { id: 'summer', ico: '☀️', name: 'Verano',    temp: 34, tint: 'rgba(251, 191, 36, 0.11)', leaf1: '#4d7c0f', leaf2: '#65a30d', snow: false },
+      { id: 'autumn', ico: '🍂', name: 'Otoño',     temp: 15, tint: 'rgba(217, 119, 6, 0.13)',  leaf1: '#b45309', leaf2: '#d97706', snow: false },
+      { id: 'winter', ico: '❄️', name: 'Invierno',  temp: 2,  tint: 'rgba(186, 230, 253, 0.16)',leaf1: '#334155', leaf2: '#475569', snow: true  }
+    ];
+
+    // Requisitos de Eras ajustados para un avance más fluido
     const ERAS = {
-      1: { name: 'Era I · Medieval',   ico: '🏰', next: 'Era II', req: { pop: 16, gold: 300, wood: 80, stone: 60 } },
-      2: { name: 'Era II · Industrial',ico: '⚙️', next: 'Era III',req: { pop: 48, gold: 850, wood: 150, stone: 130 } },
+      1: { name: 'Era I · Medieval',   ico: '🏰', next: 'Era II', req: { pop: 12, gold: 200, wood: 50, stone: 40 } },
+      2: { name: 'Era II · Industrial',ico: '⚙️', next: 'Era III',req: { pop: 32, gold: 520, wood: 100, stone: 85 } },
       3: { name: 'Era III · Moderna',  ico: '🏙️', next: 'Máxima', req: null }
     };
 
@@ -531,6 +535,7 @@
       wood:  { ico: '🪓', name: 'Leñadores' },
       stone: { ico: '⛏️', name: 'Canteros' },
       farm:  { ico: '🌾', name: 'Granjeros' },
+      eng:   { ico: '👷‍♂️', name: 'Ingenieros' },
       guard: { ico: '⚔️', name: 'Caballeros' },
       fire:  { ico: '🚒', name: 'Bomberos' },
       civic: { ico: '⚕️', name: 'Cívicos' }
@@ -544,33 +549,34 @@
       modern_road: { sec: 'roads', kind: 'road', tier: 4, era: 3, ico: '🛣️', name: 'Asfalto',    cost: { gold: 65, stone: 16 } },
 
       // CASAS
-      hut:         { sec: 'houses', kind: 'bldg', era: 1, ico: '🛖', name: 'Choza',      w: 50, h: 46, cost: { gold: 50, wood: 12 }, pop: 6, tax: 7 },
-      manor:       { sec: 'houses', kind: 'bldg', era: 1, ico: '🏡', name: 'Casona',     w: 62, h: 54, cost: { gold: 110, wood: 24, stone: 10 }, pop: 14, tax: 16 },
-      brick_house: { sec: 'houses', kind: 'bldg', era: 2, ico: '🏘️', name: 'Victoriana', w: 68, h: 58, cost: { gold: 210, wood: 25, stone: 28 }, pop: 28, tax: 36 },
-      apartments:  { sec: 'houses', kind: 'bldg', era: 2, ico: '🏢', name: 'Bloque',     w: 78, h: 64, cost: { gold: 340, wood: 30, stone: 45 }, pop: 46, tax: 58 },
-      condo:       { sec: 'houses', kind: 'bldg', era: 3, ico: '🏬', name: 'Condominio', w: 82, h: 70, cost: { gold: 540, wood: 28, stone: 68 }, pop: 76, tax: 105 },
-      tower:       { sec: 'houses', kind: 'bldg', era: 3, ico: '🏙️', name: 'Torre',      w: 92, h: 82, cost: { gold: 920, wood: 36, stone: 115 }, pop: 140, tax: 200 },
+      hut:         { sec: 'houses', kind: 'bldg', era: 1, ico: '🛖', name: 'Choza',      w: 50, h: 46, cost: { gold: 50, wood: 12 }, pop: 6, tax: 8 },
+      manor:       { sec: 'houses', kind: 'bldg', era: 1, ico: '🏡', name: 'Casona',     w: 62, h: 54, cost: { gold: 110, wood: 24, stone: 10 }, pop: 14, tax: 18 },
+      brick_house: { sec: 'houses', kind: 'bldg', era: 2, ico: '🏘️', name: 'Victoriana', w: 68, h: 58, cost: { gold: 210, wood: 25, stone: 28 }, pop: 28, tax: 38 },
+      apartments:  { sec: 'houses', kind: 'bldg', era: 2, ico: '🏢', name: 'Bloque',     w: 78, h: 64, cost: { gold: 340, wood: 30, stone: 45 }, pop: 46, tax: 62 },
+      condo:       { sec: 'houses', kind: 'bldg', era: 3, ico: '🏬', name: 'Condominio', w: 82, h: 70, cost: { gold: 540, wood: 28, stone: 68 }, pop: 76, tax: 110 },
+      tower:       { sec: 'houses', kind: 'bldg', era: 3, ico: '🏙️', name: 'Torre',      w: 92, h: 82, cost: 920, wood: 36, stone: 115 }, pop: 140, tax: 210 },
 
-      // PRODUCCIÓN
-      lumber:      { sec: 'prod', kind: 'bldg', era: 1, ico: '🪓', name: 'Leñador',    w: 64, h: 54, cost: { gold: 70, wood: 10 }, role: 'wood', slots: 3, near: 'tree', outW: 6 },
-      quarry:      { sec: 'prod', kind: 'bldg', era: 1, ico: '⛏️', name: 'Cantera',    w: 70, h: 58, cost: { gold: 90, wood: 16 }, role: 'stone', slots: 3, near: 'rock', outS: 6, outG: 4 },
-      farm:        { sec: 'prod', kind: 'bldg', era: 1, ico: '🌾', name: 'Granja',     w: 86, h: 68, cost: { gold: 75, wood: 15 }, role: 'farm', slots: 3, outF: 8, outG: 6 },
-      sawmill:     { sec: 'prod', kind: 'bldg', era: 2, ico: '⚙️', name: 'Aserradero', w: 78, h: 64, cost: { gold: 230, wood: 22, stone: 28 }, role: 'wood', slots: 5, outW: 15, outG: 12 },
-      mine:        { sec: 'prod', kind: 'bldg', era: 2, ico: '🪨', name: 'Mina',       w: 80, h: 66, cost: { gold: 280, wood: 32, stone: 24 }, role: 'stone', slots: 5, near: 'rock', outS: 14, outG: 24 },
-      power:       { sec: 'prod', kind: 'bldg', era: 3, ico: '⚡', name: 'Eléctrica',  w: 94, h: 76, cost: { gold: 650, wood: 28, stone: 90 }, role: 'civic', slots: 4, outG: 40, boost: true },
+      // PRODUCCIÓN E INGENIERÍA
+      lumber:      { sec: 'prod', kind: 'bldg', era: 1, ico: '🪓', name: 'Leñador',    w: 64, h: 54, cost: { gold: 70, wood: 10 }, role: 'wood', slots: 3, near: 'tree', outW: 7 },
+      quarry:      { sec: 'prod', kind: 'bldg', era: 1, ico: '⛏️', name: 'Cantera',    w: 70, h: 58, cost: { gold: 90, wood: 16 }, role: 'stone', slots: 3, near: 'rock', outS: 7, outG: 5 },
+      farm:        { sec: 'prod', kind: 'bldg', era: 1, ico: '🌾', name: 'Granja',     w: 86, h: 68, cost: { gold: 75, wood: 15 }, role: 'farm', slots: 3, outF: 9, outG: 7 },
+      workshop:    { sec: 'prod', kind: 'bldg', era: 1, ico: '🏗️', name: 'Ingeniería', w: 68, h: 58, cost: { gold: 100, wood: 16, stone: 14 }, role: 'eng', slots: 3 },
+      sawmill:     { sec: 'prod', kind: 'bldg', era: 2, ico: '⚙️', name: 'Aserradero', w: 78, h: 64, cost: { gold: 230, wood: 22, stone: 28 }, role: 'wood', slots: 5, outW: 16, outG: 14 },
+      mine:        { sec: 'prod', kind: 'bldg', era: 2, ico: '🪨', name: 'Mina',       w: 80, h: 66, cost: { gold: 280, wood: 32, stone: 24 }, role: 'stone', slots: 5, near: 'rock', outS: 15, outG: 26 },
+      power:       { sec: 'prod', kind: 'bldg', era: 3, ico: '⚡', name: 'Eléctrica',  w: 94, h: 76, cost: { gold: 650, wood: 28, stone: 90 }, role: 'civic', slots: 4, outG: 45, boost: true },
 
       // GUARDIA Y SERVICIOS
       keep:        { sec: 'serv', kind: 'bldg', era: 1, ico: '🛡️', name: 'Cuartel',    w: 68, h: 68, cost: { gold: 120, wood: 18, stone: 25 }, role: 'guard', slots: 3 },
       well:        { sec: 'serv', kind: 'bldg', era: 1, ico: '🪣', name: 'Bomberos',   w: 54, h: 54, cost: { gold: 80, wood: 12, stone: 14 }, role: 'fire', slots: 2 },
-      market:      { sec: 'serv', kind: 'bldg', era: 1, ico: '⚖️', name: 'Mercado',    w: 78, h: 66, cost: { gold: 135, wood: 22, stone: 14 }, role: 'farm', slots: 3, outG: 26, outF: 5 },
+      market:      { sec: 'serv', kind: 'bldg', era: 1, ico: '⚖️', name: 'Mercado',    w: 78, h: 66, cost: { gold: 135, wood: 22, stone: 14 }, role: 'farm', slots: 3, outG: 28, outF: 6 },
       fire_hq:     { sec: 'serv', kind: 'bldg', era: 2, ico: '🚒', name: 'Estación',   w: 76, h: 62, cost: { gold: 250, wood: 24, stone: 36 }, role: 'fire', slots: 4 },
       school:      { sec: 'serv', kind: 'bldg', era: 2, ico: '📜', name: 'Escuela',    w: 74, h: 60, cost: { gold: 230, wood: 28, stone: 28 }, role: 'civic', slots: 3 },
       hospital:    { sec: 'serv', kind: 'bldg', era: 3, ico: '🏥', name: 'Hospital',   w: 88, h: 72, cost: { gold: 600, wood: 28, stone: 82 }, role: 'civic', slots: 5 },
 
       // OBRAS
-      repair:      { sec: 'tools', kind: 'tool', tool: 'repair',  era: 1, ico: '🔨', name: 'Reparar', cost: { gold: 15, wood: 5 } },
-      upgrade:     { sec: 'tools', kind: 'tool', tool: 'upgrade', era: 1, ico: '⬆️', name: 'Mejorar', cost: { gold: 20, stone: 5 } },
-      demolish:    { sec: 'tools', kind: 'tool', tool: 'demolish',era: 1, ico: '🚜', name: 'Demoler', cost: {} }
+      repair:      { sec: 'tools', kind: 'tool', tool: 'repair',  era: 1, ico: '🔨', name: 'Reparar / Sellar', cost: { gold: 15, wood: 5 } },
+      upgrade:     { sec: 'tools', kind: 'tool', tool: 'upgrade', era: 1, ico: '⬆️', name: 'Mejorar Calle',    cost: { gold: 20, stone: 5 } },
+      demolish:    { sec: 'tools', kind: 'tool', tool: 'demolish',era: 1, ico: '🚜', name: 'Demoler',          cost: {} }
     };
 
     const dist = (ax, ay, bx, by) => Math.hypot(bx - ax, by - ay);
@@ -651,15 +657,20 @@
         this.uid = 1;
         this.regId = regId || 'valley';
         this.era = 1;
-        this.res = { gold: 650, wood: 140, stone: 90, food: 48 };
+        this.res = { gold: 700, wood: 150, stone: 100, food: 50 };
         this.pop = 0;
         this.popCap = 0;
-        this.workers = { wood: 0, stone: 0, farm: 0, guard: 0, fire: 0, civic: 0 };
+        this.workers = { wood: 0, stone: 0, farm: 0, eng: 0, guard: 0, fire: 0, civic: 0 };
         this.nodes = [];
         this.roads = [];
         this.bldgs = [];
         this.agents = [];
         this.history = [];
+
+        // Estaciones y temperatura
+        this.seasonIdx = 0;
+        this.seasonTimer = 75;
+        this.temperature = 20;
 
         this.weather = {
           mode: 'auto',
@@ -680,19 +691,30 @@
             vx: 300 + Math.random() * 200,
             vy: 20 + Math.random() * 30,
             size: 1.5 + Math.random() * 2
+          })),
+          windGusts: Array.from({ length: 45 }, () => ({
+            x: Math.random() * 1400,
+            y: Math.random() * 1000,
+            len: 35 + Math.random() * 45,
+            spd: 380 + Math.random() * 220
           }))
         };
 
         this.activeDisaster = null;
         this.tornado = null;
+        this.windWarning = 0;
+        this.shakeTimer = 0;
+        this.shakeMag = 0;
+        this.fissures = [];     // Grietas en el terreno por terremotos
         this.brownScars = [];
         this.tsunamiWave = null;
         this.sandIntensity = 0;
 
         this.prodT = 4.5;
-        this.fireT = 105;
+        this.fireT = 130;
         this.saveT = 15;
-        this.tornadoTimer = 95;
+        // Desastre sorpresa cada ~5 minutos (300 segundos) sin temporizador visible
+        this.surpriseTimer = 280 + Math.random() * 40;
 
         this.buildNature(this.regId);
         this.cam.x = MAP_W * 0.48;
@@ -774,13 +796,28 @@
         return false;
       }
 
+      onFissure(x, y, margin = 18) {
+        for (const f of this.fissures) {
+          for (let i = 0; i < f.pts.length - 1; i++) {
+            const p1 = f.pts[i], p2 = f.pts[i + 1];
+            if (projSeg(x, y, p1.x, p1.y, p2.x, p2.y).d < margin) return f;
+          }
+        }
+        return null;
+      }
+
       renderBg() {
         const reg = REGIONS[this.regId] || REGIONS.valley;
+        const season = SEASONS[this.seasonIdx] || SEASONS[0];
         const c = this.bgCtx;
         const g = c.createLinearGradient(0, 0, MAP_W, MAP_H);
         g.addColorStop(0, reg.g1);
         g.addColorStop(1, reg.g2);
         c.fillStyle = g;
+        c.fillRect(0, 0, MAP_W, MAP_H);
+
+        // Tinte estacional del terreno
+        c.fillStyle = season.tint;
         c.fillRect(0, 0, MAP_W, MAP_H);
 
         for (let x = 110; x < MAP_W; x += 220) {
@@ -825,15 +862,25 @@
             c.fillStyle = '#facc15';
             c.beginPath(); c.arc(r.x + r.r * 0.3, r.y + r.r * 0.1, 3.8, 0, Math.PI * 2); c.fill();
           }
+          if (season.snow) {
+            c.fillStyle = 'rgba(248, 250, 252, 0.78)';
+            c.beginPath(); c.arc(r.x - 2, r.y - 3, r.r * 0.65, Math.PI, Math.PI * 2); c.fill();
+          }
         }
 
+        // Árboles con paleta estacional y nieve en invierno
         for (const t of this.trees) {
           c.fillStyle = 'rgba(0,0,0,0.20)';
           c.beginPath(); c.arc(t.x + 3, t.y + 4, t.r, 0, Math.PI * 2); c.fill();
-          c.fillStyle = t.s > 0.5 ? '#166534' : '#15803d';
+          c.fillStyle = t.s > 0.5 ? season.leaf1 : season.leaf2;
           c.beginPath(); c.arc(t.x, t.y, t.r, 0, Math.PI * 2); c.fill();
-          c.fillStyle = 'rgba(134,239,172,0.25)';
-          c.beginPath(); c.arc(t.x - t.r * 0.25, t.y - t.r * 0.25, t.r * 0.42, 0, Math.PI * 2); c.fill();
+          if (season.snow) {
+            c.fillStyle = 'rgba(248, 250, 252, 0.85)';
+            c.beginPath(); c.arc(t.x - 1, t.y - 2, t.r * 0.75, 0, Math.PI * 2); c.fill();
+          } else {
+            c.fillStyle = 'rgba(255,255,255,0.18)';
+            c.beginPath(); c.arc(t.x - t.r * 0.25, t.y - t.r * 0.25, t.r * 0.42, 0, Math.PI * 2); c.fill();
+          }
         }
 
         c.strokeStyle = 'rgba(17,24,39,0.75)';
@@ -898,6 +945,15 @@
         return false;
       }
 
+      crossesFissure(ax, ay, bx, by) {
+        const steps = Math.max(2, Math.ceil(dist(ax, ay, bx, by) / 16));
+        for (let i = 0; i <= steps; i++) {
+          const t = i / steps;
+          if (this.onFissure(ax + (bx - ax) * t, ay + (by - ay) * t, 16)) return true;
+        }
+        return false;
+      }
+
       canAfford(cost, mult = 1) {
         return this.res.gold >= Math.round((cost.gold || 0) * mult)
             && this.res.wood >= Math.round((cost.wood || 0) * mult)
@@ -924,6 +980,10 @@
       buildRoadSegment(sSnap, eSnap, spec) {
         const len = dist(sSnap.x, sSnap.y, eSnap.x, eSnap.y);
         if (len < 42) return;
+        if (this.crossesFissure(sSnap.x, sSnap.y, eSnap.x, eSnap.y)) {
+          this.showBanner('⚠️ Grieta en el terreno · Séllala con 🔨 e Ingenieros');
+          return;
+        }
         const mult = Math.max(1, (len / 120) * (this.crossesWater(sSnap.x, sSnap.y, eSnap.x, eSnap.y) ? 1.5 : 1));
         if (!this.canAfford(spec.cost, mult)) {
           this.showBanner(`Falta ${this.costText(spec.cost, mult)}`);
@@ -953,6 +1013,7 @@
         for (const p of [...box, { x: wx, y: wy }]) {
           if (p.x < 40 || p.x > MAP_W - 40 || p.y < 40 || p.y > MAP_H - 40) return { ok: false, msg: 'Fuera del mapa', ang };
           if (this.inWater(p.x, p.y, 4)) return { ok: false, msg: 'No en el agua', ang };
+          if (this.onFissure(p.x, p.y, 16)) return { ok: false, msg: 'Grieta sísmica · Séllala primero', ang };
         }
         if (spec.near === 'tree' && !this.trees.some(t => dist(wx, wy, t.x, t.y) < 175)) {
           return { ok: false, msg: 'Ponlo junto a árboles 🌲', ang };
@@ -1015,17 +1076,38 @@
         }
 
         if (spec.tool === 'repair') {
-          if (!targetB) { this.showBanner('Toca un edificio dañado o con polvo'); return; }
+          // 1. Verificar si toca una grieta sísmica
+          const fis = this.onFissure(wx, wy, 28);
+          if (fis) {
+            if (this.workers.eng <= 0) {
+              this.showBanner('👷‍♂️ Necesitas al menos 1 Ingeniero asignado para sellar grietas');
+              return;
+            }
+            const sealCost = { gold: 45, stone: 15 };
+            if (!this.canAfford(sealCost)) {
+              this.showBanner(`Falta ${this.costText(sealCost)} para sellar grieta`);
+              return;
+            }
+            this.pay(sealCost);
+            this.fissures = this.fissures.filter(f => f.id !== fis.id);
+            this.updateHUD();
+            this.showBanner('👷‍♂️✨ ¡Grieta sísmica sellada por los Ingenieros!');
+            return;
+          }
+
+          // 2. Reparar edificio dañado
+          if (!targetB) { this.showBanner('Toca un edificio dañado o una grieta'); return; }
           if (!targetB.damaged && !targetB.dusty && !targetB.fire) { this.showBanner('Este edificio está impecable'); return; }
-          if (!this.canAfford(spec.cost)) { this.showBanner(`Falta ${this.costText(spec.cost)}`); return; }
-          this.pay(spec.cost);
+          const mult = this.workers.eng > 0 ? 0.65 : 1.0;
+          if (!this.canAfford(spec.cost, mult)) { this.showBanner(`Falta ${this.costText(spec.cost, mult)}`); return; }
+          this.pay(spec.cost, mult);
           targetB.damaged = false;
           targetB.dusty = false;
           targetB.fire = false;
           targetB.hp = 100;
           this.recalcPop();
           this.updateHUD();
-          this.showBanner('✨ ¡Edificio reparado y limpio!');
+          this.showBanner(this.workers.eng > 0 ? '👷‍♂️✨ ¡Reparado con descuento de Ingeniería!' : '✨ ¡Edificio reparado y limpio!');
           return;
         }
 
@@ -1095,7 +1177,7 @@
       }
 
       getSlots() {
-        const s = { wood: 0, stone: 0, farm: 0, guard: 0, fire: 0, civic: 0 };
+        const s = { wood: 0, stone: 0, farm: 0, eng: 0, guard: 0, fire: 0, civic: 0 };
         for (const b of this.bldgs) {
           const sp = ITEMS[b.type];
           if (sp && sp.role && !b.fire) s[sp.role] += sp.slots;
@@ -1128,7 +1210,7 @@
         const slots = this.getSlots();
         for (const k of Object.keys(ROLES)) this.workers[k] = 0;
         let free = Math.floor(this.pop);
-        const order = ['farm', 'wood', 'stone', 'fire', 'guard', 'civic'];
+        const order = ['farm', 'wood', 'stone', 'eng', 'fire', 'guard', 'civic'];
         let moved = true;
         while (free > 0 && moved) {
           moved = false;
@@ -1145,7 +1227,7 @@
       }
 
       // =========================================================================
-      // GESTIÓN DE DESASTRES Y CLIMA MASIVO
+      // DESASTRES, TERREMOTOS Y ESTACIONES
       // =========================================================================
       toggleWeatherMode() {
         if (this.activeDisaster) {
@@ -1155,11 +1237,11 @@
         if (this.weather.mode === 'auto') {
           this.weather.mode = 'manual';
           document.getElementById('disasters-bar').style.display = 'flex';
-          this.showBanner('⚡ Panel de Desastres Abierto · Lanza lo que quieras');
+          this.showBanner('⚡ Panel de Desastres Abierto');
         } else {
           this.weather.mode = 'auto';
           document.getElementById('disasters-bar').style.display = 'none';
-          this.showBanner('🔄 Clima Dinámico Automático');
+          this.showBanner('🔄 Clima y Desastres Sorpresa Activos');
         }
         this.updateHUD();
       }
@@ -1177,25 +1259,29 @@
         if (disKey === 'rain') {
           this.weather.state = 'rain';
           this.weather.timer = 99999;
-          this.showBanner('🌧️ Modo Lluvia Continua & Marea Suave');
+          this.showBanner('🌧️ Lluvia Suave & Subida de Marea');
         } else if (disKey === 'storm') {
           this.weather.state = 'storm';
           this.weather.timer = 99999;
           this.spawnLightningBolt();
-          this.showBanner('⛈️ Modo Tormenta Eléctrica Continua');
+          this.showBanner('⛈️ Tormenta Eléctrica');
         } else if (disKey === 'tor_soft') {
-          this.spawnTornado(false);
+          this.triggerWindWarningAndTornado(false);
         } else if (disKey === 'tor_strong') {
-          this.spawnTornado(true);
+          this.triggerWindWarningAndTornado(true);
         } else if (disKey === 'sand') {
           this.weather.state = 'sand';
           this.weather.timer = 99999;
-          this.showBanner('🏜️ Tormenta de Arena del Desierto');
+          this.showBanner('🏜️ Tormenta de Arena');
         } else if (disKey === 'sand_tor') {
           this.weather.state = 'sand';
           this.spawnSandTornado();
         } else if (disKey === 'tsunami') {
           this.launchTsunami();
+        } else if (disKey === 'quake_soft') {
+          this.triggerEarthquake(false);
+        } else if (disKey === 'quake_strong') {
+          this.triggerEarthquake(true);
         }
         this.updateHUD();
       }
@@ -1203,10 +1289,91 @@
       stopAllDisasters() {
         this.activeDisaster = null;
         this.tornado = null;
+        this.windWarning = 0;
         this.weather.state = 'clear';
         this.weather.timer = 45;
         this.tsunamiWave = null;
         this.updateHUD();
+      }
+
+      triggerWindWarningAndTornado(isStrong) {
+        this.windWarning = 4.0;
+        this.pendingTornadoStrong = isStrong;
+        this.showBanner('🌬️ Ráfagas de viento fuertes... ¡Se acerca un tornado!');
+      }
+
+      triggerSurpriseDisaster() {
+        const reg = REGIONS[this.regId] || REGIONS.valley;
+        const r = Math.random();
+        const { tsunami, sand, quake, tornado } = reg.risks;
+        if (r < tsunami) {
+          this.launchTsunami();
+        } else if (r < tsunami + sand) {
+          if (Math.random() < 0.5) {
+            this.weather.state = 'sand';
+            this.weather.timer = 35;
+            this.showBanner('🏜️ ¡Tormenta de arena inesperada!');
+          } else {
+            this.spawnSandTornado();
+          }
+        } else if (r < tsunami + sand + quake) {
+          this.triggerEarthquake(Math.random() < 0.45);
+        } else {
+          this.triggerWindWarningAndTornado(Math.random() < 0.4);
+        }
+      }
+
+      triggerEarthquake(isMajor = false) {
+        this.shakeTimer = isMajor ? 5.5 : 3.5;
+        this.shakeMag = isMajor ? 16 : 8;
+        this.activeDisaster = isMajor ? 'quake_strong' : 'quake_soft';
+
+        // Dañar edificios aleatoriamente
+        const dmgChance = isMajor ? 0.48 : 0.25;
+        let hitCount = 0;
+        for (const b of this.bldgs) {
+          if (Math.random() < dmgChance) {
+            b.damaged = true;
+            hitCount++;
+          }
+        }
+
+        // Si es terremoto fuerte, abrir una grieta permanente en el suelo
+        if (isMajor) {
+          const cx = Math.max(350, Math.min(MAP_W - 350, this.cam.x + (Math.random() - 0.5) * 650));
+          const cy = Math.max(300, Math.min(MAP_H - 300, this.cam.y + (Math.random() - 0.5) * 500));
+          const pts = [{ x: cx - 140, y: cy - 35 }];
+          for (let i = 1; i <= 5; i++) {
+            pts.push({
+              x: cx - 140 + i * 56,
+              y: cy + (Math.random() - 0.5) * 90
+            });
+          }
+          const fis = { id: this.uid++, pts };
+          this.fissures.push(fis);
+
+          // Romper calles que crucen la grieta
+          for (let i = this.roads.length - 1; i >= 0; i--) {
+            const rd = this.roads[i];
+            const a = this.getNode(rd.a), b = this.getNode(rd.b);
+            if (a && b && this.crossesFissure(a.x, a.y, b.x, b.y)) {
+              this.roads.splice(i, 1);
+            }
+          }
+          this.nodes = this.nodes.filter(n => this.roads.some(r => r.a === n.id || r.b === n.id));
+          this.showBanner(`🌋 ¡TERREMOTO FUERTE! Abrió una grieta y dañó ${hitCount} edificios`);
+        } else {
+          this.showBanner(`🫨 Sismo moderado · ${hitCount} edificios necesitan reparación`);
+        }
+
+        this.recalcPop();
+        this.updateHUD();
+        setTimeout(() => {
+          if (this.activeDisaster === 'quake_soft' || this.activeDisaster === 'quake_strong') {
+            this.activeDisaster = null;
+            this.updateHUD();
+          }
+        }, 5600);
       }
 
       spawnLightningBolt() {
@@ -1238,7 +1405,7 @@
           ty,
           isSand: false,
           strong: isStrong,
-          life: isStrong ? 25 : 20,
+          life: isStrong ? 24 : 18,
           angle: 0,
           scarTimer: 0,
           hitIds: new Set()
@@ -1246,8 +1413,8 @@
 
         this.showBanner(
           isStrong
-            ? '🌪️ ¡Tornado de Viento FUERTE! Destruye edificios y deja tierra café'
-            : '🌪️ Tornado de Viento Suave · Daña edificios (repáralos con 🔨)'
+            ? '🌪️ ¡Tornado FUERTE! Destruye edificios a su paso'
+            : '🌪️ Tornado Suave · Daña edificios (repáralos con 🔨)'
         );
         this.updateHUD();
       }
@@ -1265,12 +1432,12 @@
           ty,
           isSand: true,
           strong: true,
-          life: 28,
+          life: 26,
           angle: 0,
           scarTimer: 0,
           hitIds: new Set()
         };
-        this.showBanner('🌪️🏜️ ¡Tornado de Arena Gigante! Cubre todo de polvo');
+        this.showBanner('🌪️🏜️ ¡Tornado de Arena! Cubre la ciudad de polvo');
         this.updateHUD();
       }
 
@@ -1281,41 +1448,68 @@
           speed: 190,
           stage: 'approaching'
         };
-        this.showBanner('🌊⚠️ ¡ALERTA DE TSUNAMI! Una ola gigante avanza desde el este');
+        this.showBanner('🌊⚠️ ¡ALERTA DE TSUNAMI! Ola gigante aproximándose');
       }
 
       updateWeatherAndDisasters(dt) {
-        if (this.weather.mode === 'auto') {
-          if (!this.activeDisaster) {
-            this.weather.timer -= dt;
-            if (this.weather.timer <= 0) {
-              if (this.weather.state === 'clear') {
-                this.weather.state = Math.random() < 0.6 ? 'rain' : 'sand';
-                this.weather.timer = 35 + Math.random() * 25;
-              } else if (this.weather.state === 'rain') {
-                this.weather.state = Math.random() < 0.5 ? 'storm' : 'clear';
-                this.weather.timer = 30 + Math.random() * 20;
-              } else if (this.weather.state === 'storm') {
-                this.weather.state = 'clear';
-                this.weather.timer = 40 + Math.random() * 20;
-              } else if (this.weather.state === 'sand') {
-                this.weather.state = Math.random() < 0.4 ? 'clear' : 'rain';
-                this.weather.timer = 30 + Math.random() * 20;
-              }
-              this.updateHUD();
+        // Ciclo de Estaciones (Primavera -> Verano -> Otoño -> Invierno)
+        this.seasonTimer -= dt;
+        if (this.seasonTimer <= 0) {
+          this.seasonTimer = 75;
+          this.seasonIdx = (this.seasonIdx + 1) % SEASONS.length;
+          this.bgDirty = true;
+          const s = SEASONS[this.seasonIdx];
+          this.showBanner(`${s.ico} Comienza el ${s.name} (${s.temp}°C)`);
+        }
+
+        // Temperatura actual según estación y clima
+        const baseTemp = SEASONS[this.seasonIdx].temp;
+        const weatherOffset = (this.weather.state === 'rain' || this.weather.state === 'storm') ? -5 : (this.weather.state === 'sand' ? 4 : 0);
+        this.temperature += ((baseTemp + weatherOffset) - this.temperature) * Math.min(1, dt * 0.4);
+
+        // Desastre sorpresa cada ~5 minutos (oculto)
+        if (this.weather.mode === 'auto' && this.bldgs.length >= 3 && !this.activeDisaster && !this.tornado && this.windWarning <= 0) {
+          this.surpriseTimer -= dt;
+          if (this.surpriseTimer <= 0) {
+            this.surpriseTimer = 280 + Math.random() * 40;
+            this.triggerSurpriseDisaster();
+          }
+        }
+
+        // Pre-aviso de ráfagas de viento antes de tornado
+        if (this.windWarning > 0) {
+          this.windWarning -= dt;
+          for (const g of this.weather.windGusts) {
+            g.x -= g.spd * dt;
+            if (g.x < -80) {
+              g.x = this.cam.vw + Math.random() * 120;
+              g.y = Math.random() * this.cam.vh;
             }
           }
+          if (this.windWarning <= 0) {
+            this.spawnTornado(this.pendingTornadoStrong);
+          }
+        }
 
-          if (this.bldgs.length >= 4 && !this.activeDisaster) {
-            this.tornadoTimer -= dt;
-            if (this.tornadoTimer <= 0) {
-              this.tornadoTimer = 105 + Math.random() * 50;
-              const r = Math.random();
-              if (r < 0.35) this.spawnTornado(false);
-              else if (r < 0.6) this.spawnTornado(true);
-              else if (r < 0.8) this.spawnSandTornado();
-              else this.launchTsunami();
+        // Vibración de terremoto
+        if (this.shakeTimer > 0) {
+          this.shakeTimer = Math.max(0, this.shakeTimer - dt);
+        }
+
+        if (this.weather.mode === 'auto' && !this.activeDisaster) {
+          this.weather.timer -= dt;
+          if (this.weather.timer <= 0) {
+            if (this.weather.state === 'clear') {
+              this.weather.state = Math.random() < 0.65 ? 'rain' : 'sand';
+              this.weather.timer = 35 + Math.random() * 20;
+            } else if (this.weather.state === 'rain') {
+              this.weather.state = Math.random() < 0.45 ? 'storm' : 'clear';
+              this.weather.timer = 30 + Math.random() * 20;
+            } else {
+              this.weather.state = 'clear';
+              this.weather.timer = 45 + Math.random() * 20;
             }
+            this.updateHUD();
           }
         }
 
@@ -1345,7 +1539,7 @@
               p.y = Math.random() * this.cam.vh;
             }
           }
-          if (Math.random() < dt * 0.4 && this.bldgs.length > 0) {
+          if (Math.random() < dt * 0.35 && this.bldgs.length > 0) {
             const b = this.bldgs[Math.floor(Math.random() * this.bldgs.length)];
             b.dusty = true;
           }
@@ -1412,7 +1606,7 @@
               } else {
                 b.damaged = true;
                 this.recalcPop();
-                this.showBanner('🔨 Edificio dañado por tornado · Repáralo en Obras');
+                this.showBanner('🔨 Edificio dañado · Repáralo en Obras');
               }
             }
           }
@@ -1433,7 +1627,7 @@
             w.x -= w.speed * dt;
             if (w.x <= impactLine) {
               w.stage = 'crashing';
-              this.showBanner('🌊 ¡EL TSUNAMI INUNDA LA ZONA ORIENTAL!');
+              this.showBanner('🌊 ¡EL TSUNAMI INUNDA LA ZONA COSTERA!');
               for (let i = this.bldgs.length - 1; i >= 0; i--) {
                 const b = this.bldgs[i];
                 if (b.x > impactLine - 280 || this.inWater(b.x, b.y, 40)) {
@@ -1449,7 +1643,7 @@
             if (w.width > 1200) {
               this.tsunamiWave = null;
               if (this.activeDisaster === 'tsunami') this.activeDisaster = null;
-              this.showBanner('🌊 El agua del tsunami se retira poco a poco');
+              this.showBanner('🌊 El agua del tsunami se retira');
               this.updateHUD();
             }
           }
@@ -1467,7 +1661,7 @@
 
         if (this.pop < this.popCap && this.res.food > 0) {
           const prev = Math.floor(this.pop);
-          this.pop = Math.min(this.popCap, this.pop + dt * 1.2);
+          this.pop = Math.min(this.popCap, this.pop + dt * 1.35);
           if (Math.floor(this.pop) > prev) this.renderWorkers();
         }
 
@@ -1476,14 +1670,20 @@
           this.prodT = 4.5;
           const slots = this.getSlots();
           const ratio = r => slots[r] ? Math.min(1, this.workers[r] / slots[r]) : 0;
-          const civicMult = 1 + ratio('civic') * 0.25 + (this.bldgs.some(b => b.type === 'power' && !b.fire) && ratio('civic') > 0 ? 0.35 : 0);
+
+          // Supervivencia al frío (< 6°C) o calor extremo (> 31°C)
+          const extremeTemp = this.temperature <= 6 || this.temperature >= 31;
+          const climateProtection = ratio('civic') >= 0.4 || this.bldgs.some(b => b.type === 'power' && !b.fire);
+          const climateMult = (extremeTemp && !climateProtection) ? 0.72 : 1.0;
+
+          const civicMult = (1 + ratio('civic') * 0.25 + (this.bldgs.some(b => b.type === 'power' && !b.fire) && ratio('civic') > 0 ? 0.35 : 0)) * climateMult;
 
           let dg = 0, dw = 0, ds = 0, df = 0;
           for (const b of this.bldgs) {
             if (b.fire) continue;
             const dmgMult = b.damaged ? 0.45 : (b.dusty ? 0.75 : 1.0);
             const sp = ITEMS[b.type];
-            if (sp.pop && this.pop > 0) dg += sp.tax * Math.min(1, this.pop / Math.max(1, this.popCap)) * dmgMult;
+            if (sp.pop && this.pop > 0) dg += sp.tax * Math.min(1, this.pop / Math.max(1, this.popCap)) * dmgMult * climateMult;
             if (sp.role && ratio(sp.role) > 0) {
               const f = ratio(sp.role) * civicMult * dmgMult;
               if (sp.outW) dw += sp.outW * f;
@@ -1501,7 +1701,7 @@
         if (this.bldgs.length >= 4 && this.pop >= 12 && !this.activeDisaster) {
           this.fireT -= dt;
           if (this.fireT <= 0) {
-            this.fireT = 110;
+            this.fireT = 135;
             this.triggerFire();
           }
         }
@@ -1611,11 +1811,9 @@
         requestAnimationFrame(t => this.loop(t));
       }
 
-      // =========================================================================
-      // DIBUJO DETALLADO DE EDIFICIOS
-      // =========================================================================
       drawDetailedBuilding(c, b) {
         const hw = b.w * 0.5, hh = b.h * 0.5;
+        const isWinter = SEASONS[this.seasonIdx]?.snow;
 
         c.fillStyle = 'rgba(0,0,0,0.28)';
         c.roundRect(-hw + 4, -hh + 4, b.w, b.h, 6);
@@ -1669,6 +1867,18 @@
             c.strokeStyle = '#fef08a';
             c.lineWidth = 1.5;
             c.strokeRect(hw - 20, -hh + 6, 14, b.h - 12);
+            break;
+          }
+
+          case 'workshop': {
+            c.fillStyle = '#334155';
+            c.roundRect(-hw, -hh, b.w, b.h, 6); c.fill();
+            c.fillStyle = '#d97706';
+            c.fillRect(-hw + 5, -hh + 5, b.w - 10, b.h - 10);
+            c.strokeStyle = '#fef08a';
+            c.lineWidth = 2.5;
+            c.beginPath(); c.moveTo(-hw + 8, -hh + 8); c.lineTo(hw - 8, hh - 8); c.stroke();
+            c.beginPath(); c.moveTo(hw - 8, -hh + 8); c.lineTo(-hw + 8, hh - 8); c.stroke();
             break;
           }
 
@@ -1822,6 +2032,13 @@
           }
         }
 
+        // Nieve sutil en los techos durante el invierno
+        if (isWinter) {
+          c.fillStyle = 'rgba(248, 250, 252, 0.32)';
+          c.roundRect(-hw + 2, -hh + 2, b.w - 4, (b.h - 4) * 0.45, 4);
+          c.fill();
+        }
+
         if (b.dusty) {
           c.fillStyle = 'rgba(230, 200, 150, 0.55)';
           c.roundRect(-hw, -hh, b.w, b.h, 6);
@@ -1853,7 +2070,9 @@
         c.fillRect(0, 0, this.cam.vw, this.cam.vh);
 
         c.save();
-        c.translate(Math.round(this.cam.vw * 0.5 - this.cam.x), Math.round(this.cam.vh * 0.5 - this.cam.y));
+        const sx = this.shakeTimer > 0 ? (Math.random() - 0.5) * this.shakeMag : 0;
+        const sy = this.shakeTimer > 0 ? (Math.random() - 0.5) * this.shakeMag : 0;
+        c.translate(Math.round(this.cam.vw * 0.5 - this.cam.x + sx), Math.round(this.cam.vh * 0.5 - this.cam.y + sy));
         c.drawImage(this.bg, 0, 0);
 
         if (this.weather.tide > 0.02) {
@@ -1886,6 +2105,25 @@
             c.fillStyle = '#3f2614';
             c.beginPath(); c.arc(sc.x + 4, sc.y + 3, sc.r * 0.55, 0, Math.PI * 2); c.fill();
           }
+          c.restore();
+        }
+
+        // Dibujar Grietas Sísmicas permanentes
+        for (const f of this.fissures) {
+          c.save();
+          c.lineCap = 'round';
+          c.lineJoin = 'round';
+          c.strokeStyle = '#78350f';
+          c.lineWidth = 18;
+          c.beginPath();
+          f.pts.forEach((p, idx) => idx === 0 ? c.moveTo(p.x, p.y) : c.lineTo(p.x, p.y));
+          c.stroke();
+
+          c.strokeStyle = '#1c1917';
+          c.lineWidth = 9;
+          c.beginPath();
+          f.pts.forEach((p, idx) => idx === 0 ? c.moveTo(p.x, p.y) : c.lineTo(p.x, p.y));
+          c.stroke();
           c.restore();
         }
 
@@ -2027,6 +2265,18 @@
 
         c.restore();
 
+        // Ráfagas de viento de advertencia antes de un tornado
+        if (this.windWarning > 0) {
+          c.strokeStyle = 'rgba(241, 245, 249, 0.55)';
+          c.lineWidth = 2.2;
+          c.beginPath();
+          for (const g of this.weather.windGusts) {
+            c.moveTo(g.x, g.y);
+            c.lineTo(g.x + g.len, g.y + Math.sin(g.x * 0.03) * 6);
+          }
+          c.stroke();
+        }
+
         if (this.weather.state === 'rain' || this.weather.state === 'storm') {
           c.fillStyle = this.weather.state === 'storm' ? 'rgba(15, 23, 42, 0.28)' : 'rgba(15, 23, 42, 0.15)';
           c.fillRect(0, 0, this.cam.vw, this.cam.vh);
@@ -2062,6 +2312,13 @@
         const sx = mw / MAP_W, sy = mh / MAP_H;
         m.clearRect(0, 0, mw, mh);
         m.drawImage(this.bg, 0, 0, mw, mh);
+
+        m.strokeStyle = '#1c1917'; m.lineWidth = 2;
+        for (const f of this.fissures) {
+          m.beginPath();
+          f.pts.forEach((p, idx) => idx === 0 ? m.moveTo(p.x * sx, p.y * sy) : m.lineTo(p.x * sx, p.y * sy));
+          m.stroke();
+        }
 
         m.strokeStyle = '#f3f4f6'; m.lineWidth = 1.5;
         for (const r of this.roads) {
@@ -2132,7 +2389,9 @@
 
       updateHUD() {
         const e = ERAS[this.era];
+        const s = SEASONS[this.seasonIdx] || SEASONS[0];
         document.getElementById('era-pill').textContent = `${e.ico} Era ${this.era === 1 ? 'I' : (this.era === 2 ? 'II' : 'III')}`;
+        document.getElementById('season-pill').textContent = `${s.ico} ${Math.round(this.temperature)}°C`;
         document.getElementById('v-gold').textContent  = Math.floor(this.res.gold);
         document.getElementById('v-wood').textContent  = Math.floor(this.res.wood);
         document.getElementById('v-stone').textContent = Math.floor(this.res.stone);
@@ -2153,7 +2412,9 @@
           'tor_strong': 'db-tor-strong',
           'sand': 'db-sand',
           'sand_tor': 'db-sand-tor',
-          'tsunami': 'db-tsunami'
+          'tsunami': 'db-tsunami',
+          'quake_soft': 'db-quake-soft',
+          'quake_strong': 'db-quake-strong'
         };
         Object.entries(disMap).forEach(([k, btnId]) => {
           const btn = document.getElementById(btnId);
@@ -2233,12 +2494,14 @@
             uid: this.uid,
             regId: this.regId,
             era: this.era,
+            seasonIdx: this.seasonIdx,
             res: this.res,
             pop: this.pop,
             workers: this.workers,
             nodes: this.nodes,
             roads: this.roads,
-            bldgs: this.bldgs
+            bldgs: this.bldgs,
+            fissures: this.fissures
           };
           localStorage.setItem(SAVE_KEY, JSON.stringify(data));
           if (!silent) this.showBanner('💾 ¡Ciudad guardada!');
@@ -2256,12 +2519,15 @@
           this.initWorld(d.regId);
           this.uid = d.uid || 1;
           this.era = d.era || 1;
-          this.res = d.res || { gold: 650, wood: 140, stone: 90, food: 48 };
+          this.seasonIdx = d.seasonIdx || 0;
+          this.res = d.res || { gold: 700, wood: 150, stone: 100, food: 50 };
           this.pop = d.pop || 0;
-          this.workers = d.workers || { wood: 0, stone: 0, farm: 0, guard: 0, fire: 0, civic: 0 };
+          this.workers = Object.assign({ wood: 0, stone: 0, farm: 0, eng: 0, guard: 0, fire: 0, civic: 0 }, d.workers || {});
           this.nodes = d.nodes || [];
           this.roads = d.roads || [];
           this.bldgs = d.bldgs || [];
+          this.fissures = d.fissures || [];
+          this.bgDirty = true;
           this.recalcPop();
           if (!silent) this.showBanner('📂 Ciudad cargada');
           return true;
@@ -2283,7 +2549,6 @@
       bindEvents() {
         window.addEventListener('resize', () => this.resize());
 
-        // Tabs inferiores
         document.querySelectorAll('.tab-btn').forEach(btn => {
           btn.onclick = () => {
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -2295,7 +2560,6 @@
           };
         });
 
-        // Botones superiores
         document.getElementById('btn-workers').onclick = () => {
           document.getElementById('workers-drawer').classList.toggle('open');
           this.renderWorkers();
@@ -2343,7 +2607,6 @@
         document.getElementById('btn-region').onclick = () => this.openRegionModal(false);
         document.getElementById('modal-cancel').onclick = () => document.getElementById('modal').classList.add('hidden');
 
-        // Minimapa táctil
         const jumpMini = e => {
           const rect = this.mini.getBoundingClientRect();
           const cx = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
@@ -2358,7 +2621,6 @@
           jumpMini(e);
         });
 
-        // Gestos táctiles y ratón en el mundo (1 dedo construye o desplaza, 2 dedos desplazan cámara)
         this.canvas.addEventListener('pointerdown', e => {
           this.canvas.setPointerCapture(e.pointerId);
           this.touches.set(e.pointerId, { x: e.clientX, y: e.clientY });
