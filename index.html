@@ -322,18 +322,19 @@
       top: calc(max(10px, env(safe-area-inset-top)) + 64px);
       left: 50%;
       transform: translateX(-50%);
-      background: rgba(17, 24, 39, 0.92);
-      border: 1px solid var(--gold);
+      background: rgba(17, 24, 39, 0.94);
+      border: 2px solid var(--gold);
       border-radius: 14px;
-      padding: 7px 14px;
-      font-size: 13px;
-      font-weight: 700;
+      padding: 8px 16px;
+      font-size: 14px;
+      font-weight: 800;
       color: #fde68a;
-      z-index: 22;
+      z-index: 24;
       pointer-events: none;
       opacity: 0;
       transition: opacity 0.2s;
       white-space: nowrap;
+      box-shadow: 0 10px 28px rgba(0,0,0,0.6);
     }
     #banner.show { opacity: 1; }
 
@@ -423,7 +424,7 @@
 
       <div class="pill-group">
         <button id="btn-workers" class="icon-btn">👷 <span id="v-free">0</span></button>
-        <button id="btn-era" class="icon-btn gold">⚔️ Era II</button>
+        <button id="btn-era" class="icon-btn gold">⚔️ Meta: 100👥</button>
         <button id="btn-trade" class="icon-btn" title="Comercio entre Regiones">🌐 Comercio</button>
         <button id="btn-weather" class="icon-btn" title="Alternar Clima">☀️ Clima</button>
         <button id="btn-disasters" class="icon-btn" title="Panel de Desastres">⚡</button>
@@ -506,7 +507,7 @@
         navigator.serviceWorker.getRegistrations().then(regs => {
           for (const reg of regs) reg.update();
         }).catch(() => {});
-        navigator.serviceWorker.register('./sw.js?v=5').catch(() => {});
+        navigator.serviceWorker.register('./sw.js?v=6').catch(() => {});
       });
     }
 
@@ -528,13 +529,13 @@
     const MAP_W = 2600;
     const MAP_H = 1950;
     const ROAD_W = 36;
-    const SAVE_KEY = 'arquitecto_ipad_pwa_v5';
+    const SAVE_KEY = 'arquitecto_ipad_pwa_v6';
 
     const REGIONS = {
-      valley: { id: 'valley', icon: '🌿', name: 'Valle Verde',   g1: '#5f9e49', g2: '#528c3e', water: '#0284c7', bank: '#e7d39a', trees: 32, rocks: 18, deer: 14, style: 'river', risks: { tornado: 0.45, quake: 0.30, sand: 0.15, tsunami: 0.10 } },
-      nordic: { id: 'nordic', icon: '🌲', name: 'Bosque Norte',  g1: '#467a52', g2: '#3a6845', water: '#0369a1', bank: '#cbd5e1', trees: 48, rocks: 22, deer: 20, style: 'fork',  risks: { quake: 0.45, tornado: 0.35, tsunami: 0.15, sand: 0.05 } },
-      mesa:   { id: 'mesa',   icon: '🏜️', name: 'Meseta Dorada', g1: '#c29b61', g2: '#af884e', water: '#0ea5e9', bank: '#fde68a', trees: 16, rocks: 36, deer: 8,  style: 'river', risks: { sand: 0.55, quake: 0.25, tornado: 0.15, tsunami: 0.05 } },
-      coast:  { id: 'coast',  icon: '🌊', name: 'Costa Azul',    g1: '#70a348', g2: '#61923b', water: '#0284c7', bank: '#f6df9d', trees: 26, rocks: 22, deer: 12, style: 'bay',   risks: { tsunami: 0.50, quake: 0.25, tornado: 0.15, sand: 0.10 } }
+      valley: { id: 'valley', icon: '🌿', name: 'Valle Verde',   g1: '#5f9e49', g2: '#528c3e', water: '#0284c7', bank: '#e7d39a', trees: 32, rocks: 18, deer: 14, rabbits: 16, style: 'river', risks: { tornado: 0.45, quake: 0.30, sand: 0.15, tsunami: 0.10 } },
+      nordic: { id: 'nordic', icon: '🌲', name: 'Bosque Norte',  g1: '#467a52', g2: '#3a6845', water: '#0369a1', bank: '#cbd5e1', trees: 48, rocks: 22, deer: 20, rabbits: 20, style: 'fork',  risks: { quake: 0.45, tornado: 0.35, tsunami: 0.15, sand: 0.05 } },
+      mesa:   { id: 'mesa',   icon: '🏜️', name: 'Meseta Dorada', g1: '#c29b61', g2: '#af884e', water: '#0ea5e9', bank: '#fde68a', trees: 16, rocks: 36, deer: 8,  rabbits: 10, style: 'river', risks: { sand: 0.55, quake: 0.25, tornado: 0.15, tsunami: 0.05 } },
+      coast:  { id: 'coast',  icon: '🌊', name: 'Costa Azul',    g1: '#70a348', g2: '#61923b', water: '#0284c7', bank: '#f6df9d', trees: 26, rocks: 22, deer: 12, rabbits: 14, style: 'bay',   risks: { tsunami: 0.50, quake: 0.25, tornado: 0.15, sand: 0.10 } }
     };
 
     const SEASONS = [
@@ -544,11 +545,11 @@
       { id: 'winter', ico: '❄️', name: 'Invierno',  temp: 2,  tint: 'rgba(186, 230, 253, 0.16)',leaf1: '#334155', leaf2: '#475569', snow: true  }
     ];
 
-    // Progresión de 4 Eras basada únicamente en población: 100 -> 500 -> 1000 -> Era IV Futura
+    // Progresión automática de 4 Eras por población: 100 -> 500 -> 1500 -> Era IV Futura
     const ERAS = {
       1: { name: 'Era I · Medieval',    ico: '🏰', next: 'Era II',  reqPop: 100 },
       2: { name: 'Era II · Industrial', ico: '⚙️', next: 'Era III', reqPop: 500 },
-      3: { name: 'Era III · Moderna',   ico: '🏙️', next: 'Era IV',  reqPop: 1000 },
+      3: { name: 'Era III · Moderna',   ico: '🏙️', next: 'Era IV',  reqPop: 1500 },
       4: { name: 'Era IV · Futura',     ico: '🚀', next: 'Máxima',  reqPop: null }
     };
 
@@ -571,14 +572,14 @@
       modern_road: { sec: 'roads', kind: 'road', tier: 4, era: 3, ico: '🛣️', name: 'Asfalto',     cost: { gold: 65, stone: 16, metal: 8 } },
       maglev_road: { sec: 'roads', kind: 'road', tier: 5, era: 4, ico: '🚄', name: 'Vía Maglev',  cost: { gold: 120, metal: 20, copper: 18 } },
 
-      // CASAS (escaladas para llegar a 100, 500 y 1000 habitantes)
-      hut:         { sec: 'houses', kind: 'bldg', era: 1, ico: '🛖', name: 'Choza',       w: 50, h: 46, cost: { gold: 45, wood: 10 }, pop: 18, tax: 12 },
-      manor:       { sec: 'houses', kind: 'bldg', era: 1, ico: '🏡', name: 'Casona',      w: 62, h: 54, cost: { gold: 95, wood: 20, stone: 10 }, pop: 42, tax: 26 },
-      brick_house: { sec: 'houses', kind: 'bldg', era: 2, ico: '🏘️', name: 'Victoriana',  w: 68, h: 58, cost: { gold: 190, wood: 22, stone: 25, metal: 6 }, pop: 95, tax: 55 },
-      apartments:  { sec: 'houses', kind: 'bldg', era: 2, ico: '🏢', name: 'Bloque',      w: 78, h: 64, cost: { gold: 320, wood: 25, stone: 40, metal: 12 }, pop: 180, tax: 95 },
-      condo:       { sec: 'houses', kind: 'bldg', era: 3, ico: '🏬', name: 'Condominio',  w: 82, h: 70, cost: { gold: 520, stone: 60, metal: 22, copper: 14 }, pop: 320, tax: 160 },
-      tower:       { sec: 'houses', kind: 'bldg', era: 3, ico: '🏙️', name: 'Rascacielos', w: 92, h: 82, cost: { gold: 850, stone: 95, metal: 38, copper: 26 }, pop: 550, tax: 280 },
-      arcology:    { sec: 'houses', kind: 'bldg', era: 4, ico: '🛸', name: 'Arcología',   w: 104, h: 92, cost: { gold: 1500, metal: 75, copper: 60 }, pop: 1200, tax: 620 },
+      // CASAS (escaladas para llegar a 100, 500 y 1500 habitantes)
+      hut:         { sec: 'houses', kind: 'bldg', era: 1, ico: '🛖', name: 'Choza',       w: 50, h: 46, cost: { gold: 45, wood: 10 }, pop: 20, tax: 12 },
+      manor:       { sec: 'houses', kind: 'bldg', era: 1, ico: '🏡', name: 'Casona',      w: 62, h: 54, cost: { gold: 95, wood: 20, stone: 10 }, pop: 45, tax: 26 },
+      brick_house: { sec: 'houses', kind: 'bldg', era: 2, ico: '🏘️', name: 'Victoriana',  w: 68, h: 58, cost: { gold: 190, wood: 22, stone: 25, metal: 6 }, pop: 110, tax: 55 },
+      apartments:  { sec: 'houses', kind: 'bldg', era: 2, ico: '🏢', name: 'Bloque',      w: 78, h: 64, cost: { gold: 320, wood: 25, stone: 40, metal: 12 }, pop: 220, tax: 95 },
+      condo:       { sec: 'houses', kind: 'bldg', era: 3, ico: '🏬', name: 'Condominio',  w: 82, h: 70, cost: { gold: 520, stone: 60, metal: 22, copper: 14 }, pop: 420, tax: 160 },
+      tower:       { sec: 'houses', kind: 'bldg', era: 3, ico: '🏙️', name: 'Rascacielos', w: 92, h: 82, cost: { gold: 850, stone: 95, metal: 38, copper: 26 }, pop: 750, tax: 280 },
+      arcology:    { sec: 'houses', kind: 'bldg', era: 4, ico: '🛸', name: 'Arcología',   w: 104, h: 92, cost: { gold: 1500, metal: 75, copper: 60 }, pop: 1500, tax: 620 },
 
       // PRODUCCIÓN, CAZA Y MINERÍA (Oro, Metal, Cobre)
       lumber:      { sec: 'prod', kind: 'bldg', era: 1, ico: '🪓', name: 'Leñador',     w: 64, h: 54, cost: { gold: 65, wood: 10 }, role: 'wood', slots: 4, near: 'tree', outW: 9 },
@@ -695,6 +696,7 @@
         this.bldgs = [];
         this.agents = [];
         this.deers = [];
+        this.rabbits = [];
         this.history = [];
 
         // Ciclo Día y Noche (0..24 horas, inicia a las 10:00 AM)
@@ -748,14 +750,14 @@
         this.surpriseTimer = 280 + Math.random() * 40;
 
         this.buildNature(this.regId);
-        this.spawnDeers();
+        this.spawnWildlife();
         this.cam.x = MAP_W * 0.48;
         this.cam.y = MAP_H * 0.5;
         this.cam.vx = 0;
         this.cam.vy = 0;
       }
 
-      spawnDeers() {
+      spawnWildlife() {
         const reg = REGIONS[this.regId] || REGIONS.valley;
         this.deers = [];
         for (let i = 0; i < (reg.deer || 14); i++) {
@@ -769,6 +771,22 @@
             ty: y + (Math.random() - 0.5) * 300,
             ang: Math.random() * Math.PI * 2,
             wait: Math.random() * 3
+          });
+        }
+
+        this.rabbits = [];
+        for (let i = 0; i < (reg.rabbits || 16); i++) {
+          let x = 180 + Math.random() * (MAP_W - 360);
+          let y = 180 + Math.random() * (MAP_H - 360);
+          if (this.inWater(x, y, 25)) { x = MAP_W * 0.45; y = MAP_H * 0.45; }
+          this.rabbits.push({
+            id: this.uid++,
+            x, y,
+            tx: x + (Math.random() - 0.5) * 180,
+            ty: y + (Math.random() - 0.5) * 180,
+            ang: Math.random() * Math.PI * 2,
+            wait: Math.random() * 2,
+            hop: Math.random() * 6
           });
         }
       }
@@ -910,7 +928,6 @@
           c.fillStyle = '#94a3b8';
           c.beginPath(); c.arc(r.x - r.r * 0.2, r.y - r.r * 0.25, r.r * 0.45, 0, Math.PI * 2); c.fill();
 
-          // Vetas de Oro, Cobre o Metal
           c.fillStyle = r.ore === 'gold' ? '#facc15' : (r.ore === 'copper' ? '#fb923c' : '#e2e8f0');
           c.beginPath(); c.arc(r.x + r.r * 0.3, r.y + r.r * 0.1, 4, 0, Math.PI * 2); c.fill();
 
@@ -1120,6 +1137,7 @@
           this.pop = Math.min(this.popCap, 8);
           this.showBanner('👥 ¡Llegaron aldeanos! Asígnalos en 👷');
         }
+        this.checkEraProgression();
         this.renderWorkers();
         this.updateHUD();
       }
@@ -1262,6 +1280,24 @@
           const k = Object.keys(ROLES).sort((a, b) => this.workers[b] - this.workers[a])[0];
           if (this.workers[k] <= 0) break;
           this.workers[k]--;
+        }
+      }
+
+      checkEraProgression() {
+        let evolved = false;
+        while (this.era < 4) {
+          const req = ERAS[this.era].reqPop;
+          if (req && Math.floor(this.pop) >= req) {
+            this.era++;
+            evolved = true;
+          } else {
+            break;
+          }
+        }
+        if (evolved) {
+          this.renderCards();
+          this.updateHUD();
+          this.showBanner(`🎉 ¡NUEVA ERA ALCANZADA! ${ERAS[this.era].name} (${ERAS[this.era].ico})`);
         }
       }
 
@@ -1491,7 +1527,6 @@
       }
 
       updateWeatherAndDisasters(dt) {
-        // Ciclo Día y Noche (24h cada ~2.5 minutos reales)
         this.timeOfDay = (this.timeOfDay + dt * 0.16) % 24;
 
         this.seasonTimer -= dt;
@@ -1693,8 +1728,10 @@
         }
       }
 
-      updateDeers(dt) {
+      updateWildlife(dt) {
         const reg = REGIONS[this.regId] || REGIONS.valley;
+
+        // Ciervos
         if (this.deers.length < (reg.deer || 14) && Math.random() < dt * 0.25) {
           const x = 200 + Math.random() * (MAP_W - 400);
           const y = 200 + Math.random() * (MAP_H - 400);
@@ -1704,10 +1741,7 @@
         }
 
         for (const d of this.deers) {
-          if (d.wait > 0) {
-            d.wait -= dt;
-            continue;
-          }
+          if (d.wait > 0) { d.wait -= dt; continue; }
           const dd = dist(d.x, d.y, d.tx, d.ty);
           if (dd < 20) {
             d.wait = 1.5 + Math.random() * 3;
@@ -1717,25 +1751,48 @@
             d.ang = Math.atan2(d.ty - d.y, d.tx - d.x);
             const nx = d.x + Math.cos(d.ang) * 24 * dt;
             const ny = d.y + Math.sin(d.ang) * 24 * dt;
-            if (!this.inWater(nx, ny, 14)) {
-              d.x = nx;
-              d.y = ny;
-            } else {
-              d.wait = 1;
-            }
+            if (!this.inWater(nx, ny, 14)) { d.x = nx; d.y = ny; } else { d.wait = 1; }
+          }
+        }
+
+        // Conejos
+        if (this.rabbits.length < (reg.rabbits || 16) && Math.random() < dt * 0.35) {
+          const x = 180 + Math.random() * (MAP_W - 360);
+          const y = 180 + Math.random() * (MAP_H - 360);
+          if (!this.inWater(x, y, 25)) {
+            this.rabbits.push({ id: this.uid++, x, y, tx: x + 80, ty: y + 60, ang: 0, wait: 0.8, hop: 0 });
+          }
+        }
+
+        for (const rb of this.rabbits) {
+          rb.hop += dt * 10;
+          if (rb.wait > 0) { rb.wait -= dt; continue; }
+          const dd = dist(rb.x, rb.y, rb.tx, rb.ty);
+          if (dd < 14) {
+            rb.wait = 0.8 + Math.random() * 2.2;
+            rb.tx = Math.max(100, Math.min(MAP_W - 100, rb.x + (Math.random() - 0.5) * 200));
+            rb.ty = Math.max(100, Math.min(MAP_H - 100, rb.y + (Math.random() - 0.5) * 200));
+          } else {
+            rb.ang = Math.atan2(rb.ty - rb.y, rb.tx - rb.x);
+            const nx = rb.x + Math.cos(rb.ang) * 32 * dt;
+            const ny = rb.y + Math.sin(rb.ang) * 32 * dt;
+            if (!this.inWater(nx, ny, 12)) { rb.x = nx; rb.y = ny; } else { rb.wait = 0.6; }
           }
         }
       }
 
       sim(dt) {
         this.updateWeatherAndDisasters(dt);
-        this.updateDeers(dt);
+        this.updateWildlife(dt);
         this.recalcPop();
 
         if (this.pop < this.popCap && this.res.food > 0) {
           const prev = Math.floor(this.pop);
-          this.pop = Math.min(this.popCap, this.pop + dt * 3.8);
-          if (Math.floor(this.pop) > prev) this.renderWorkers();
+          this.pop = Math.min(this.popCap, this.pop + dt * 4.5);
+          if (Math.floor(this.pop) > prev) {
+            this.checkEraProgression();
+            this.renderWorkers();
+          }
         }
 
         this.prodT -= dt;
@@ -1763,8 +1820,9 @@
               if (sp.outM) dm += sp.outM * f;
               if (sp.outC) dc += sp.outC * f;
               if (sp.outF) {
-                const deerBonus = sp.role === 'hunter' ? Math.min(1.5, 0.5 + this.deers.length * 0.08) : 1;
-                df += sp.outF * f * deerBonus;
+                const faunaCount = this.deers.length + this.rabbits.length * 0.5;
+                const huntBonus = sp.role === 'hunter' ? Math.min(1.6, 0.5 + faunaCount * 0.06) : 1;
+                df += sp.outF * f * huntBonus;
               }
               if (sp.outG) dg += sp.outG * f;
             }
@@ -1820,11 +1878,16 @@
       updateAgents(dt) {
         const want = Math.min(34, Math.floor(this.pop * 0.25 + this.workers.guard * 2 + this.workers.hunter * 2));
         if (this.agents.length < want && Math.random() < dt * 2.5) {
-          if (this.workers.hunter > 0 && this.deers.length > 0 && Math.random() < 0.35) {
+          if (this.workers.hunter > 0 && (this.deers.length > 0 || this.rabbits.length > 0) && Math.random() < 0.35) {
             const post = this.bldgs.find(b => b.type === 'hunter_post' && !b.fire);
-            const targetDeer = this.deers[Math.floor(Math.random() * this.deers.length)];
-            if (post && targetDeer) {
-              this.agents.push({ kind: 'hunter', x: post.x, y: post.y, deerId: targetDeer.id, spd: 55, ang: 0 });
+            if (post) {
+              if (this.deers.length > 0 && Math.random() < 0.6) {
+                const targetDeer = this.deers[Math.floor(Math.random() * this.deers.length)];
+                this.agents.push({ kind: 'hunter', preyType: 'deer', x: post.x, y: post.y, preyId: targetDeer.id, spd: 55, ang: 0 });
+              } else if (this.rabbits.length > 0) {
+                const targetRabbit = this.rabbits[Math.floor(Math.random() * this.rabbits.length)];
+                this.agents.push({ kind: 'hunter', preyType: 'rabbit', x: post.x, y: post.y, preyId: targetRabbit.id, spd: 58, ang: 0 });
+              }
             }
           } else if (this.roads.length) {
             const r = this.roads[Math.floor(Math.random() * this.roads.length)];
@@ -1854,12 +1917,18 @@
             continue;
           }
           if (ag.kind === 'hunter') {
-            const dObj = this.deers.find(d => d.id === ag.deerId);
-            if (!dObj) { this.agents.splice(i, 1); continue; }
-            ag.ang = Math.atan2(dObj.y - ag.y, dObj.x - ag.x);
-            if (dist(ag.x, ag.y, dObj.x, dObj.y) < 16) {
-              this.res.food += 18;
-              this.deers = this.deers.filter(d => d.id !== dObj.id);
+            const list = ag.preyType === 'rabbit' ? this.rabbits : this.deers;
+            const prey = list.find(p => p.id === ag.preyId);
+            if (!prey) { this.agents.splice(i, 1); continue; }
+            ag.ang = Math.atan2(prey.y - ag.y, prey.x - ag.x);
+            if (dist(ag.x, ag.y, prey.x, prey.y) < 16) {
+              if (ag.preyType === 'rabbit') {
+                this.res.food += 10;
+                this.rabbits = this.rabbits.filter(p => p.id !== prey.id);
+              } else {
+                this.res.food += 20;
+                this.deers = this.deers.filter(p => p.id !== prey.id);
+              }
               this.agents.splice(i, 1);
             } else {
               ag.x += Math.cos(ag.ang) * ag.spd * dt;
@@ -1876,7 +1945,6 @@
       }
 
       getNightFactor() {
-        // 0 = mediodía pleno, 1 = medianoche oscura
         const h = this.timeOfDay;
         if (h >= 7 && h <= 17) return 0;
         if (h > 17 && h < 20.5) return (h - 17) / 3.5;
@@ -2160,6 +2228,20 @@
           c.restore();
         }
 
+        // Dibujar Conejos
+        for (const rb of this.rabbits) {
+          const bounce = rb.wait <= 0 ? Math.abs(Math.sin(rb.hop)) * 2.5 : 0;
+          c.save();
+          c.translate(rb.x, rb.y - bounce);
+          c.rotate(rb.ang);
+          c.fillStyle = '#f8fafc';
+          c.beginPath(); c.ellipse(0, 0, 4.2, 2.8, 0, 0, Math.PI * 2); c.fill();
+          c.fillStyle = '#fbcfe8';
+          c.beginPath(); c.ellipse(2, -1.6, 2.4, 0.9, -0.3, 0, Math.PI * 2); c.fill();
+          c.beginPath(); c.ellipse(2,  1.6, 2.4, 0.9,  0.3, 0, Math.PI * 2); c.fill();
+          c.restore();
+        }
+
         for (const b of this.bldgs) {
           const sp = ITEMS[b.type];
           if (!sp) continue;
@@ -2256,7 +2338,6 @@
           c.restore();
         }
 
-        // Ciclo Día y Noche + Iluminación de Postes de Luz y Edificios
         if (night > 0.02) {
           c.save();
           c.fillStyle = `rgba(10, 15, 35, ${night * 0.58})`;
@@ -2353,7 +2434,7 @@
             <span class="card-prc">${this.costText(it.cost)}</span>
           `;
           b.onclick = () => {
-            if (lock) { this.showBanner(`🔒 ${ERAS[it.era].name}`); return; }
+            if (lock) { this.showBanner(`🔒 ${ERAS[it.era].name} (${ERAS[it.era - 1].reqPop} hab.)`); return; }
             this.item = k;
             this.renderCards();
           };
@@ -2402,7 +2483,7 @@
         document.getElementById('v-pop').textContent    = `${Math.floor(this.pop)}/${this.popCap}`;
         const free = Math.max(0, Math.floor(this.pop) - Object.values(this.workers).reduce((a, b) => a + b, 0));
         document.getElementById('v-free').textContent = String(free);
-        document.getElementById('btn-era').textContent = e.reqPop ? `⚔️ ${e.next}` : '🚀 IV';
+        document.getElementById('btn-era').textContent = e.reqPop ? `⚔️ ${e.next}: ${e.reqPop}👥` : '🚀 Era IV';
 
         const wBtn = document.getElementById('btn-weather');
         wBtn.classList.toggle('active', this.weather.mode === 'manual' || this.activeDisaster !== null);
@@ -2414,7 +2495,7 @@
         el.textContent = msg;
         el.classList.add('show');
         clearTimeout(this.bannerTimer);
-        this.bannerTimer = setTimeout(() => el.classList.remove('show'), 3200);
+        this.bannerTimer = setTimeout(() => el.classList.remove('show'), 3600);
       }
 
       openRegionModal(boot = false) {
@@ -2450,25 +2531,12 @@
 
       openEraModal() {
         const e = ERAS[this.era];
-        if (!e.reqPop) return;
-        const ok = Math.floor(this.pop) >= e.reqPop;
-        document.getElementById('modal-title').textContent = `⚔️ Avanzar a ${e.next}`;
-        document.getElementById('modal-body').innerHTML = `
-          <div style="background:rgba(255,255,255,0.06);padding:18px;border-radius:14px;margin-bottom:16px;font-size:18px;font-weight:900;text-align:center;">
-            👥 Población requerida: ${Math.floor(this.pop)} / ${e.reqPop} habitantes
-          </div>
-        `;
-        document.getElementById('modal-cancel').style.display = 'inline-flex';
-        document.getElementById('modal-ok').textContent = ok ? '¡Evolucionar!' : 'Faltan habitantes';
-        document.getElementById('modal-ok').onclick = () => {
-          if (!ok) { this.showBanner(`Necesitas ${e.reqPop} habitantes`); return; }
-          this.era++;
-          document.getElementById('modal').classList.add('hidden');
-          this.renderCards();
-          this.updateHUD();
-          this.showBanner(`🎉 ¡Bienvenido a ${ERAS[this.era].name}!`);
-        };
-        m.classList.remove('hidden');
+        if (!e.reqPop) {
+          this.showBanner('🚀 ¡Ya estás en la Era IV · Futura!');
+          return;
+        }
+        const faltan = Math.max(0, e.reqPop - Math.floor(this.pop));
+        this.showBanner(`⚔️ ${e.next} se desbloquea automáticamente al llegar a ${e.reqPop} habitantes (faltan ${faltan})`);
       }
 
       openTradeModal() {
@@ -2561,6 +2629,7 @@
           this.fissures = d.fissures || [];
           this.bgDirty = true;
           this.recalcPop();
+          this.checkEraProgression();
           if (!silent) this.showBanner('📂 Ciudad cargada');
           return true;
         } catch (err) {
