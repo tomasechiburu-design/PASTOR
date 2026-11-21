@@ -4,8 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>Arquitecto de Ciudades</title>
-
-  <!-- PWA & iPadOS Home Screen App -->
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="Arquitecto" />
@@ -14,470 +12,101 @@
   <link rel="manifest" href="./manifest.json" />
   <link rel="apple-touch-icon" sizes="512x512" href="./icon-512.png" />
   <link rel="icon" type="image/png" href="./icon-512.png" />
-
   <style>
-    :root {
-      --bg-panel: rgba(17, 24, 39, 0.90);
-      --bg-panel-solid: #111827;
-      --bg-card: rgba(31, 41, 55, 0.92);
-      --bg-card-active: rgba(245, 158, 11, 0.25);
-      --border: rgba(255, 255, 255, 0.16);
-      --gold: #f59e0b;
-      --emerald: #10b981;
-      --sky: #38bdf8;
-      --danger: #ef4444;
-      --text: #f9fafb;
-      --muted: #9ca3af;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      user-select: none;
-      -webkit-user-select: none;
-      -webkit-touch-callout: none;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    html, body {
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      background: #111827;
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Rounded", "Segoe UI", Roboto, sans-serif;
-      color: var(--text);
-      touch-action: none;
-    }
-
-    #app {
-      position: fixed;
-      inset: 0;
-      overflow: hidden;
-    }
-
-    #world {
-      display: block;
-      width: 100%;
-      height: 100%;
-      touch-action: none;
-    }
-
-    #hud-top {
-      position: absolute;
-      top: max(10px, env(safe-area-inset-top));
-      left: max(10px, env(safe-area-inset-left));
-      right: max(10px, env(safe-area-inset-right));
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 6px;
-      pointer-events: none;
-      z-index: 20;
-      flex-wrap: wrap;
-    }
-
-    .pill-group {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      background: var(--bg-panel);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 5px 8px;
-      pointer-events: auto;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.45);
-      flex-wrap: wrap;
-    }
-
-    .stat {
-      display: inline-flex;
-      align-items: center;
-      gap: 3px;
-      font-size: 12px;
-      font-weight: 800;
-      padding: 4px 7px;
-      background: rgba(255,255,255,0.06);
-      border-radius: 9px;
-    }
-
-    .icon-btn {
-      min-width: 38px;
-      height: 36px;
-      padding: 0 9px;
-      border-radius: 11px;
-      border: 1px solid var(--border);
-      background: var(--bg-card);
-      color: var(--text);
-      font-size: 14px;
-      font-weight: 800;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 4px;
-      cursor: pointer;
-    }
+    :root { --bg-panel: rgba(17, 24, 39, 0.90); --bg-panel-solid: #111827; --bg-card: rgba(31, 41, 55, 0.92); --bg-card-active: rgba(245, 158, 11, 0.25); --border: rgba(255, 255, 255, 0.16); --gold: #f59e0b; --sky: #38bdf8; --danger: #ef4444; --text: #f9fafb; --muted: #9ca3af; }
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent; }
+    html, body { width: 100%; height: 100%; overflow: hidden; background: #111827; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Rounded", "Segoe UI", Roboto, sans-serif; color: var(--text); touch-action: none; }
+    #app { position: fixed; inset: 0; overflow: hidden; }
+    #world { display: block; width: 100%; height: 100%; touch-action: none; }
+    #hud-top { position: absolute; top: max(10px, env(safe-area-inset-top)); left: max(10px, env(safe-area-inset-left)); right: max(10px, env(safe-area-inset-right)); display: flex; align-items: center; justify-content: space-between; gap: 6px; pointer-events: none; z-index: 20; flex-wrap: wrap; }
+    .pill-group { display: flex; align-items: center; gap: 5px; background: var(--bg-panel); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--border); border-radius: 16px; padding: 5px 8px; pointer-events: auto; box-shadow: 0 8px 24px rgba(0,0,0,0.45); flex-wrap: wrap; }
+    .stat { display: inline-flex; align-items: center; gap: 3px; font-size: 12px; font-weight: 800; padding: 4px 7px; background: rgba(255,255,255,0.06); border-radius: 9px; }
+    .icon-btn { min-width: 38px; height: 36px; padding: 0 9px; border-radius: 11px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text); font-size: 14px; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; gap: 4px; cursor: pointer; }
     .icon-btn:active { transform: scale(0.95); }
-    .icon-btn.active {
-      background: rgba(56, 189, 248, 0.25);
-      border-color: var(--sky);
-    }
-    .icon-btn.gold {
-      background: linear-gradient(135deg, #d97706, #f59e0b);
-      color: #111827;
-      border: none;
-    }
-
-    #minimap-wrap {
-      position: absolute;
-      top: calc(max(10px, env(safe-area-inset-top)) + 64px);
-      right: max(10px, env(safe-area-inset-right));
-      background: var(--bg-panel);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 5px;
-      z-index: 18;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.45);
-    }
-    #minimap {
-      display: block;
-      width: 132px;
-      height: 98px;
-      border-radius: 9px;
-    }
-
-    #workers-drawer {
-      position: absolute;
-      top: calc(max(10px, env(safe-area-inset-top)) + 64px);
-      left: max(10px, env(safe-area-inset-left));
-      width: 285px;
-      background: var(--bg-panel);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 12px;
-      z-index: 25;
-      box-shadow: 0 12px 30px rgba(0,0,0,0.55);
-      display: none;
-    }
+    .icon-btn.active { background: rgba(56, 189, 248, 0.25); border-color: var(--sky); }
+    .icon-btn.gold { background: linear-gradient(135deg, #d97706, #f59e0b); color: #111827; border: none; }
+    #minimap-wrap { position: absolute; top: calc(max(10px, env(safe-area-inset-top)) + 64px); right: max(10px, env(safe-area-inset-right)); background: var(--bg-panel); border: 1px solid var(--border); border-radius: 14px; padding: 5px; z-index: 18; box-shadow: 0 8px 24px rgba(0,0,0,0.45); }
+    #minimap { display: block; width: 132px; height: 98px; border-radius: 9px; }
+    #workers-drawer { position: absolute; top: calc(max(10px, env(safe-area-inset-top)) + 64px); left: max(10px, env(safe-area-inset-left)); width: 285px; background: var(--bg-panel); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid var(--border); border-radius: 18px; padding: 12px; z-index: 25; box-shadow: 0 12px 30px rgba(0,0,0,0.55); display: none; }
     #workers-drawer.open { display: block; }
-
-    .drawer-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 10px;
-      font-size: 15px;
-      font-weight: 800;
-    }
-
-    .role-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 5px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .stepper {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .step-btn {
-      width: 30px;
-      height: 30px;
-      border-radius: 9px;
-      border: 1px solid var(--border);
-      background: var(--bg-card);
-      color: #fff;
-      font-size: 17px;
-      font-weight: 900;
-    }
+    .drawer-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; font-size: 15px; font-weight: 800; }
+    .role-row { display: flex; align-items: center; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 13px; font-weight: 700; }
+    .stepper { display: flex; align-items: center; gap: 6px; }
+    .step-btn { width: 30px; height: 30px; border-radius: 9px; border: 1px solid var(--border); background: var(--bg-card); color: #fff; font-size: 17px; font-weight: 900; }
     .step-btn:disabled { opacity: 0.3; }
-
-    #disasters-bar {
-      position: absolute;
-      bottom: max(124px, env(safe-area-inset-bottom) + 114px);
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(17, 24, 39, 0.94);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border: 1px solid var(--danger);
-      border-radius: 18px;
-      padding: 10px 14px;
-      z-index: 22;
-      box-shadow: 0 12px 36px rgba(239, 68, 68, 0.35);
-      display: flex;
-      flex-direction: column;
-      gap: 7px;
-      max-width: calc(100vw - 24px);
-    }
-    .disaster-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
+    #disasters-bar { position: absolute; bottom: max(124px, env(safe-area-inset-bottom) + 114px); left: 50%; transform: translateX(-50%); background: rgba(17, 24, 39, 0.94); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid var(--danger); border-radius: 18px; padding: 10px 14px; z-index: 22; box-shadow: 0 12px 36px rgba(239, 68, 68, 0.35); display: flex; flex-direction: column; gap: 7px; max-width: calc(100vw - 24px); }
+    .disaster-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
     .dis-lbl { font-size: 13px; font-weight: 800; color: #fecaca; min-width: 145px; }
-    .dis-btn {
-      height: 34px;
-      padding: 0 11px;
-      border-radius: 10px;
-      border: 1px solid rgba(255,255,255,0.18);
-      background: #7f1d1d;
-      color: #fee2e2;
-      font-size: 12px;
-      font-weight: 800;
-      cursor: pointer;
-    }
+    .dis-btn { height: 34px; padding: 0 11px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.18); background: #7f1d1d; color: #fee2e2; font-size: 12px; font-weight: 800; cursor: pointer; }
     .dis-btn:active { transform: scale(0.95); }
-    .dis-btn.active {
-      background: #dc2626;
-      border-color: #fca5a5;
-      box-shadow: 0 0 12px #f87171;
-    }
-
-    #dock {
-      position: absolute;
-      bottom: max(10px, env(safe-area-inset-bottom));
-      left: 50%;
-      transform: translateX(-50%);
-      width: min(980px, calc(100vw - 20px));
-      background: var(--bg-panel);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 8px 10px;
-      z-index: 20;
-      box-shadow: 0 12px 32px rgba(0,0,0,0.55);
-    }
-
-    .tabs {
-      display: flex;
-      gap: 6px;
-      margin-bottom: 8px;
-      overflow-x: auto;
-    }
-
-    .tab-btn {
-      flex: 1;
-      min-width: 88px;
-      height: 36px;
-      border-radius: 12px;
-      border: 1px solid transparent;
-      background: rgba(255,255,255,0.06);
-      color: var(--muted);
-      font-size: 13px;
-      font-weight: 800;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 5px;
-    }
-    .tab-btn.active {
-      background: var(--bg-card-active);
-      border-color: var(--gold);
-      color: #fde68a;
-    }
-
-    .cards {
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      padding-bottom: 2px;
-    }
-
-    .card {
-      min-width: 112px;
-      background: var(--bg-card);
-      border: 2px solid transparent;
-      border-radius: 14px;
-      padding: 8px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-      color: var(--text);
-      flex-shrink: 0;
-    }
-    .card.active {
-      background: var(--bg-card-active);
-      border-color: var(--gold);
-    }
+    .dis-btn.active { background: #dc2626; border-color: #fca5a5; box-shadow: 0 0 12px #f87171; }
+    #dock { position: absolute; bottom: max(10px, env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%); width: min(980px, calc(100vw - 20px)); background: var(--bg-panel); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid var(--border); border-radius: 20px; padding: 8px 10px; z-index: 20; box-shadow: 0 12px 32px rgba(0,0,0,0.55); }
+    .tabs { display: flex; gap: 6px; margin-bottom: 8px; overflow-x: auto; }
+    .tab-btn { flex: 1; min-width: 88px; height: 36px; border-radius: 12px; border: 1px solid transparent; background: rgba(255,255,255,0.06); color: var(--muted); font-size: 13px; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; gap: 5px; }
+    .tab-btn.active { background: var(--bg-card-active); border-color: var(--gold); color: #fde68a; }
+    .cards { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 2px; }
+    .card { min-width: 112px; background: var(--bg-card); border: 2px solid transparent; border-radius: 14px; padding: 8px; display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text); flex-shrink: 0; }
+    .card.active { background: var(--bg-card-active); border-color: var(--gold); }
     .card.locked { opacity: 0.42; }
     .card-ico { font-size: 25px; line-height: 1; }
     .card-lbl { font-size: 12px; font-weight: 800; text-align: center; }
     .card-prc { font-size: 11px; font-weight: 700; color: #fbbf24; }
-
-    #banner {
-      position: absolute;
-      top: calc(max(10px, env(safe-area-inset-top)) + 64px);
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(17, 24, 39, 0.94);
-      border: 2px solid var(--gold);
-      border-radius: 14px;
-      padding: 8px 16px;
-      font-size: 14px;
-      font-weight: 800;
-      color: #fde68a;
-      z-index: 24;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 0.2s;
-      white-space: nowrap;
-      box-shadow: 0 10px 28px rgba(0,0,0,0.6);
-    }
+    #banner { position: absolute; top: calc(max(10px, env(safe-area-inset-top)) + 64px); left: 50%; transform: translateX(-50%); background: rgba(17, 24, 39, 0.94); border: 2px solid var(--gold); border-radius: 14px; padding: 8px 16px; font-size: 14px; font-weight: 800; color: #fde68a; z-index: 24; pointer-events: none; opacity: 0; transition: opacity 0.2s; white-space: nowrap; box-shadow: 0 10px 28px rgba(0,0,0,0.6); }
     #banner.show { opacity: 1; }
-
-    #modal {
-      position: fixed;
-      inset: 0;
-      background: rgba(3, 7, 18, 0.78);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 50;
-      padding: 16px;
-    }
+    #modal { position: fixed; inset: 0; background: rgba(3, 7, 18, 0.78); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; z-index: 50; padding: 16px; }
     #modal.hidden { display: none; }
-
-    .modal-box {
-      width: min(560px, 100%);
-      background: var(--bg-panel-solid);
-      border: 1px solid rgba(245, 158, 11, 0.4);
-      border-radius: 22px;
-      padding: 20px;
-      box-shadow: 0 20px 48px rgba(0,0,0,0.7);
-      max-height: 85vh;
-      overflow-y: auto;
-    }
-    .modal-title {
-      font-size: 19px;
-      font-weight: 900;
-      margin-bottom: 12px;
-      text-align: center;
-    }
-    .reg-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      margin-bottom: 16px;
-    }
-    .reg-btn {
-      background: var(--bg-card);
-      border: 2px solid transparent;
-      border-radius: 16px;
-      padding: 14px 10px;
-      color: var(--text);
-      font-size: 15px;
-      font-weight: 800;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-    }
-    .reg-btn.selected {
-      border-color: var(--gold);
-      background: var(--bg-card-active);
-    }
-    .trade-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: rgba(255,255,255,0.06);
-      padding: 10px 12px;
-      border-radius: 12px;
-      margin-bottom: 8px;
-      font-size: 13px;
-      font-weight: 700;
-      gap: 8px;
-    }
+    .modal-box { width: min(560px, 100%); background: var(--bg-panel-solid); border: 1px solid rgba(245, 158, 11, 0.4); border-radius: 22px; padding: 20px; box-shadow: 0 20px 48px rgba(0,0,0,0.7); max-height: 85vh; overflow-y: auto; }
+    .modal-title { font-size: 19px; font-weight: 900; margin-bottom: 12px; text-align: center; }
+    .reg-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 16px; }
+    .reg-btn { background: var(--bg-card); border: 2px solid transparent; border-radius: 16px; padding: 14px 10px; color: var(--text); font-size: 15px; font-weight: 800; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+    .reg-btn.selected { border-color: var(--gold); background: var(--bg-card-active); }
+    .trade-row { display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.06); padding: 10px 12px; border-radius: 12px; margin-bottom: 8px; font-size: 13px; font-weight: 700; gap: 8px; }
   </style>
 </head>
 <body>
   <div id="app">
     <canvas id="world"></canvas>
-
     <div id="hud-top">
       <div class="pill-group">
         <span id="era-pill" class="stat">🏰 Era I</span>
-        <span id="time-pill" class="stat" title="Hora y Estación">☀️ 12:00 · 🌿 20°C</span>
-        <span class="stat" title="Oro">🪙 <span id="v-gold">700</span></span>
-        <span class="stat" title="Madera">🪵 <span id="v-wood">150</span></span>
-        <span class="stat" title="Piedra">🪨 <span id="v-stone">100</span></span>
-        <span class="stat" title="Metal">⚙️ <span id="v-metal">25</span></span>
-        <span class="stat" title="Cobre">🟠 <span id="v-copper">25</span></span>
-        <span class="stat" title="Comida">🌾 <span id="v-food">60</span></span>
-        <span class="stat" title="Población">👥 <span id="v-pop">0/0</span></span>
+        <span id="time-pill" class="stat">☀️ 12:00 · 🌿 20°C</span>
+        <span class="stat">🪙 <span id="v-gold">700</span></span>
+        <span class="stat">🪵 <span id="v-wood">150</span></span>
+        <span class="stat">🪨 <span id="v-stone">100</span></span>
+        <span class="stat">⚙️ <span id="v-metal">25</span></span>
+        <span class="stat">🟠 <span id="v-copper">25</span></span>
+        <span class="stat">🌾 <span id="v-food">60</span></span>
+        <span class="stat">👥 <span id="v-pop">0/0</span></span>
       </div>
-
       <div class="pill-group">
         <button id="btn-workers" class="icon-btn">👷 <span id="v-free">0</span></button>
-        <button id="btn-era" class="icon-btn gold">⚔️ Meta: 100👥</button>
-        <button id="btn-trade" class="icon-btn" title="Comercio entre Regiones">🌐 Comercio</button>
-        <button id="btn-weather" class="icon-btn" title="Alternar Clima">☀️ Clima</button>
-        <button id="btn-disasters" class="icon-btn" title="Panel de Desastres">⚡</button>
-        <button id="btn-undo" class="icon-btn" title="Deshacer">↩️</button>
-        <button id="btn-rotate" class="icon-btn" title="Rotar">↻</button>
+        <button id="btn-era" class="icon-btn gold">⚔️ Era II: 100👥</button>
+        <button id="btn-trade" class="icon-btn">🌐 Comercio</button>
+        <button id="btn-weather" class="icon-btn">☀️ Clima</button>
+        <button id="btn-disasters" class="icon-btn">⚡</button>
+        <button id="btn-undo" class="icon-btn">↩️</button>
+        <button id="btn-rotate" class="icon-btn">↻</button>
         <button id="btn-speed" class="icon-btn">▶️</button>
-        <button id="btn-export" class="icon-btn" title="Guardar ciudad">💾</button>
-        <button id="btn-region" class="icon-btn" title="Nuevo mapa">🗺️</button>
+        <button id="btn-export" class="icon-btn">💾</button>
+        <button id="btn-region" class="icon-btn">🗺️</button>
       </div>
     </div>
-
     <aside id="disasters-bar" style="display:none;">
       <div style="font-size:14px;font-weight:900;color:#fca5a5;margin-bottom:4px;display:flex;justify-content:space-between;align-items:center;">
         <span>🔥 Panel Maestro de Desastres</span>
         <button id="btn-close-disasters" class="icon-btn" style="height:28px;min-width:32px;font-size:12px;">✕</button>
       </div>
-      <div class="disaster-row">
-        <span class="dis-lbl">🌧️ Lluvia & Rayos</span>
-        <button class="dis-btn" id="db-rain" onclick="window.game.toggleManualDisaster('rain')">Lluvia Suave</button>
-        <button class="dis-btn" id="db-storm" onclick="window.game.toggleManualDisaster('storm')">Tormenta Rayos</button>
-      </div>
-      <div class="disaster-row">
-        <span class="dis-lbl">🌪️ Tornados Viento</span>
-        <button class="dis-btn" id="db-tor-soft" onclick="window.game.toggleManualDisaster('tor_soft')">Tornado Suave</button>
-        <button class="dis-btn" id="db-tor-strong" onclick="window.game.toggleManualDisaster('tor_strong')">Tornado Fuerte</button>
-      </div>
-      <div class="disaster-row">
-        <span class="dis-lbl">🏜️ Arena & Tsunami</span>
-        <button class="dis-btn" id="db-sand" onclick="window.game.toggleManualDisaster('sand')">Tormenta Arena</button>
-        <button class="dis-btn" id="db-sand-tor" onclick="window.game.toggleManualDisaster('sand_tor')">Tornado Arena</button>
-        <button class="dis-btn" id="db-tsunami" onclick="window.game.toggleManualDisaster('tsunami')">Tsunami</button>
-      </div>
-      <div class="disaster-row">
-        <span class="dis-lbl">🌋 Actividad Sísmica</span>
-        <button class="dis-btn" id="db-quake-soft" onclick="window.game.toggleManualDisaster('quake_soft')">Sismo Moderado</button>
-        <button class="dis-btn" id="db-quake-strong" onclick="window.game.toggleManualDisaster('quake_strong')">Terremoto + Grietas</button>
-      </div>
+      <div class="disaster-row"><span class="dis-lbl">🌧️ Lluvia & Rayos</span><button class="dis-btn" onclick="window.game.toggleManualDisaster('rain')">Lluvia Suave</button><button class="dis-btn" onclick="window.game.toggleManualDisaster('storm')">Tormenta Rayos</button></div>
+      <div class="disaster-row"><span class="dis-lbl">🌪️ Tornados Viento</span><button class="dis-btn" onclick="window.game.toggleManualDisaster('tor_soft')">Tornado Suave</button><button class="dis-btn" onclick="window.game.toggleManualDisaster('tor_strong')">Tornado Fuerte</button></div>
+      <div class="disaster-row"><span class="dis-lbl">🏜️ Arena & Tsunami</span><button class="dis-btn" onclick="window.game.toggleManualDisaster('sand')">Tormenta Arena</button><button class="dis-btn" onclick="window.game.toggleManualDisaster('sand_tor')">Tornado Arena</button><button class="dis-btn" onclick="window.game.toggleManualDisaster('tsunami')">Tsunami</button></div>
+      <div class="disaster-row"><span class="dis-lbl">🌋 Actividad Sísmica</span><button class="dis-btn" onclick="window.game.toggleManualDisaster('quake_soft')">Sismo Moderado</button><button class="dis-btn" onclick="window.game.toggleManualDisaster('quake_strong')">Terremoto + Grietas</button></div>
     </aside>
-
     <div id="banner"></div>
-
-    <div id="minimap-wrap">
-      <canvas id="minimap" width="132" height="98"></canvas>
-    </div>
-
+    <div id="minimap-wrap"><canvas id="minimap" width="132" height="98"></canvas></div>
     <aside id="workers-drawer">
-      <div class="drawer-head">
-        <span>👷 Trabajadores (<span id="w-free">0</span> libres)</span>
-        <button id="btn-auto" class="icon-btn gold" style="height:30px;font-size:12px;">⚡ Auto</button>
-      </div>
+      <div class="drawer-head"><span>👷 Trabajadores (<span id="w-free">0</span> libres)</span><button id="btn-auto" class="icon-btn gold" style="height:30px;font-size:12px;">⚡ Auto</button></div>
       <div id="roles-list"></div>
     </aside>
-
     <section id="dock">
       <div id="tabs" class="tabs">
         <button class="tab-btn active" data-sec="roads">🛣️ Calles</button>
@@ -488,7 +117,6 @@
       </div>
       <div id="cards" class="cards"></div>
     </section>
-
     <div id="modal">
       <div class="modal-box">
         <div id="modal-title" class="modal-title">🗺️ Elige tu Región</div>
@@ -500,79 +128,51 @@
       </div>
     </div>
   </div>
-
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.getRegistrations().then(regs => {
-          for (const reg of regs) reg.update();
-        }).catch(() => {});
-        navigator.serviceWorker.register('./sw.js?v=6').catch(() => {});
+        navigator.serviceWorker.getRegistrations().then(r => r.forEach(x => x.update())).catch(() => {});
+        navigator.serviceWorker.register('./sw.js?v=8').catch(() => {});
       });
     }
-
     if (typeof CanvasRenderingContext2D !== 'undefined' && !CanvasRenderingContext2D.prototype.roundRect) {
       CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
         const rad = typeof r === 'number' ? r : (Array.isArray(r) ? r[0] : 0);
         const rr = Math.min(rad, Math.abs(w) * 0.5, Math.abs(h) * 0.5);
-        this.beginPath();
-        this.moveTo(x + rr, y);
-        this.arcTo(x + w, y, x + w, y + h, rr);
-        this.arcTo(x + w, y + h, x, y + h, rr);
-        this.arcTo(x, y + h, x, y, rr);
-        this.arcTo(x, y, x + w, y, rr);
-        this.closePath();
-        return this;
+        this.beginPath(); this.moveTo(x + rr, y); this.arcTo(x + w, y, x + w, y + h, rr); this.arcTo(x + w, y + h, x, y + h, rr); this.arcTo(x, y + h, x, y, rr); this.arcTo(x, y, x + w, y, rr); this.closePath(); return this;
       };
     }
 
-    const MAP_W = 2600;
-    const MAP_H = 1950;
-    const ROAD_W = 36;
-    const SAVE_KEY = 'arquitecto_ipad_pwa_v6';
-
+    const MAP_W = 2600, MAP_H = 1950, ROAD_W = 36, SAVE_KEY = 'arquitecto_ipad_pwa_v8';
     const REGIONS = {
       valley: { id: 'valley', icon: '🌿', name: 'Valle Verde',   g1: '#5f9e49', g2: '#528c3e', water: '#0284c7', bank: '#e7d39a', trees: 32, rocks: 18, deer: 14, rabbits: 16, style: 'river', risks: { tornado: 0.45, quake: 0.30, sand: 0.15, tsunami: 0.10 } },
       nordic: { id: 'nordic', icon: '🌲', name: 'Bosque Norte',  g1: '#467a52', g2: '#3a6845', water: '#0369a1', bank: '#cbd5e1', trees: 48, rocks: 22, deer: 20, rabbits: 20, style: 'fork',  risks: { quake: 0.45, tornado: 0.35, tsunami: 0.15, sand: 0.05 } },
       mesa:   { id: 'mesa',   icon: '🏜️', name: 'Meseta Dorada', g1: '#c29b61', g2: '#af884e', water: '#0ea5e9', bank: '#fde68a', trees: 16, rocks: 36, deer: 8,  rabbits: 10, style: 'river', risks: { sand: 0.55, quake: 0.25, tornado: 0.15, tsunami: 0.05 } },
       coast:  { id: 'coast',  icon: '🌊', name: 'Costa Azul',    g1: '#70a348', g2: '#61923b', water: '#0284c7', bank: '#f6df9d', trees: 26, rocks: 22, deer: 12, rabbits: 14, style: 'bay',   risks: { tsunami: 0.50, quake: 0.25, tornado: 0.15, sand: 0.10 } }
     };
-
     const SEASONS = [
       { id: 'spring', ico: '🌿', name: 'Primavera', temp: 20, tint: 'rgba(52, 211, 153, 0.04)', leaf1: '#166534', leaf2: '#15803d', snow: false },
       { id: 'summer', ico: '☀️', name: 'Verano',    temp: 34, tint: 'rgba(251, 191, 36, 0.11)', leaf1: '#4d7c0f', leaf2: '#65a30d', snow: false },
       { id: 'autumn', ico: '🍂', name: 'Otoño',     temp: 15, tint: 'rgba(217, 119, 6, 0.13)',  leaf1: '#b45309', leaf2: '#d97706', snow: false },
       { id: 'winter', ico: '❄️', name: 'Invierno',  temp: 2,  tint: 'rgba(186, 230, 253, 0.16)',leaf1: '#334155', leaf2: '#475569', snow: true  }
     ];
-
-    // Progresión automática de 4 Eras por población: 100 -> 500 -> 1500 -> Era IV Futura
     const ERAS = {
       1: { name: 'Era I · Medieval',    ico: '🏰', next: 'Era II',  reqPop: 100 },
       2: { name: 'Era II · Industrial', ico: '⚙️', next: 'Era III', reqPop: 500 },
       3: { name: 'Era III · Moderna',   ico: '🏙️', next: 'Era IV',  reqPop: 1500 },
       4: { name: 'Era IV · Futura',     ico: '🚀', next: 'Máxima',  reqPop: null }
     };
-
     const ROLES = {
-      wood:   { ico: '🪓', name: 'Leñadores' },
-      stone:  { ico: '⛏️', name: 'Mineros' },
-      farm:   { ico: '🌾', name: 'Granjeros' },
-      hunter: { ico: '🏹', name: 'Cazadores' },
-      eng:    { ico: '👷‍♂️', name: 'Ingenieros' },
-      guard:  { ico: '⚔️', name: 'Guardias' },
-      fire:   { ico: '🚒', name: 'Bomberos' },
-      civic:  { ico: '⚕️', name: 'Cívicos' }
+      wood: { ico: '🪓', name: 'Leñadores' }, stone: { ico: '⛏️', name: 'Mineros' }, farm: { ico: '🌾', name: 'Granjeros' },
+      hunter: { ico: '🏹', name: 'Cazadores' }, eng: { ico: '👷‍♂️', name: 'Ingenieros' }, guard: { ico: '⚔️', name: 'Guardias' },
+      fire: { ico: '🚒', name: 'Bomberos' }, civic: { ico: '⚕️', name: 'Cívicos' }
     };
-
     const ITEMS = {
-      // CALLES
       dirt_road:   { sec: 'roads', kind: 'road', tier: 1, era: 1, ico: '🟫', name: 'Tierra',      cost: { gold: 15 } },
       stone_road:  { sec: 'roads', kind: 'road', tier: 2, era: 1, ico: '🧱', name: 'Piedra',      cost: { gold: 25, stone: 6 } },
       cobble_road: { sec: 'roads', kind: 'road', tier: 3, era: 2, ico: '🛤️', name: 'Adoquín',     cost: { gold: 45, stone: 12, metal: 4 } },
       modern_road: { sec: 'roads', kind: 'road', tier: 4, era: 3, ico: '🛣️', name: 'Asfalto',     cost: { gold: 65, stone: 16, metal: 8 } },
       maglev_road: { sec: 'roads', kind: 'road', tier: 5, era: 4, ico: '🚄', name: 'Vía Maglev',  cost: { gold: 120, metal: 20, copper: 18 } },
-
-      // CASAS (escaladas para llegar a 100, 500 y 1500 habitantes)
       hut:         { sec: 'houses', kind: 'bldg', era: 1, ico: '🛖', name: 'Choza',       w: 50, h: 46, cost: { gold: 45, wood: 10 }, pop: 20, tax: 12 },
       manor:       { sec: 'houses', kind: 'bldg', era: 1, ico: '🏡', name: 'Casona',      w: 62, h: 54, cost: { gold: 95, wood: 20, stone: 10 }, pop: 45, tax: 26 },
       brick_house: { sec: 'houses', kind: 'bldg', era: 2, ico: '🏘️', name: 'Victoriana',  w: 68, h: 58, cost: { gold: 190, wood: 22, stone: 25, metal: 6 }, pop: 110, tax: 55 },
@@ -580,8 +180,6 @@
       condo:       { sec: 'houses', kind: 'bldg', era: 3, ico: '🏬', name: 'Condominio',  w: 82, h: 70, cost: { gold: 520, stone: 60, metal: 22, copper: 14 }, pop: 420, tax: 160 },
       tower:       { sec: 'houses', kind: 'bldg', era: 3, ico: '🏙️', name: 'Rascacielos', w: 92, h: 82, cost: { gold: 850, stone: 95, metal: 38, copper: 26 }, pop: 750, tax: 280 },
       arcology:    { sec: 'houses', kind: 'bldg', era: 4, ico: '🛸', name: 'Arcología',   w: 104, h: 92, cost: { gold: 1500, metal: 75, copper: 60 }, pop: 1500, tax: 620 },
-
-      // PRODUCCIÓN, CAZA Y MINERÍA (Oro, Metal, Cobre)
       lumber:      { sec: 'prod', kind: 'bldg', era: 1, ico: '🪓', name: 'Leñador',     w: 64, h: 54, cost: { gold: 65, wood: 10 }, role: 'wood', slots: 4, near: 'tree', outW: 9 },
       quarry:      { sec: 'prod', kind: 'bldg', era: 1, ico: '⛏️', name: 'Cantera',     w: 70, h: 58, cost: { gold: 85, wood: 15 }, role: 'stone', slots: 4, near: 'rock', outS: 9, outG: 6, outC: 3 },
       farm:        { sec: 'prod', kind: 'bldg', era: 1, ico: '🌾', name: 'Granja',      w: 86, h: 68, cost: { gold: 70, wood: 14 }, role: 'farm', slots: 4, outF: 14, outG: 8 },
@@ -591,8 +189,6 @@
       mine:        { sec: 'prod', kind: 'bldg', era: 2, ico: '🪨', name: 'Mina Metales',w: 80, h: 66, cost: { gold: 260, wood: 28, stone: 24 }, role: 'stone', slots: 6, near: 'rock', outS: 14, outG: 24, outM: 12, outC: 10 },
       power:       { sec: 'prod', kind: 'bldg', era: 3, ico: '⚡', name: 'Eléctrica',   w: 94, h: 76, cost: { gold: 600, stone: 75, metal: 30, copper: 28 }, role: 'civic', slots: 5, outG: 50, boost: true },
       fusion:      { sec: 'prod', kind: 'bldg', era: 4, ico: '⚛️', name: 'Reactor Fusión',w: 102, h: 84, cost: { gold: 1400, metal: 65, copper: 55 }, role: 'civic', slots: 6, outG: 140, outM: 18, outC: 18, boost: true },
-
-      // SERVICIOS, POSTES DE LUZ Y COMERCIO REGIONAL
       keep:        { sec: 'serv', kind: 'bldg', era: 1, ico: '🛡️', name: 'Cuartel',     w: 68, h: 68, cost: { gold: 110, wood: 18, stone: 22 }, role: 'guard', slots: 4 },
       well:        { sec: 'serv', kind: 'bldg', era: 1, ico: '🪣', name: 'Bomberos',    w: 54, h: 54, cost: { gold: 75, wood: 12, stone: 12 }, role: 'fire', slots: 3 },
       market:      { sec: 'serv', kind: 'bldg', era: 1, ico: '⚖️', name: 'Mercado',     w: 78, h: 66, cost: { gold: 130, wood: 20, stone: 14 }, role: 'farm', slots: 4, outG: 32, outF: 8 },
@@ -602,38 +198,26 @@
       street_light:{ sec: 'serv', kind: 'bldg', era: 3, ico: '💡', name: 'Poste de Luz',w: 26, h: 26, cost: { gold: 40, metal: 4, copper: 5 }, light: true },
       hospital:    { sec: 'serv', kind: 'bldg', era: 3, ico: '🏥', name: 'Hospital',    w: 88, h: 72, cost: { gold: 560, stone: 75, metal: 24, copper: 16 }, role: 'civic', slots: 6 },
       shield_dome: { sec: 'serv', kind: 'bldg', era: 4, ico: '🔮', name: 'Domo Clima',  w: 90, h: 90, cost: { gold: 1350, metal: 55, copper: 50 }, role: 'eng', slots: 5, dome: true },
-
-      // OBRAS
       repair:      { sec: 'tools', kind: 'tool', tool: 'repair',  era: 1, ico: '🔨', name: 'Reparar / Sellar', cost: { gold: 15, wood: 5 } },
       upgrade:     { sec: 'tools', kind: 'tool', tool: 'upgrade', era: 1, ico: '⬆️', name: 'Mejorar Calle',    cost: { gold: 20, stone: 5 } },
       demolish:    { sec: 'tools', kind: 'tool', tool: 'demolish',era: 1, ico: '🚜', name: 'Demoler',          cost: {} }
     };
 
     const dist = (ax, ay, bx, by) => Math.hypot(bx - ax, by - ay);
-
     function projSeg(px, py, ax, ay, bx, by) {
       const dx = bx - ax, dy = by - ay, l2 = dx * dx + dy * dy;
       if (l2 < 1e-6) return { x: ax, y: ay, t: 0, d: dist(px, py, ax, ay) };
       const t = Math.max(0, Math.min(1, ((px - ax) * dx + (py - ay) * dy) / l2));
-      const x = ax + t * dx, y = ay + t * dy;
-      return { x, y, t, d: dist(px, py, x, y) };
+      return { x: ax + t * dx, y: ay + t * dy, t, d: dist(px, py, ax + t * dx, ay + t * dy) };
     }
-
     function obb(cx, cy, w, h, ang) {
       const c = Math.cos(ang), s = Math.sin(ang), hw = w * 0.5, hh = h * 0.5;
-      return [
-        { x: cx + (-hw * c + hh * s), y: cy + (-hw * s - hh * c) },
-        { x: cx + ( hw * c + hh * s), y: cy + ( hw * s - hh * c) },
-        { x: cx + ( hw * c - hh * s), y: cy + ( hw * s + hh * c) },
-        { x: cx + (-hw * c - hh * s), y: cy + (-hw * s - hh * c) }
-      ];
+      return [{ x: cx + (-hw * c + hh * s), y: cy + (-hw * s - hh * c) }, { x: cx + (hw * c + hh * s), y: cy + (hw * s - hh * c) }, { x: cx + (hw * c - hh * s), y: cy + (hw * s + hh * c) }, { x: cx + (-hw * c - hh * s), y: cy + (-hw * s - hh * c) }];
     }
-
     function overlap(a, b) {
       for (const poly of [a, b]) {
         for (let i = 0; i < poly.length; i++) {
-          const p1 = poly[i], p2 = poly[(i + 1) % poly.length];
-          const nx = -(p2.y - p1.y), ny = p2.x - p1.x;
+          const p1 = poly[i], p2 = poly[(i + 1) % poly.length], nx = -(p2.y - p1.y), ny = p2.x - p1.x;
           let minA = Infinity, maxA = -Infinity, minB = Infinity, maxB = -Infinity;
           for (const v of a) { const p = v.x * nx + v.y * ny; if (p < minA) minA = p; if (p > maxA) maxA = p; }
           for (const v of b) { const p = v.x * nx + v.y * ny; if (p < minB) minB = p; if (p > maxB) maxB = p; }
@@ -645,1305 +229,524 @@
 
     class Game {
       constructor() {
-        this.canvas = document.getElementById('world');
-        this.ctx = this.canvas.getContext('2d');
-        this.mini = document.getElementById('minimap');
-        this.mctx = this.mini.getContext('2d');
-
-        this.bg = document.createElement('canvas');
-        this.bg.width = MAP_W;
-        this.bg.height = MAP_H;
-        this.bgCtx = this.bg.getContext('2d');
-        this.bgDirty = true;
-
+        this.canvas = document.getElementById('world'); this.ctx = this.canvas.getContext('2d');
+        this.mini = document.getElementById('minimap'); this.mctx = this.mini.getContext('2d');
+        this.bg = document.createElement('canvas'); this.bg.width = MAP_W; this.bg.height = MAP_H; this.bgCtx = this.bg.getContext('2d'); this.bgDirty = true;
         this.cam = { x: MAP_W * 0.48, y: MAP_H * 0.5, vx: 0, vy: 0, vw: window.innerWidth, vh: window.innerHeight };
-
-        this.sec = 'roads';
-        this.item = 'dirt_road';
-        this.rot = 0;
-        this.speed = 1;
-        this.history = [];
-
-        this.touches = new Map();
-        this.gesture = null;
-
-        this.initWorld('valley');
-        this.bindEvents();
-        this.resize();
-
-        if (!this.load(true)) {
-          this.openRegionModal(true);
-        }
-
-        this.renderCards();
-        this.renderWorkers();
-        this.updateHUD();
-
-        this.lastT = performance.now();
-        requestAnimationFrame(t => this.loop(t));
+        this.sec = 'roads'; this.item = 'dirt_road'; this.rot = 0; this.speed = 1; this.history = [];
+        this.touches = new Map(); this.gesture = null;
+        this.initWorld('valley'); this.bindEvents(); this.resize();
+        if (!this.load(true)) this.openRegionModal(true);
+        this.renderCards(); this.renderWorkers(); this.updateHUD();
+        this.lastT = performance.now(); requestAnimationFrame(t => this.loop(t));
       }
-
       initWorld(regId) {
-        this.uid = 1;
-        this.regId = regId || 'valley';
-        this.era = 1;
+        this.uid = 1; this.regId = regId || 'valley'; this.era = 1;
         this.res = { gold: 700, wood: 150, stone: 100, metal: 25, copper: 25, food: 60 };
-        this.pop = 0;
-        this.popCap = 0;
+        this.pop = 0; this.popCap = 0;
         this.workers = { wood: 0, stone: 0, farm: 0, hunter: 0, eng: 0, guard: 0, fire: 0, civic: 0 };
-        this.nodes = [];
-        this.roads = [];
-        this.bldgs = [];
-        this.agents = [];
-        this.deers = [];
-        this.rabbits = [];
-        this.history = [];
-
-        // Ciclo Día y Noche (0..24 horas, inicia a las 10:00 AM)
-        this.timeOfDay = 10.0;
-
-        this.seasonIdx = 0;
-        this.seasonTimer = 75;
-        this.temperature = 20;
-
-        this.weather = {
-          mode: 'auto',
-          state: 'clear',
-          timer: 45,
-          tide: 0,
-          lightningFlash: 0,
-          bolts: [],
-          drops: Array.from({ length: 180 }, () => ({
-            x: Math.random() * 1400,
-            y: Math.random() * 1000,
-            l: 10 + Math.random() * 10,
-            s: 420 + Math.random() * 200
-          })),
-          sandParticles: Array.from({ length: 220 }, () => ({
-            x: Math.random() * 1400,
-            y: Math.random() * 1000,
-            vx: 300 + Math.random() * 200,
-            vy: 20 + Math.random() * 30,
-            size: 1.5 + Math.random() * 2
-          })),
-          windGusts: Array.from({ length: 45 }, () => ({
-            x: Math.random() * 1400,
-            y: Math.random() * 1000,
-            len: 35 + Math.random() * 45,
-            spd: 380 + Math.random() * 220
-          }))
+        this.nodes = []; this.roads = []; this.bldgs = []; this.agents = []; this.deers = []; this.rabbits = []; this.history = [];
+        this.timeOfDay = 10.0; this.seasonIdx = 0; this.seasonTimer = 75; this.temperature = 20;
+        this.weather = { mode: 'auto', state: 'clear', timer: 45, tide: 0, lightningFlash: 0, bolts: [],
+          drops: Array.from({ length: 180 }, () => ({ x: Math.random() * 1400, y: Math.random() * 1000, l: 10 + Math.random() * 10, s: 420 + Math.random() * 200 })),
+          sandParticles: Array.from({ length: 220 }, () => ({ x: Math.random() * 1400, y: Math.random() * 1000, vx: 300 + Math.random() * 200, vy: 20 + Math.random() * 30, size: 1.5 + Math.random() * 2 })),
+          windGusts: Array.from({ length: 45 }, () => ({ x: Math.random() * 1400, y: Math.random() * 1000, len: 35 + Math.random() * 45, spd: 380 + Math.random() * 220 }))
         };
-
-        this.activeDisaster = null;
-        this.tornado = null;
-        this.windWarning = 0;
-        this.shakeTimer = 0;
-        this.shakeMag = 0;
-        this.fissures = [];
-        this.brownScars = [];
-        this.tsunamiWave = null;
-        this.sandIntensity = 0;
-
-        this.prodT = 4.5;
-        this.fireT = 130;
-        this.saveT = 15;
-        this.surpriseTimer = 280 + Math.random() * 40;
-
-        this.buildNature(this.regId);
-        this.spawnWildlife();
-        this.cam.x = MAP_W * 0.48;
-        this.cam.y = MAP_H * 0.5;
-        this.cam.vx = 0;
-        this.cam.vy = 0;
+        this.activeDisaster = null; this.tornado = null; this.windWarning = 0; this.shakeTimer = 0; this.shakeMag = 0;
+        this.fissures = []; this.brownScars = []; this.tsunamiWave = null; this.sandIntensity = 0;
+        this.prodT = 4.5; this.fireT = 130; this.saveT = 15; this.surpriseTimer = 280 + Math.random() * 40;
+        this.buildNature(this.regId); this.spawnWildlife();
+        this.cam.x = MAP_W * 0.48; this.cam.y = MAP_H * 0.5; this.cam.vx = 0; this.cam.vy = 0;
       }
-
       spawnWildlife() {
         const reg = REGIONS[this.regId] || REGIONS.valley;
-        this.deers = [];
-        for (let i = 0; i < (reg.deer || 14); i++) {
-          let x = 200 + Math.random() * (MAP_W - 400);
-          let y = 200 + Math.random() * (MAP_H - 400);
+        this.deers = Array.from({ length: reg.deer || 14 }, () => {
+          let x = 200 + Math.random() * (MAP_W - 400), y = 200 + Math.random() * (MAP_H - 400);
           if (this.inWater(x, y, 30)) { x = MAP_W * 0.4; y = MAP_H * 0.4; }
-          this.deers.push({
-            id: this.uid++,
-            x, y,
-            tx: x + (Math.random() - 0.5) * 300,
-            ty: y + (Math.random() - 0.5) * 300,
-            ang: Math.random() * Math.PI * 2,
-            wait: Math.random() * 3
-          });
-        }
-
-        this.rabbits = [];
-        for (let i = 0; i < (reg.rabbits || 16); i++) {
-          let x = 180 + Math.random() * (MAP_W - 360);
-          let y = 180 + Math.random() * (MAP_H - 360);
+          return { id: this.uid++, x, y, tx: x + (Math.random() - 0.5) * 300, ty: y + (Math.random() - 0.5) * 300, ang: Math.random() * Math.PI * 2, wait: Math.random() * 3 };
+        });
+        this.rabbits = Array.from({ length: reg.rabbits || 16 }, () => {
+          let x = 180 + Math.random() * (MAP_W - 360), y = 180 + Math.random() * (MAP_H - 360);
           if (this.inWater(x, y, 25)) { x = MAP_W * 0.45; y = MAP_H * 0.45; }
-          this.rabbits.push({
-            id: this.uid++,
-            x, y,
-            tx: x + (Math.random() - 0.5) * 180,
-            ty: y + (Math.random() - 0.5) * 180,
-            ang: Math.random() * Math.PI * 2,
-            wait: Math.random() * 2,
-            hop: Math.random() * 6
-          });
-        }
+          return { id: this.uid++, x, y, tx: x + (Math.random() - 0.5) * 180, ty: y + (Math.random() - 0.5) * 180, ang: Math.random() * Math.PI * 2, wait: Math.random() * 2, hop: Math.random() * 6 };
+        });
       }
-
       buildNature(regId) {
         const reg = REGIONS[regId] || REGIONS.valley;
-        this.water = [];
-        this.trees = [];
-        this.rocks = [];
-        this.coastX = null;
-
+        this.water = []; this.trees = []; this.rocks = []; this.coastX = null;
         if (reg.style === 'river') {
-          for (let i = 0; i < 24; i++) {
-            const t1 = i / 24, t2 = (i + 1) / 24;
-            this.water.push({
-              ax: t1 * MAP_W, ay: MAP_H * 0.32 + Math.sin(t1 * 6.5) * 180 + t1 * 240,
-              bx: t2 * MAP_W, by: MAP_H * 0.32 + Math.sin(t2 * 6.5) * 180 + t2 * 240,
-              r: 36
-            });
-          }
+          for (let i = 0; i < 24; i++) { const t1 = i / 24, t2 = (i + 1) / 24; this.water.push({ ax: t1 * MAP_W, ay: MAP_H * 0.32 + Math.sin(t1 * 6.5) * 180 + t1 * 240, bx: t2 * MAP_W, by: MAP_H * 0.32 + Math.sin(t2 * 6.5) * 180 + t2 * 240, r: 36 }); }
         } else if (reg.style === 'fork') {
-          for (let i = 0; i < 20; i++) {
-            const t1 = i / 20, t2 = (i + 1) / 20;
-            this.water.push({
-              ax: MAP_W * 0.2 + t1 * MAP_W * 0.7, ay: t1 * MAP_H,
-              bx: MAP_W * 0.2 + t2 * MAP_W * 0.7, by: t2 * MAP_H,
-              r: 36
-            });
-          }
+          for (let i = 0; i < 20; i++) { const t1 = i / 20, t2 = (i + 1) / 20; this.water.push({ ax: MAP_W * 0.2 + t1 * MAP_W * 0.7, ay: t1 * MAP_H, bx: MAP_W * 0.2 + t2 * MAP_W * 0.7, by: t2 * MAP_H, r: 36 }); }
         } else {
           this.coastX = MAP_W - 420;
-          for (let i = 0; i < 15; i++) {
-            const t1 = i / 15, t2 = (i + 1) / 15;
-            this.water.push({
-              ax: t1 * (this.coastX + 50), ay: 340 + Math.sin(t1 * 5) * 65,
-              bx: t2 * (this.coastX + 50), by: 340 + Math.sin(t2 * 5) * 65,
-              r: 28
-            });
-          }
+          for (let i = 0; i < 15; i++) { const t1 = i / 15, t2 = (i + 1) / 15; this.water.push({ ax: t1 * (this.coastX + 50), ay: 340 + Math.sin(t1 * 5) * 65, bx: t2 * (this.coastX + 50), by: 340 + Math.sin(t2 * 5) * 65, r: 28 }); }
         }
-
         let seed = regId.split('').reduce((a, c) => a + c.charCodeAt(0) * 41, 1024);
         const rnd = () => { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
-
         for (let i = 0; i < reg.trees; i++) {
           const cx = 140 + rnd() * (MAP_W - 280), cy = 140 + rnd() * (MAP_H - 280);
           if (this.inWater(cx, cy, 70) || dist(cx, cy, MAP_W * 0.48, MAP_H * 0.5) < 200) continue;
           for (let k = 0; k < 6; k++) {
             const tx = cx + (rnd() - 0.5) * 120, ty = cy + (rnd() - 0.5) * 120;
-            if (tx > 60 && tx < MAP_W - 60 && ty > 60 && ty < MAP_H - 60 && !this.inWater(tx, ty, 48)) {
-              this.trees.push({ x: tx, y: ty, r: 15 + rnd() * 8, s: rnd() });
-            }
+            if (tx > 60 && tx < MAP_W - 60 && ty > 60 && ty < MAP_H - 60 && !this.inWater(tx, ty, 48)) this.trees.push({ x: tx, y: ty, r: 15 + rnd() * 8, s: rnd() });
           }
         }
-
         for (let i = 0; i < reg.rocks; i++) {
           const cx = 160 + rnd() * (MAP_W - 320), cy = 160 + rnd() * (MAP_H - 320);
           if (this.inWater(cx, cy, 70) || dist(cx, cy, MAP_W * 0.48, MAP_H * 0.5) < 210) continue;
           for (let k = 0; k < 3; k++) {
             const rx = cx + (rnd() - 0.5) * 80, ry = cy + (rnd() - 0.5) * 80;
             if (!this.inWater(rx, ry, 48) && !this.trees.some(t => dist(rx, ry, t.x, t.y) < 30)) {
-              const v = rnd();
-              const ore = v < 0.35 ? 'gold' : (v < 0.68 ? 'copper' : 'metal');
-              this.rocks.push({ x: rx, y: ry, r: 18 + rnd() * 9, ore });
+              const v = rnd(); this.rocks.push({ x: rx, y: ry, r: 18 + rnd() * 9, ore: v < 0.35 ? 'gold' : (v < 0.68 ? 'copper' : 'metal') });
             }
           }
         }
-
         this.bgDirty = true;
       }
-
       inWater(x, y, margin = 0) {
         if (this.coastX && x > this.coastX - margin + Math.sin(y * 0.008) * 40) return true;
-        for (const s of this.water) {
-          if (projSeg(x, y, s.ax, s.ay, s.bx, s.by).d < s.r + margin) return true;
-        }
+        for (const s of this.water) if (projSeg(x, y, s.ax, s.ay, s.bx, s.by).d < s.r + margin) return true;
         return false;
       }
-
       onFissure(x, y, margin = 18) {
-        for (const f of this.fissures) {
-          for (let i = 0; i < f.pts.length - 1; i++) {
-            const p1 = f.pts[i], p2 = f.pts[i + 1];
-            if (projSeg(x, y, p1.x, p1.y, p2.x, p2.y).d < margin) return f;
-          }
-        }
+        for (const f of this.fissures) for (let i = 0; i < f.pts.length - 1; i++) if (projSeg(x, y, f.pts[i].x, f.pts[i].y, f.pts[i + 1].x, f.pts[i + 1].y).d < margin) return f;
         return null;
       }
-
       renderBg() {
-        const reg = REGIONS[this.regId] || REGIONS.valley;
-        const season = SEASONS[this.seasonIdx] || SEASONS[0];
-        const c = this.bgCtx;
-        const g = c.createLinearGradient(0, 0, MAP_W, MAP_H);
-        g.addColorStop(0, reg.g1);
-        g.addColorStop(1, reg.g2);
-        c.fillStyle = g;
-        c.fillRect(0, 0, MAP_W, MAP_H);
-
-        c.fillStyle = season.tint;
-        c.fillRect(0, 0, MAP_W, MAP_H);
-
+        const reg = REGIONS[this.regId] || REGIONS.valley, season = SEASONS[this.seasonIdx] || SEASONS[0], c = this.bgCtx;
+        const g = c.createLinearGradient(0, 0, MAP_W, MAP_H); g.addColorStop(0, reg.g1); g.addColorStop(1, reg.g2);
+        c.fillStyle = g; c.fillRect(0, 0, MAP_W, MAP_H);
+        c.fillStyle = season.tint; c.fillRect(0, 0, MAP_W, MAP_H);
         for (let x = 110; x < MAP_W; x += 220) {
           for (let y = 110; y < MAP_H; y += 220) {
-            c.fillStyle = 'rgba(255,255,255,0.03)';
-            c.beginPath();
-            c.arc(x + Math.sin(y) * 30, y + Math.cos(x) * 30, 88, 0, Math.PI * 2);
-            c.fill();
+            c.fillStyle = 'rgba(255,255,255,0.03)'; c.beginPath(); c.arc(x + Math.sin(y) * 30, y + Math.cos(x) * 30, 88, 0, Math.PI * 2); c.fill();
           }
         }
-
         if (this.coastX) {
-          c.fillStyle = reg.bank;
-          c.beginPath(); c.moveTo(MAP_W, 0); c.lineTo(MAP_W, MAP_H);
+          c.fillStyle = reg.bank; c.beginPath(); c.moveTo(MAP_W, 0); c.lineTo(MAP_W, MAP_H);
           for (let y = MAP_H; y >= 0; y -= 30) c.lineTo(this.coastX - 24 + Math.sin(y * 0.008) * 40, y);
           c.closePath(); c.fill();
-
-          c.fillStyle = reg.water;
-          c.beginPath(); c.moveTo(MAP_W, 0); c.lineTo(MAP_W, MAP_H);
+          c.fillStyle = reg.water; c.beginPath(); c.moveTo(MAP_W, 0); c.lineTo(MAP_W, MAP_H);
           for (let y = MAP_H; y >= 0; y -= 30) c.lineTo(this.coastX + Math.sin(y * 0.008) * 40, y);
           c.closePath(); c.fill();
         }
-
         c.lineCap = 'round';
-        for (const s of this.water) {
-          c.strokeStyle = reg.bank; c.lineWidth = (s.r + 11) * 2;
-          c.beginPath(); c.moveTo(s.ax, s.ay); c.lineTo(s.bx, s.by); c.stroke();
-        }
-        for (const s of this.water) {
-          c.strokeStyle = reg.water; c.lineWidth = s.r * 2;
-          c.beginPath(); c.moveTo(s.ax, s.ay); c.lineTo(s.bx, s.by); c.stroke();
-        }
-
+        for (const s of this.water) { c.strokeStyle = reg.bank; c.lineWidth = (s.r + 11) * 2; c.beginPath(); c.moveTo(s.ax, s.ay); c.lineTo(s.bx, s.by); c.stroke(); }
+        for (const s of this.water) { c.strokeStyle = reg.water; c.lineWidth = s.r * 2; c.beginPath(); c.moveTo(s.ax, s.ay); c.lineTo(s.bx, s.by); c.stroke(); }
         for (const r of this.rocks) {
-          c.fillStyle = 'rgba(0,0,0,0.22)';
-          c.beginPath(); c.arc(r.x + 4, r.y + 4, r.r, 0, Math.PI * 2); c.fill();
-          c.fillStyle = '#64748b';
-          c.beginPath(); c.arc(r.x, r.y, r.r, 0, Math.PI * 2); c.fill();
-          c.fillStyle = '#94a3b8';
-          c.beginPath(); c.arc(r.x - r.r * 0.2, r.y - r.r * 0.25, r.r * 0.45, 0, Math.PI * 2); c.fill();
-
+          c.fillStyle = 'rgba(0,0,0,0.22)'; c.beginPath(); c.arc(r.x + 4, r.y + 4, r.r, 0, Math.PI * 2); c.fill();
+          c.fillStyle = '#64748b'; c.beginPath(); c.arc(r.x, r.y, r.r, 0, Math.PI * 2); c.fill();
+          c.fillStyle = '#94a3b8'; c.beginPath(); c.arc(r.x - r.r * 0.2, r.y - r.r * 0.25, r.r * 0.45, 0, Math.PI * 2); c.fill();
           c.fillStyle = r.ore === 'gold' ? '#facc15' : (r.ore === 'copper' ? '#fb923c' : '#e2e8f0');
           c.beginPath(); c.arc(r.x + r.r * 0.3, r.y + r.r * 0.1, 4, 0, Math.PI * 2); c.fill();
-
-          if (season.snow) {
-            c.fillStyle = 'rgba(248, 250, 252, 0.78)';
-            c.beginPath(); c.arc(r.x - 2, r.y - 3, r.r * 0.65, Math.PI, Math.PI * 2); c.fill();
-          }
+          if (season.snow) { c.fillStyle = 'rgba(248, 250, 252, 0.78)'; c.beginPath(); c.arc(r.x - 2, r.y - 3, r.r * 0.65, Math.PI, Math.PI * 2); c.fill(); }
         }
-
         for (const t of this.trees) {
-          c.fillStyle = 'rgba(0,0,0,0.20)';
-          c.beginPath(); c.arc(t.x + 3, t.y + 4, t.r, 0, Math.PI * 2); c.fill();
-          c.fillStyle = t.s > 0.5 ? season.leaf1 : season.leaf2;
-          c.beginPath(); c.arc(t.x, t.y, t.r, 0, Math.PI * 2); c.fill();
-          if (season.snow) {
-            c.fillStyle = 'rgba(248, 250, 252, 0.85)';
-            c.beginPath(); c.arc(t.x - 1, t.y - 2, t.r * 0.75, 0, Math.PI * 2); c.fill();
-          } else {
-            c.fillStyle = 'rgba(255,255,255,0.18)';
-            c.beginPath(); c.arc(t.x - t.r * 0.25, t.y - t.r * 0.25, t.r * 0.42, 0, Math.PI * 2); c.fill();
-          }
+          c.fillStyle = 'rgba(0,0,0,0.20)'; c.beginPath(); c.arc(t.x + 3, t.y + 4, t.r, 0, Math.PI * 2); c.fill();
+          c.fillStyle = t.s > 0.5 ? season.leaf1 : season.leaf2; c.beginPath(); c.arc(t.x, t.y, t.r, 0, Math.PI * 2); c.fill();
+          if (season.snow) { c.fillStyle = 'rgba(248, 250, 252, 0.85)'; c.beginPath(); c.arc(t.x - 1, t.y - 2, t.r * 0.75, 0, Math.PI * 2); c.fill(); }
+          else { c.fillStyle = 'rgba(255,255,255,0.18)'; c.beginPath(); c.arc(t.x - t.r * 0.25, t.y - t.r * 0.25, t.r * 0.42, 0, Math.PI * 2); c.fill(); }
         }
-
-        c.strokeStyle = 'rgba(17,24,39,0.75)';
-        c.lineWidth = 12;
-        c.strokeRect(6, 6, MAP_W - 12, MAP_H - 12);
+        c.strokeStyle = 'rgba(17,24,39,0.75)'; c.lineWidth = 12; c.strokeRect(6, 6, MAP_W - 12, MAP_H - 12);
         this.bgDirty = false;
       }
-
-      toWorld(sx, sy) {
-        return { x: sx - this.cam.vw * 0.5 + this.cam.x, y: sy - this.cam.vh * 0.5 + this.cam.y };
-      }
-
+      toWorld(sx, sy) { return { x: sx - this.cam.vw * 0.5 + this.cam.x, y: sy - this.cam.vh * 0.5 + this.cam.y }; }
       getNode(id) { return this.nodes.find(n => n.id === id) || null; }
-
-      addNode(x, y) {
-        const ex = this.nodes.find(n => dist(n.x, n.y, x, y) < 28);
-        if (ex) return ex;
-        const n = { id: this.uid++, x, y };
-        this.nodes.push(n);
-        return n;
-      }
-
+      addNode(x, y) { const ex = this.nodes.find(n => dist(n.x, n.y, x, y) < 28); if (ex) return ex; const n = { id: this.uid++, x, y }; this.nodes.push(n); return n; }
       snapPoint(wx, wy) {
         let bestN = null, bd = 36;
-        for (const n of this.nodes) {
-          const d = dist(wx, wy, n.x, n.y);
-          if (d < bd) { bd = d; bestN = n; }
-        }
+        for (const n of this.nodes) { const d = dist(wx, wy, n.x, n.y); if (d < bd) { bd = d; bestN = n; } }
         if (bestN) return { x: bestN.x, y: bestN.y, node: bestN, split: null };
-
         let bestP = null, rd = 30, target = null;
         for (const r of this.roads) {
-          const a = this.getNode(r.a), b = this.getNode(r.b);
-          if (!a || !b) continue;
+          const a = this.getNode(r.a), b = this.getNode(r.b); if (!a || !b) continue;
           const p = projSeg(wx, wy, a.x, a.y, b.x, b.y);
           if (p.d < rd && p.t > 0.12 && p.t < 0.88) { rd = p.d; bestP = p; target = r; }
         }
         if (bestP) return { x: bestP.x, y: bestP.y, node: null, split: target };
         return { x: wx, y: wy, node: null, split: null };
       }
-
       splitRoad(road, px, py) {
-        const a = this.getNode(road.a), b = this.getNode(road.b);
-        if (!a || !b) return this.addNode(px, py);
-        if (dist(px, py, a.x, a.y) < 26) return a;
-        if (dist(px, py, b.x, b.y) < 26) return b;
-        const mid = this.addNode(px, py);
-        this.roads = this.roads.filter(r => r.id !== road.id);
-        this.roads.push(
-          { id: this.uid++, a: road.a, b: mid.id, tier: road.tier, bridge: this.crossesWater(a.x, a.y, mid.x, mid.y) },
-          { id: this.uid++, a: mid.id, b: road.b, tier: road.tier, bridge: this.crossesWater(mid.x, mid.y, b.x, b.y) }
-        );
+        const a = this.getNode(road.a), b = this.getNode(road.b); if (!a || !b) return this.addNode(px, py);
+        if (dist(px, py, a.x, a.y) < 26) return a; if (dist(px, py, b.x, b.y) < 26) return b;
+        const mid = this.addNode(px, py); this.roads = this.roads.filter(r => r.id !== road.id);
+        this.roads.push({ id: this.uid++, a: road.a, b: mid.id, tier: road.tier, bridge: this.crossesWater(a.x, a.y, mid.x, mid.y) }, { id: this.uid++, a: mid.id, b: road.b, tier: road.tier, bridge: this.crossesWater(mid.x, mid.y, b.x, b.y) });
         return mid;
       }
-
-      crossesWater(ax, ay, bx, by) {
-        const steps = Math.max(2, Math.ceil(dist(ax, ay, bx, by) / 20));
-        for (let i = 1; i < steps; i++) {
-          const t = i / steps;
-          if (this.inWater(ax + (bx - ax) * t, ay + (by - ay) * t, -4)) return true;
-        }
-        return false;
-      }
-
-      crossesFissure(ax, ay, bx, by) {
-        const steps = Math.max(2, Math.ceil(dist(ax, ay, bx, by) / 16));
-        for (let i = 0; i <= steps; i++) {
-          const t = i / steps;
-          if (this.onFissure(ax + (bx - ax) * t, ay + (by - ay) * t, 16)) return true;
-        }
-        return false;
-      }
-
-      canAfford(cost, mult = 1) {
-        return this.res.gold   >= Math.round((cost.gold || 0) * mult)
-            && this.res.wood   >= Math.round((cost.wood || 0) * mult)
-            && this.res.stone  >= Math.round((cost.stone || 0) * mult)
-            && this.res.metal  >= Math.round((cost.metal || 0) * mult)
-            && this.res.copper >= Math.round((cost.copper || 0) * mult);
-      }
-
-      pay(cost, mult = 1) {
-        this.res.gold   -= Math.round((cost.gold || 0) * mult);
-        this.res.wood   -= Math.round((cost.wood || 0) * mult);
-        this.res.stone  -= Math.round((cost.stone || 0) * mult);
-        this.res.metal  -= Math.round((cost.metal || 0) * mult);
-        this.res.copper -= Math.round((cost.copper || 0) * mult);
-      }
-
+      crossesWater(ax, ay, bx, by) { const s = Math.max(2, Math.ceil(dist(ax, ay, bx, by) / 20)); for (let i = 1; i < s; i++) if (this.inWater(ax + (bx - ax) * (i / s), ay + (by - ay) * (i / s), -4)) return true; return false; }
+      crossesFissure(ax, ay, bx, by) { const s = Math.max(2, Math.ceil(dist(ax, ay, bx, by) / 16)); for (let i = 0; i <= s; i++) if (this.onFissure(ax + (bx - ax) * (i / s), ay + (by - ay) * (i / s), 16)) return true; return false; }
+      canAfford(cost, mult = 1) { return this.res.gold >= Math.round((cost.gold || 0) * mult) && this.res.wood >= Math.round((cost.wood || 0) * mult) && this.res.stone >= Math.round((cost.stone || 0) * mult) && this.res.metal >= Math.round((cost.metal || 0) * mult) && this.res.copper >= Math.round((cost.copper || 0) * mult); }
+      pay(cost, mult = 1) { this.res.gold -= Math.round((cost.gold || 0) * mult); this.res.wood -= Math.round((cost.wood || 0) * mult); this.res.stone -= Math.round((cost.stone || 0) * mult); this.res.metal -= Math.round((cost.metal || 0) * mult); this.res.copper -= Math.round((cost.copper || 0) * mult); }
       costText(cost, mult = 1) {
-        const p = [];
-        const g = Math.round((cost.gold || 0) * mult);
-        const w = Math.round((cost.wood || 0) * mult);
-        const s = Math.round((cost.stone || 0) * mult);
-        const m = Math.round((cost.metal || 0) * mult);
-        const c = Math.round((cost.copper || 0) * mult);
-        if (g > 0) p.push(`${g}🪙`);
-        if (w > 0) p.push(`${w}🪵`);
-        if (s > 0) p.push(`${s}🪨`);
-        if (m > 0) p.push(`${m}⚙️`);
-        if (c > 0) p.push(`${c}🟠`);
+        const p = [], g = Math.round((cost.gold || 0) * mult), w = Math.round((cost.wood || 0) * mult), s = Math.round((cost.stone || 0) * mult), m = Math.round((cost.metal || 0) * mult), c = Math.round((cost.copper || 0) * mult);
+        if (g > 0) p.push(`${g}🪙`); if (w > 0) p.push(`${w}🪵`); if (s > 0) p.push(`${s}🪨`); if (m > 0) p.push(`${m}⚙️`); if (c > 0) p.push(`${c}🟠`);
         return p.length ? p.join(' ') : 'Gratis';
       }
-
       buildRoadSegment(sSnap, eSnap, spec) {
-        const len = dist(sSnap.x, sSnap.y, eSnap.x, eSnap.y);
-        if (len < 42) return;
-        if (this.crossesFissure(sSnap.x, sSnap.y, eSnap.x, eSnap.y)) {
-          this.showBanner('⚠️ Grieta en el terreno · Séllala con 🔨 e Ingenieros');
-          return;
-        }
+        const len = dist(sSnap.x, sSnap.y, eSnap.x, eSnap.y); if (len < 42) return;
+        if (this.crossesFissure(sSnap.x, sSnap.y, eSnap.x, eSnap.y)) { this.showBanner('⚠️ Grieta en el terreno · Séllala con 🔨'); return; }
         const mult = Math.max(1, (len / 120) * (this.crossesWater(sSnap.x, sSnap.y, eSnap.x, eSnap.y) ? 1.5 : 1));
-        if (!this.canAfford(spec.cost, mult)) {
-          this.showBanner(`Falta ${this.costText(spec.cost, mult)}`);
-          return;
-        }
+        if (!this.canAfford(spec.cost, mult)) { this.showBanner(`Falta ${this.costText(spec.cost, mult)}`); return; }
         const nA = sSnap.node || (sSnap.split ? this.splitRoad(sSnap.split, sSnap.x, sSnap.y) : this.addNode(sSnap.x, sSnap.y));
         const nB = eSnap.node || (eSnap.split ? this.splitRoad(eSnap.split, eSnap.x, eSnap.y) : this.addNode(eSnap.x, eSnap.y));
         if (nA.id === nB.id) return;
-
-        const rId = this.uid++;
-        this.roads.push({ id: rId, a: nA.id, b: nB.id, tier: spec.tier, bridge: this.crossesWater(nA.x, nA.y, nB.x, nB.y) });
-        this.pay(spec.cost, mult);
-        this.history.push({ kind: 'road', id: rId, cost: spec.cost, mult });
-        this.updateHUD();
+        const rId = this.uid++; this.roads.push({ id: rId, a: nA.id, b: nB.id, tier: spec.tier, bridge: this.crossesWater(nA.x, nA.y, nB.x, nB.y) });
+        this.pay(spec.cost, mult); this.history.push({ kind: 'road', id: rId, cost: spec.cost, mult }); this.updateHUD();
       }
-
       checkBldg(key, wx, wy) {
-        const spec = ITEMS[key];
-        if (!spec || spec.kind !== 'bldg') return { ok: false, msg: '' };
+        const spec = ITEMS[key]; if (!spec || spec.kind !== 'bldg') return { ok: false, msg: '' };
         if (spec.era > this.era) return { ok: false, msg: `🔒 ${ERAS[spec.era].name}` };
-
-        let ang = this.rot;
-        const nr = this.nearRoad(wx, wy, 150);
-        if (nr && Math.abs(this.rot) < 0.01) ang = nr.ang;
-
+        let ang = this.rot; const nr = this.nearRoad(wx, wy, 150); if (nr && Math.abs(this.rot) < 0.01) ang = nr.ang;
         const box = obb(wx, wy, spec.w + 4, spec.h + 4, ang);
         for (const p of [...box, { x: wx, y: wy }]) {
           if (p.x < 40 || p.x > MAP_W - 40 || p.y < 40 || p.y > MAP_H - 40) return { ok: false, msg: 'Fuera del mapa', ang };
           if (this.inWater(p.x, p.y, 4)) return { ok: false, msg: 'No en el agua', ang };
           if (this.onFissure(p.x, p.y, 16)) return { ok: false, msg: 'Grieta sísmica · Séllala primero', ang };
         }
-        if (spec.near === 'tree' && !this.trees.some(t => dist(wx, wy, t.x, t.y) < 175)) {
-          return { ok: false, msg: 'Ponlo junto a árboles 🌲', ang };
-        }
-        if (spec.near === 'rock' && !this.rocks.some(r => dist(wx, wy, r.x, r.y) < 185)) {
-          return { ok: false, msg: 'Ponlo junto a rocas 🪨', ang };
-        }
-        for (const o of this.bldgs) {
-          if (overlap(box, obb(o.x, o.y, o.w + 4, o.h + 4, o.ang))) return { ok: false, msg: 'Choca con edificio', ang };
-        }
+        if (spec.near === 'tree' && !this.trees.some(t => dist(wx, wy, t.x, t.y) < 175)) return { ok: false, msg: 'Ponlo junto a árboles 🌲', ang };
+        if (spec.near === 'rock' && !this.rocks.some(r => dist(wx, wy, r.x, r.y) < 185)) return { ok: false, msg: 'Ponlo junto a rocas 🪨', ang };
+        for (const o of this.bldgs) if (overlap(box, obb(o.x, o.y, o.w + 4, o.h + 4, o.ang))) return { ok: false, msg: 'Choca con edificio', ang };
         for (const r of this.roads) {
           const a = this.getNode(r.a), b = this.getNode(r.b);
-          if (a && b && overlap(box, obb((a.x + b.x) * 0.5, (a.y + b.y) * 0.5, dist(a.x, a.y, b.x, b.y), ROAD_W + 4, Math.atan2(b.y - a.y, b.x - a.x)))) {
-            return { ok: false, msg: 'Encima de calle', ang };
-          }
+          if (a && b && overlap(box, obb((a.x + b.x) * 0.5, (a.y + b.y) * 0.5, dist(a.x, a.y, b.x, b.y), ROAD_W + 4, Math.atan2(b.y - a.y, b.x - a.x)))) return { ok: false, msg: 'Encima de calle', ang };
         }
         if (!this.canAfford(spec.cost)) return { ok: false, msg: `Falta ${this.costText(spec.cost)}`, ang };
         return { ok: true, ang, nr };
       }
-
       nearRoad(wx, wy, maxD = 160) {
         let best = null, bd = maxD;
         for (const r of this.roads) {
-          const a = this.getNode(r.a), b = this.getNode(r.b);
-          if (!a || !b) continue;
-          const p = projSeg(wx, wy, a.x, a.y, b.x, b.y);
-          if (p.d < bd) { bd = p.d; best = { x: p.x, y: p.y, road: r, ang: Math.atan2(b.y - a.y, b.x - a.x) }; }
+          const a = this.getNode(r.a), b = this.getNode(r.b); if (!a || !b) continue;
+          const p = projSeg(wx, wy, a.x, a.y, b.x, b.y); if (p.d < bd) { bd = p.d; best = { x: p.x, y: p.y, road: r, ang: Math.atan2(b.y - a.y, b.x - a.x) }; }
         }
         return best;
       }
-
       placeBldg(wx, wy) {
-        const spec = ITEMS[this.item];
-        const chk = this.checkBldg(this.item, wx, wy);
-        if (!chk.ok) {
-          if (chk.msg) this.showBanner(chk.msg);
-          return;
-        }
-        this.pay(spec.cost);
-        const id = this.uid++;
+        const spec = ITEMS[this.item], chk = this.checkBldg(this.item, wx, wy);
+        if (!chk.ok) { if (chk.msg) this.showBanner(chk.msg); return; }
+        this.pay(spec.cost); const id = this.uid++;
         this.bldgs.push({ id, type: this.item, x: wx, y: wy, w: spec.w, h: spec.h, ang: chk.ang, hp: 100, fire: false, damaged: false, dusty: false });
         this.history.push({ kind: 'bldg', id, cost: spec.cost, mult: 1 });
         this.recalcPop();
-        if (spec.pop && this.pop < 8) {
-          this.pop = Math.min(this.popCap, 8);
-          this.showBanner('👥 ¡Llegaron aldeanos! Asígnalos en 👷');
-        }
-        this.checkEraProgression();
-        this.renderWorkers();
-        this.updateHUD();
+        if (spec.pop && this.pop < 8) { this.pop = Math.min(this.popCap, 8); this.showBanner('👥 ¡Llegaron aldeanos! Asígnalos en 👷'); }
+        this.checkEraProgression(); this.renderWorkers(); this.updateHUD();
       }
-
       useTool(wx, wy) {
-        const spec = ITEMS[this.item];
-        if (!spec || spec.kind !== 'tool') return;
-
+        const spec = ITEMS[this.item]; if (!spec || spec.kind !== 'tool') return;
         let targetB = null, bd = 60;
-        for (const b of this.bldgs) {
-          const d = dist(wx, wy, b.x, b.y);
-          if (d < bd) { bd = d; targetB = b; }
-        }
-
+        for (const b of this.bldgs) { const d = dist(wx, wy, b.x, b.y); if (d < bd) { bd = d; targetB = b; } }
         if (spec.tool === 'repair') {
           const fis = this.onFissure(wx, wy, 28);
           if (fis) {
-            if (this.workers.eng <= 0) {
-              this.showBanner('👷‍♂️ Necesitas al menos 1 Ingeniero asignado para sellar grietas');
-              return;
-            }
+            if (this.workers.eng <= 0) { this.showBanner('👷‍♂️ Necesitas al menos 1 Ingeniero para sellar grietas'); return; }
             const sealCost = { gold: 45, stone: 15 };
-            if (!this.canAfford(sealCost)) {
-              this.showBanner(`Falta ${this.costText(sealCost)} para sellar grieta`);
-              return;
-            }
-            this.pay(sealCost);
-            this.fissures = this.fissures.filter(f => f.id !== fis.id);
-            this.updateHUD();
-            this.showBanner('👷‍♂️✨ ¡Grieta sísmica sellada por los Ingenieros!');
-            return;
+            if (!this.canAfford(sealCost)) { this.showBanner(`Falta ${this.costText(sealCost)}`); return; }
+            this.pay(sealCost); this.fissures = this.fissures.filter(f => f.id !== fis.id); this.updateHUD();
+            this.showBanner('👷‍♂️✨ ¡Grieta sísmica sellada!'); return;
           }
-
           if (!targetB) { this.showBanner('Toca un edificio dañado o una grieta'); return; }
           if (!targetB.damaged && !targetB.dusty && !targetB.fire) { this.showBanner('Este edificio está impecable'); return; }
           const mult = this.workers.eng > 0 ? 0.65 : 1.0;
           if (!this.canAfford(spec.cost, mult)) { this.showBanner(`Falta ${this.costText(spec.cost, mult)}`); return; }
-          this.pay(spec.cost, mult);
-          targetB.damaged = false;
-          targetB.dusty = false;
-          targetB.fire = false;
-          targetB.hp = 100;
-          this.recalcPop();
-          this.updateHUD();
-          this.showBanner(this.workers.eng > 0 ? '👷‍♂️✨ ¡Reparado con descuento de Ingeniería!' : '✨ ¡Edificio reparado y limpio!');
-          return;
+          this.pay(spec.cost, mult); targetB.damaged = false; targetB.dusty = false; targetB.fire = false; targetB.hp = 100;
+          this.recalcPop(); this.updateHUD(); this.showBanner('✨ ¡Edificio reparado y limpio!'); return;
         }
-
         if (spec.tool === 'upgrade') {
           let targetR = null, rd = 36;
-          for (const r of this.roads) {
-            const a = this.getNode(r.a), b = this.getNode(r.b);
-            if (!a || !b) continue;
-            const d = projSeg(wx, wy, a.x, a.y, b.x, b.y).d;
-            if (d < rd) { rd = d; targetR = r; }
-          }
+          for (const r of this.roads) { const a = this.getNode(r.a), b = this.getNode(r.b); if (!a || !b) continue; const d = projSeg(wx, wy, a.x, a.y, b.x, b.y).d; if (d < rd) { rd = d; targetR = r; } }
           if (!targetR) { this.showBanner('Toca una calle para mejorarla'); return; }
           if (targetR.tier >= 5) { this.showBanner('Calle ya está al máximo'); return; }
           if (!this.canAfford(spec.cost)) { this.showBanner(`Falta ${this.costText(spec.cost)}`); return; }
-          this.pay(spec.cost);
-          targetR.tier++;
-          this.updateHUD();
-          this.showBanner('⬆️ ¡Calle mejorada!');
-          return;
+          this.pay(spec.cost); targetR.tier++; this.updateHUD(); this.showBanner('⬆️ ¡Calle mejorada!'); return;
         }
-
         if (spec.tool === 'demolish') {
-          if (targetB) {
-            this.bldgs = this.bldgs.filter(b => b.id !== targetB.id);
-            this.recalcPop();
-            this.renderWorkers();
-            this.updateHUD();
-            this.showBanner('🚜 Edificio demolido');
-            return;
-          }
+          if (targetB) { this.bldgs = this.bldgs.filter(b => b.id !== targetB.id); this.recalcPop(); this.renderWorkers(); this.updateHUD(); this.showBanner('🚜 Edificio demolido'); return; }
           let targetR = null, rd = 36;
-          for (const r of this.roads) {
-            const a = this.getNode(r.a), b = this.getNode(r.b);
-            if (!a || !b) continue;
-            const d = projSeg(wx, wy, a.x, a.y, b.x, b.y).d;
-            if (d < rd) { rd = d; targetR = r; }
-          }
-          if (targetR) {
-            this.roads = this.roads.filter(r => r.id !== targetR.id);
-            this.nodes = this.nodes.filter(n => this.roads.some(r => r.a === n.id || r.b === n.id));
-            this.updateHUD();
-            this.showBanner('🚜 Calle demolida');
-          }
+          for (const r of this.roads) { const a = this.getNode(r.a), b = this.getNode(r.b); if (!a || !b) continue; const d = projSeg(wx, wy, a.x, a.y, b.x, b.y).d; if (d < rd) { rd = d; targetR = r; } }
+          if (targetR) { this.roads = this.roads.filter(r => r.id !== targetR.id); this.nodes = this.nodes.filter(n => this.roads.some(r => r.a === n.id || r.b === n.id)); this.updateHUD(); this.showBanner('🚜 Calle demolida'); }
         }
       }
-
       undoLast() {
-        const last = this.history.pop();
-        if (!last) {
-          this.showBanner('Nada que deshacer');
-          return;
-        }
-        this.res.gold   += Math.round((last.cost.gold || 0) * last.mult);
-        this.res.wood   += Math.round((last.cost.wood || 0) * last.mult);
-        this.res.stone  += Math.round((last.cost.stone || 0) * last.mult);
-        this.res.metal  += Math.round((last.cost.metal || 0) * last.mult);
-        this.res.copper += Math.round((last.cost.copper || 0) * last.mult);
-
-        if (last.kind === 'bldg') {
-          this.bldgs = this.bldgs.filter(b => b.id !== last.id);
-        } else if (last.kind === 'road') {
-          this.roads = this.roads.filter(r => r.id !== last.id);
-          this.nodes = this.nodes.filter(n => this.roads.some(r => r.a === n.id || r.b === n.id));
-        }
-        this.recalcPop();
-        this.renderWorkers();
-        this.updateHUD();
-        this.showBanner('↩️ Obra deshecha');
+        const last = this.history.pop(); if (!last) { this.showBanner('Nada que deshacer'); return; }
+        this.res.gold += Math.round((last.cost.gold || 0) * last.mult); this.res.wood += Math.round((last.cost.wood || 0) * last.mult); this.res.stone += Math.round((last.cost.stone || 0) * last.mult); this.res.metal += Math.round((last.cost.metal || 0) * last.mult); this.res.copper += Math.round((last.cost.copper || 0) * last.mult);
+        if (last.kind === 'bldg') this.bldgs = this.bldgs.filter(b => b.id !== last.id);
+        else if (last.kind === 'road') { this.roads = this.roads.filter(r => r.id !== last.id); this.nodes = this.nodes.filter(n => this.roads.some(r => r.a === n.id || r.b === n.id)); }
+        this.recalcPop(); this.renderWorkers(); this.updateHUD(); this.showBanner('↩️ Obra deshecha');
       }
-
       getSlots() {
         const s = { wood: 0, stone: 0, farm: 0, hunter: 0, eng: 0, guard: 0, fire: 0, civic: 0 };
-        for (const b of this.bldgs) {
-          const sp = ITEMS[b.type];
-          if (sp && sp.role && !b.fire) s[sp.role] += sp.slots;
-        }
+        for (const b of this.bldgs) { const sp = ITEMS[b.type]; if (sp && sp.role && !b.fire) s[sp.role] += sp.slots; }
         return s;
       }
-
       recalcPop() {
         let cap = 0;
-        for (const b of this.bldgs) {
-          if (!b.fire && ITEMS[b.type]?.pop) {
-            cap += b.damaged ? Math.ceil(ITEMS[b.type].pop * 0.5) : ITEMS[b.type].pop;
-          }
-        }
-        this.popCap = cap;
-        if (this.pop > cap) this.pop = cap;
-
+        for (const b of this.bldgs) if (!b.fire && ITEMS[b.type]?.pop) cap += b.damaged ? Math.ceil(ITEMS[b.type].pop * 0.5) : ITEMS[b.type].pop;
+        this.popCap = cap; if (this.pop > cap) this.pop = cap;
         const slots = this.getSlots();
-        for (const k of Object.keys(ROLES)) {
-          if (this.workers[k] > slots[k]) this.workers[k] = slots[k];
-        }
+        for (const k of Object.keys(ROLES)) if (this.workers[k] > slots[k]) this.workers[k] = slots[k];
         while (Object.values(this.workers).reduce((a, b) => a + b, 0) > Math.floor(this.pop)) {
           const k = Object.keys(ROLES).sort((a, b) => this.workers[b] - this.workers[a])[0];
-          if (this.workers[k] <= 0) break;
-          this.workers[k]--;
+          if (this.workers[k] <= 0) break; this.workers[k]--;
         }
       }
-
       checkEraProgression() {
         let evolved = false;
         while (this.era < 4) {
           const req = ERAS[this.era].reqPop;
-          if (req && Math.floor(this.pop) >= req) {
-            this.era++;
-            evolved = true;
-          } else {
-            break;
-          }
+          if (req && Math.floor(this.pop) >= req) { this.era++; evolved = true; } else break;
         }
         if (evolved) {
-          this.renderCards();
-          this.updateHUD();
+          this.renderCards(); this.updateHUD();
           this.showBanner(`🎉 ¡NUEVA ERA ALCANZADA! ${ERAS[this.era].name} (${ERAS[this.era].ico})`);
         }
       }
-
       autoWorkers() {
-        const slots = this.getSlots();
-        for (const k of Object.keys(ROLES)) this.workers[k] = 0;
-        let free = Math.floor(this.pop);
+        const slots = this.getSlots(); for (const k of Object.keys(ROLES)) this.workers[k] = 0;
+        let free = Math.floor(this.pop), moved = true;
         const order = ['farm', 'hunter', 'wood', 'stone', 'eng', 'fire', 'guard', 'civic'];
-        let moved = true;
-        while (free > 0 && moved) {
-          moved = false;
-          for (const r of order) {
-            if (free > 0 && this.workers[r] < slots[r]) {
-              this.workers[r]++;
-              free--;
-              moved = true;
-            }
-          }
-        }
-        this.renderWorkers();
-        this.updateHUD();
+        while (free > 0 && moved) { moved = false; for (const r of order) if (free > 0 && this.workers[r] < slots[r]) { this.workers[r]++; free--; moved = true; } }
+        this.renderWorkers(); this.updateHUD();
       }
-
       toggleWeatherMode() {
-        if (this.activeDisaster) {
-          this.stopAllDisasters();
-          return;
-        }
-        if (this.weather.mode === 'auto') {
-          this.weather.mode = 'manual';
-          document.getElementById('disasters-bar').style.display = 'flex';
-          this.showBanner('⚡ Panel de Desastres Abierto');
-        } else {
-          this.weather.mode = 'auto';
-          document.getElementById('disasters-bar').style.display = 'none';
-          this.showBanner('🔄 Clima y Desastres Sorpresa Activos');
-        }
+        if (this.activeDisaster) { this.stopAllDisasters(); return; }
+        if (this.weather.mode === 'auto') { this.weather.mode = 'manual'; document.getElementById('disasters-bar').style.display = 'flex'; this.showBanner('⚡ Panel de Desastres Abierto'); }
+        else { this.weather.mode = 'auto'; document.getElementById('disasters-bar').style.display = 'none'; this.showBanner('🔄 Clima y Desastres Sorpresa Activos'); }
         this.updateHUD();
       }
-
       toggleManualDisaster(disKey) {
-        if (this.activeDisaster === disKey) {
-          this.stopAllDisasters();
-          this.showBanner('🛑 Desastre detenido');
-          return;
-        }
-        this.stopAllDisasters();
-        this.activeDisaster = disKey;
-        document.getElementById('disasters-bar').style.display = 'flex';
-
-        if (disKey === 'rain') {
-          this.weather.state = 'rain';
-          this.weather.timer = 99999;
-          this.showBanner('🌧️ Lluvia Suave & Subida de Marea');
-        } else if (disKey === 'storm') {
-          this.weather.state = 'storm';
-          this.weather.timer = 99999;
-          this.spawnLightningBolt();
-          this.showBanner('⛈️ Tormenta Eléctrica');
-        } else if (disKey === 'tor_soft') {
-          this.triggerWindWarningAndTornado(false);
-        } else if (disKey === 'tor_strong') {
-          this.triggerWindWarningAndTornado(true);
-        } else if (disKey === 'sand') {
-          this.weather.state = 'sand';
-          this.weather.timer = 99999;
-          this.showBanner('🏜️ Tormenta de Arena');
-        } else if (disKey === 'sand_tor') {
-          this.weather.state = 'sand';
-          this.spawnSandTornado();
-        } else if (disKey === 'tsunami') {
-          this.launchTsunami();
-        } else if (disKey === 'quake_soft') {
-          this.triggerEarthquake(false);
-        } else if (disKey === 'quake_strong') {
-          this.triggerEarthquake(true);
-        }
+        if (this.activeDisaster === disKey) { this.stopAllDisasters(); this.showBanner('🛑 Desastre detenido'); return; }
+        this.stopAllDisasters(); this.activeDisaster = disKey; document.getElementById('disasters-bar').style.display = 'flex';
+        if (disKey === 'rain') { this.weather.state = 'rain'; this.weather.timer = 99999; this.showBanner('🌧️ Lluvia Suave & Subida de Marea'); }
+        else if (disKey === 'storm') { this.weather.state = 'storm'; this.weather.timer = 99999; this.spawnLightningBolt(); this.showBanner('⛈️ Tormenta Eléctrica'); }
+        else if (disKey === 'tor_soft') this.triggerWindWarningAndTornado(false);
+        else if (disKey === 'tor_strong') this.triggerWindWarningAndTornado(true);
+        else if (disKey === 'sand') { this.weather.state = 'sand'; this.weather.timer = 99999; this.showBanner('🏜️ Tormenta de Arena'); }
+        else if (disKey === 'sand_tor') { this.weather.state = 'sand'; this.spawnSandTornado(); }
+        else if (disKey === 'tsunami') this.launchTsunami();
+        else if (disKey === 'quake_soft') this.triggerEarthquake(false);
+        else if (disKey === 'quake_strong') this.triggerEarthquake(true);
         this.updateHUD();
       }
-
-      stopAllDisasters() {
-        this.activeDisaster = null;
-        this.tornado = null;
-        this.windWarning = 0;
-        this.weather.state = 'clear';
-        this.weather.timer = 45;
-        this.tsunamiWave = null;
-        this.updateHUD();
-      }
-
-      triggerWindWarningAndTornado(isStrong) {
-        this.windWarning = 4.0;
-        this.pendingTornadoStrong = isStrong;
-        this.showBanner('🌬️ Ráfagas de viento fuertes... ¡Se acerca un tornado!');
-      }
-
+      stopAllDisasters() { this.activeDisaster = null; this.tornado = null; this.windWarning = 0; this.weather.state = 'clear'; this.weather.timer = 45; this.tsunamiWave = null; this.updateHUD(); }
+      triggerWindWarningAndTornado(isStrong) { this.windWarning = 4.0; this.pendingTornadoStrong = isStrong; this.showBanner('🌬️ Ráfagas de viento fuertes... ¡Se acerca un tornado!'); }
       triggerSurpriseDisaster() {
-        const reg = REGIONS[this.regId] || REGIONS.valley;
-        const r = Math.random();
-        const { tsunami, sand, quake } = reg.risks;
-        if (r < tsunami) {
-          this.launchTsunami();
-        } else if (r < tsunami + sand) {
-          if (Math.random() < 0.5) {
-            this.weather.state = 'sand';
-            this.weather.timer = 35;
-            this.showBanner('🏜️ ¡Tormenta de arena inesperada!');
-          } else {
-            this.spawnSandTornado();
-          }
-        } else if (r < tsunami + sand + quake) {
-          this.triggerEarthquake(Math.random() < 0.45);
-        } else {
-          this.triggerWindWarningAndTornado(Math.random() < 0.4);
-        }
+        const reg = REGIONS[this.regId] || REGIONS.valley, r = Math.random(), { tsunami, sand, quake } = reg.risks;
+        if (r < tsunami) this.launchTsunami();
+        else if (r < tsunami + sand) { if (Math.random() < 0.5) { this.weather.state = 'sand'; this.weather.timer = 35; this.showBanner('🏜️ ¡Tormenta de arena inesperada!'); } else this.spawnSandTornado(); }
+        else if (r < tsunami + sand + quake) this.triggerEarthquake(Math.random() < 0.45);
+        else this.triggerWindWarningAndTornado(Math.random() < 0.4);
       }
-
       triggerEarthquake(isMajor = false) {
-        this.shakeTimer = isMajor ? 5.5 : 3.5;
-        this.shakeMag = isMajor ? 16 : 8;
-        this.activeDisaster = isMajor ? 'quake_strong' : 'quake_soft';
-
-        const dmgChance = isMajor ? 0.48 : 0.25;
-        let hitCount = 0;
-        for (const b of this.bldgs) {
-          if (Math.random() < dmgChance) {
-            b.damaged = true;
-            hitCount++;
-          }
-        }
-
+        this.shakeTimer = isMajor ? 5.5 : 3.5; this.shakeMag = isMajor ? 16 : 8; this.activeDisaster = isMajor ? 'quake_strong' : 'quake_soft';
+        let hitCount = 0; for (const b of this.bldgs) if (Math.random() < (isMajor ? 0.48 : 0.25)) { b.damaged = true; hitCount++; }
         if (isMajor) {
-          const cx = Math.max(350, Math.min(MAP_W - 350, this.cam.x + (Math.random() - 0.5) * 650));
-          const cy = Math.max(300, Math.min(MAP_H - 300, this.cam.y + (Math.random() - 0.5) * 500));
-          const pts = [{ x: cx - 140, y: cy - 35 }];
-          for (let i = 1; i <= 5; i++) {
-            pts.push({
-              x: cx - 140 + i * 56,
-              y: cy + (Math.random() - 0.5) * 90
-            });
-          }
-          const fis = { id: this.uid++, pts };
-          this.fissures.push(fis);
-
-          for (let i = this.roads.length - 1; i >= 0; i--) {
-            const rd = this.roads[i];
-            const a = this.getNode(rd.a), b = this.getNode(rd.b);
-            if (a && b && this.crossesFissure(a.x, a.y, b.x, b.y)) {
-              this.roads.splice(i, 1);
-            }
-          }
+          const cx = Math.max(350, Math.min(MAP_W - 350, this.cam.x + (Math.random() - 0.5) * 650)), cy = Math.max(300, Math.min(MAP_H - 300, this.cam.y + (Math.random() - 0.5) * 500));
+          const pts = [{ x: cx - 140, y: cy - 35 }]; for (let i = 1; i <= 5; i++) pts.push({ x: cx - 140 + i * 56, y: cy + (Math.random() - 0.5) * 90 });
+          this.fissures.push({ id: this.uid++, pts });
+          for (let i = this.roads.length - 1; i >= 0; i--) { const a = this.getNode(this.roads[i].a), b = this.getNode(this.roads[i].b); if (a && b && this.crossesFissure(a.x, a.y, b.x, b.y)) this.roads.splice(i, 1); }
           this.nodes = this.nodes.filter(n => this.roads.some(r => r.a === n.id || r.b === n.id));
           this.showBanner(`🌋 ¡TERREMOTO FUERTE! Abrió una grieta y dañó ${hitCount} edificios`);
-        } else {
-          this.showBanner(`🫨 Sismo moderado · ${hitCount} edificios necesitan reparación`);
-        }
-
-        this.recalcPop();
-        this.updateHUD();
-        setTimeout(() => {
-          if (this.activeDisaster === 'quake_soft' || this.activeDisaster === 'quake_strong') {
-            this.activeDisaster = null;
-            this.updateHUD();
-          }
-        }, 5600);
+        } else this.showBanner(`🫨 Sismo moderado · ${hitCount} edificios necesitan reparación`);
+        this.recalcPop(); this.updateHUD();
+        setTimeout(() => { if (this.activeDisaster === 'quake_soft' || this.activeDisaster === 'quake_strong') { this.activeDisaster = null; this.updateHUD(); } }, 5600);
       }
-
       spawnLightningBolt() {
         this.weather.lightningFlash = 0.28;
-        const bx = this.cam.x + (Math.random() - 0.5) * this.cam.vw * 0.7;
-        const by = this.cam.y + (Math.random() - 0.5) * this.cam.vh * 0.6;
+        const bx = this.cam.x + (Math.random() - 0.5) * this.cam.vw * 0.7, by = this.cam.y + (Math.random() - 0.5) * this.cam.vh * 0.6;
         const pts = [{ x: bx + (Math.random() - 0.5) * 140, y: by - 420 }];
-        const segs = 7;
-        for (let i = 1; i <= segs; i++) {
-          const t = i / segs;
-          pts.push({
-            x: pts[0].x + (bx - pts[0].x) * t + (i < segs ? (Math.random() - 0.5) * 55 : 0),
-            y: pts[0].y + (by - pts[0].y) * t
-          });
-        }
+        for (let i = 1; i <= 7; i++) { const t = i / 7; pts.push({ x: pts[0].x + (bx - pts[0].x) * t + (i < 7 ? (Math.random() - 0.5) * 55 : 0), y: pts[0].y + (by - pts[0].y) * t }); }
         this.weather.bolts.push({ pts, life: 0.35 });
       }
-
       spawnTornado(isStrong = false) {
-        const cx = Math.max(250, Math.min(MAP_W - 250, this.cam.x + (Math.random() - 0.5) * 700));
-        const cy = Math.max(250, Math.min(MAP_H - 250, this.cam.y + (Math.random() - 0.5) * 550));
-        const tx = Math.max(200, Math.min(MAP_W - 200, cx + (Math.random() - 0.5) * 950));
-        const ty = Math.max(200, Math.min(MAP_H - 200, cy + (Math.random() - 0.5) * 750));
-
-        this.tornado = {
-          x: cx, y: cy, tx, ty,
-          isSand: false, strong: isStrong,
-          life: isStrong ? 24 : 18, angle: 0, scarTimer: 0, hitIds: new Set()
-        };
-
-        this.showBanner(
-          isStrong
-            ? '🌪️ ¡Tornado FUERTE! Destruye edificios a su paso'
-            : '🌪️ Tornado Suave · Daña edificios (repáralos con 🔨)'
-        );
-        this.updateHUD();
+        const cx = Math.max(250, Math.min(MAP_W - 250, this.cam.x + (Math.random() - 0.5) * 700)), cy = Math.max(250, Math.min(MAP_H - 250, this.cam.y + (Math.random() - 0.5) * 550));
+        this.tornado = { x: cx, y: cy, tx: Math.max(200, Math.min(MAP_W - 200, cx + (Math.random() - 0.5) * 950)), ty: Math.max(200, Math.min(MAP_H - 200, cy + (Math.random() - 0.5) * 750)), isSand: false, strong: isStrong, life: isStrong ? 24 : 18, angle: 0, scarTimer: 0, hitIds: new Set() };
+        this.showBanner(isStrong ? '🌪️ ¡Tornado FUERTE! Destruye edificios a su paso' : '🌪️ Tornado Suave · Daña edificios (repáralos con 🔨)'); this.updateHUD();
       }
-
       spawnSandTornado() {
-        const cx = Math.max(300, Math.min(MAP_W - 300, this.cam.x + (Math.random() - 0.5) * 800));
-        const cy = Math.max(300, Math.min(MAP_H - 300, this.cam.y + (Math.random() - 0.5) * 600));
-        const tx = Math.max(200, Math.min(MAP_W - 200, cx + (Math.random() - 0.5) * 1000));
-        const ty = Math.max(200, Math.min(MAP_H - 200, cy + (Math.random() - 0.5) * 800));
-
-        this.tornado = {
-          x: cx, y: cy, tx, ty,
-          isSand: true, strong: true,
-          life: 26, angle: 0, scarTimer: 0, hitIds: new Set()
-        };
-        this.showBanner('🌪️🏜️ ¡Tornado de Arena! Cubre la ciudad de polvo');
-        this.updateHUD();
+        const cx = Math.max(300, Math.min(MAP_W - 300, this.cam.x + (Math.random() - 0.5) * 800)), cy = Math.max(300, Math.min(MAP_H - 300, this.cam.y + (Math.random() - 0.5) * 600));
+        this.tornado = { x: cx, y: cy, tx: Math.max(200, Math.min(MAP_W - 200, cx + (Math.random() - 0.5) * 1000)), ty: Math.max(200, Math.min(MAP_H - 200, cy + (Math.random() - 0.5) * 800)), isSand: true, strong: true, life: 26, angle: 0, scarTimer: 0, hitIds: new Set() };
+        this.showBanner('🌪️🏜️ ¡Tornado de Arena! Cubre la ciudad de polvo'); this.updateHUD();
       }
-
-      launchTsunami() {
-        this.tsunamiWave = {
-          x: MAP_W + 150,
-          width: 320,
-          speed: 190,
-          stage: 'approaching'
-        };
-        this.showBanner('🌊⚠️ ¡ALERTA DE TSUNAMI! Ola gigante aproximándose');
-      }
-
+      launchTsunami() { this.tsunamiWave = { x: MAP_W + 150, width: 320, speed: 190, stage: 'approaching' }; this.showBanner('🌊⚠️ ¡ALERTA DE TSUNAMI! Ola gigante aproximándose'); }
       updateWeatherAndDisasters(dt) {
         this.timeOfDay = (this.timeOfDay + dt * 0.16) % 24;
-
         this.seasonTimer -= dt;
-        if (this.seasonTimer <= 0) {
-          this.seasonTimer = 75;
-          this.seasonIdx = (this.seasonIdx + 1) % SEASONS.length;
-          this.bgDirty = true;
-          const s = SEASONS[this.seasonIdx];
-          this.showBanner(`${s.ico} Comienza el ${s.name} (${s.temp}°C)`);
-        }
-
-        const baseTemp = SEASONS[this.seasonIdx].temp;
-        const nightDrop = (this.timeOfDay >= 20 || this.timeOfDay <= 5) ? -4 : 0;
-        const weatherOffset = (this.weather.state === 'rain' || this.weather.state === 'storm') ? -5 : (this.weather.state === 'sand' ? 4 : 0);
+        if (this.seasonTimer <= 0) { this.seasonTimer = 75; this.seasonIdx = (this.seasonIdx + 1) % SEASONS.length; this.bgDirty = true; const s = SEASONS[this.seasonIdx]; this.showBanner(`${s.ico} Comienza el ${s.name} (${s.temp}°C)`); }
+        const baseTemp = SEASONS[this.seasonIdx].temp, nightDrop = (this.timeOfDay >= 20 || this.timeOfDay <= 5) ? -4 : 0, weatherOffset = (this.weather.state === 'rain' || this.weather.state === 'storm') ? -5 : (this.weather.state === 'sand' ? 4 : 0);
         this.temperature += ((baseTemp + nightDrop + weatherOffset) - this.temperature) * Math.min(1, dt * 0.4);
-
         if (this.weather.mode === 'auto' && this.bldgs.length >= 3 && !this.activeDisaster && !this.tornado && this.windWarning <= 0) {
-          this.surpriseTimer -= dt;
-          if (this.surpriseTimer <= 0) {
-            this.surpriseTimer = 280 + Math.random() * 40;
-            this.triggerSurpriseDisaster();
-          }
+          this.surpriseTimer -= dt; if (this.surpriseTimer <= 0) { this.surpriseTimer = 280 + Math.random() * 40; this.triggerSurpriseDisaster(); }
         }
-
         if (this.windWarning > 0) {
           this.windWarning -= dt;
-          for (const g of this.weather.windGusts) {
-            g.x -= g.spd * dt;
-            if (g.x < -80) {
-              g.x = this.cam.vw + Math.random() * 120;
-              g.y = Math.random() * this.cam.vh;
-            }
-          }
-          if (this.windWarning <= 0) {
-            this.spawnTornado(this.pendingTornadoStrong);
-          }
+          for (const g of this.weather.windGusts) { g.x -= g.spd * dt; if (g.x < -80) { g.x = this.cam.vw + Math.random() * 120; g.y = Math.random() * this.cam.vh; } }
+          if (this.windWarning <= 0) this.spawnTornado(this.pendingTornadoStrong);
         }
-
-        if (this.shakeTimer > 0) {
-          this.shakeTimer = Math.max(0, this.shakeTimer - dt);
-        }
-
+        if (this.shakeTimer > 0) this.shakeTimer = Math.max(0, this.shakeTimer - dt);
         if (this.weather.mode === 'auto' && !this.activeDisaster) {
           this.weather.timer -= dt;
           if (this.weather.timer <= 0) {
-            if (this.weather.state === 'clear') {
-              this.weather.state = Math.random() < 0.65 ? 'rain' : 'sand';
-              this.weather.timer = 35 + Math.random() * 20;
-            } else if (this.weather.state === 'rain') {
-              this.weather.state = Math.random() < 0.45 ? 'storm' : 'clear';
-              this.weather.timer = 30 + Math.random() * 20;
-            } else {
-              this.weather.state = 'clear';
-              this.weather.timer = 45 + Math.random() * 20;
-            }
+            if (this.weather.state === 'clear') { this.weather.state = Math.random() < 0.65 ? 'rain' : 'sand'; this.weather.timer = 35 + Math.random() * 20; }
+            else if (this.weather.state === 'rain') { this.weather.state = Math.random() < 0.45 ? 'storm' : 'clear'; this.weather.timer = 30 + Math.random() * 20; }
+            else { this.weather.state = 'clear'; this.weather.timer = 45 + Math.random() * 20; }
             this.updateHUD();
           }
         }
-
-        const targetTide = (this.weather.state === 'rain' || this.weather.state === 'storm') ? 1 : 0;
-        this.weather.tide += (targetTide - this.weather.tide) * Math.min(1, dt * 0.45);
-
-        const targetSand = this.weather.state === 'sand' ? 1 : 0;
-        this.sandIntensity += (targetSand - this.sandIntensity) * Math.min(1, dt * 0.5);
-
+        this.weather.tide += (((this.weather.state === 'rain' || this.weather.state === 'storm') ? 1 : 0) - this.weather.tide) * Math.min(1, dt * 0.45);
+        this.sandIntensity += ((this.weather.state === 'sand' ? 1 : 0) - this.sandIntensity) * Math.min(1, dt * 0.5);
         if (this.weather.state === 'rain' || this.weather.state === 'storm') {
-          for (const d of this.weather.drops) {
-            d.x -= d.s * 0.22 * dt;
-            d.y += d.s * dt;
-            if (d.y > this.cam.vh + 20) {
-              d.y = -20;
-              d.x = Math.random() * (this.cam.vw + 250);
-            }
-          }
+          for (const d of this.weather.drops) { d.x -= d.s * 0.22 * dt; d.y += d.s * dt; if (d.y > this.cam.vh + 20) { d.y = -20; d.x = Math.random() * (this.cam.vw + 250); } }
         }
-
         if (this.sandIntensity > 0.05) {
-          for (const p of this.weather.sandParticles) {
-            p.x -= p.vx * (0.5 + this.sandIntensity * 0.6) * dt;
-            p.y += p.vy * dt;
-            if (p.x < -50) {
-              p.x = this.cam.vw + Math.random() * 100;
-              p.y = Math.random() * this.cam.vh;
-            }
-          }
-          if (Math.random() < dt * 0.35 && this.bldgs.length > 0) {
-            const b = this.bldgs[Math.floor(Math.random() * this.bldgs.length)];
-            b.dusty = true;
-          }
+          for (const p of this.weather.sandParticles) { p.x -= p.vx * (0.5 + this.sandIntensity * 0.6) * dt; p.y += p.vy * dt; if (p.x < -50) { p.x = this.cam.vw + Math.random() * 100; p.y = Math.random() * this.cam.vh; } }
+          if (Math.random() < dt * 0.35 && this.bldgs.length > 0) this.bldgs[Math.floor(Math.random() * this.bldgs.length)].dusty = true;
         }
-
-        if (this.weather.state === 'storm' && Math.random() < dt * 0.4) {
-          this.spawnLightningBolt();
-        }
-        if (this.weather.lightningFlash > 0) {
-          this.weather.lightningFlash = Math.max(0, this.weather.lightningFlash - dt);
-        }
-        for (let i = this.weather.bolts.length - 1; i >= 0; i--) {
-          this.weather.bolts[i].life -= dt;
-          if (this.weather.bolts[i].life <= 0) this.weather.bolts.splice(i, 1);
-        }
-
+        if (this.weather.state === 'storm' && Math.random() < dt * 0.4) this.spawnLightningBolt();
+        if (this.weather.lightningFlash > 0) this.weather.lightningFlash = Math.max(0, this.weather.lightningFlash - dt);
+        for (let i = this.weather.bolts.length - 1; i >= 0; i--) { this.weather.bolts[i].life -= dt; if (this.weather.bolts[i].life <= 0) this.weather.bolts.splice(i, 1); }
         if (this.tornado) {
-          const t = this.tornado;
-          t.life -= dt;
-          t.angle += dt * (t.strong ? 15 : 10);
-
-          const d = dist(t.x, t.y, t.tx, t.ty);
-          if (d < 45) {
-            t.tx = Math.max(200, Math.min(MAP_W - 200, t.x + (Math.random() - 0.5) * 950));
-            t.ty = Math.max(200, Math.min(MAP_H - 200, t.y + (Math.random() - 0.5) * 750));
-          } else {
-            const ang = Math.atan2(t.ty - t.y, t.tx - t.x);
-            const spd = t.strong ? 82 : 55;
-            t.x += Math.cos(ang) * spd * dt;
-            t.y += Math.sin(ang) * spd * dt;
-          }
-
+          const t = this.tornado; t.life -= dt; t.angle += dt * (t.strong ? 15 : 10);
+          if (dist(t.x, t.y, t.tx, t.ty) < 45) { t.tx = Math.max(200, Math.min(MAP_W - 200, t.x + (Math.random() - 0.5) * 950)); t.ty = Math.max(200, Math.min(MAP_H - 200, t.y + (Math.random() - 0.5) * 750)); }
+          else { const ang = Math.atan2(t.ty - t.y, t.tx - t.x), spd = t.strong ? 82 : 55; t.x += Math.cos(ang) * spd * dt; t.y += Math.sin(ang) * spd * dt; }
           t.scarTimer -= dt;
           if (t.scarTimer <= 0) {
             t.scarTimer = t.isSand ? 0.3 : 0.22;
-            if (t.isSand) {
-              for (const b of this.bldgs) {
-                if (dist(t.x, t.y, b.x, b.y) < 160) b.dusty = true;
-              }
-            } else {
-              this.brownScars.push({
-                x: t.x + (Math.random() - 0.5) * 18,
-                y: t.y + (Math.random() - 0.5) * 18,
-                r: t.strong ? 38 : 28,
-                life: 80,
-                maxLife: 80
-              });
-              if (this.brownScars.length > 280) this.brownScars.shift();
-            }
+            if (t.isSand) { for (const b of this.bldgs) if (dist(t.x, t.y, b.x, b.y) < 160) b.dusty = true; }
+            else { this.brownScars.push({ x: t.x + (Math.random() - 0.5) * 18, y: t.y + (Math.random() - 0.5) * 18, r: t.strong ? 38 : 28, life: 80, maxLife: 80 }); if (this.brownScars.length > 280) this.brownScars.shift(); }
           }
-
           const hitRadius = t.strong ? 58 : 46;
           for (let i = this.bldgs.length - 1; i >= 0; i--) {
-            const b = this.bldgs[i];
-            if (t.hitIds.has(b.id)) continue;
+            const b = this.bldgs[i]; if (t.hitIds.has(b.id)) continue;
             if (dist(t.x, t.y, b.x, b.y) < hitRadius) {
               t.hitIds.add(b.id);
-              if (t.isSand || t.strong) {
-                this.brownScars.push({ x: b.x, y: b.y, r: Math.max(b.w, b.h) * 0.7, life: 125, maxLife: 125, crater: true });
-                this.bldgs.splice(i, 1);
-                this.recalcPop();
-                this.renderWorkers();
-                this.showBanner(t.isSand ? '🌪️🏜️ ¡El tornado de arena destruyó un edificio!' : '🌪️ ¡El tornado fuerte destruyó un edificio!');
-              } else {
-                b.damaged = true;
-                this.recalcPop();
-                this.showBanner('🔨 Edificio dañado · Repáralo en Obras');
-              }
+              if (t.isSand || t.strong) { this.brownScars.push({ x: b.x, y: b.y, r: Math.max(b.w, b.h) * 0.7, life: 125, maxLife: 125, crater: true }); this.bldgs.splice(i, 1); this.recalcPop(); this.renderWorkers(); this.showBanner('🌪️ ¡El tornado destruyó un edificio!'); }
+              else { b.damaged = true; this.recalcPop(); this.showBanner('🔨 Edificio dañado · Repáralo en Obras'); }
             }
           }
-
-          if (t.life <= 0) {
-            this.tornado = null;
-            if (['tor_soft', 'tor_strong', 'sand_tor'].includes(this.activeDisaster)) {
-              this.activeDisaster = null;
-            }
-            this.updateHUD();
-          }
+          if (t.life <= 0) { this.tornado = null; if (['tor_soft', 'tor_strong', 'sand_tor'].includes(this.activeDisaster)) this.activeDisaster = null; this.updateHUD(); }
         }
-
         if (this.tsunamiWave) {
-          const w = this.tsunamiWave;
-          const impactLine = this.coastX ? (this.coastX + 80) : (MAP_W - 650);
+          const w = this.tsunamiWave, impactLine = this.coastX ? (this.coastX + 80) : (MAP_W - 650);
           if (w.stage === 'approaching') {
             w.x -= w.speed * dt;
             if (w.x <= impactLine) {
-              w.stage = 'crashing';
-              this.showBanner('🌊 ¡EL TSUNAMI INUNDA LA ZONA COSTERA!');
-              for (let i = this.bldgs.length - 1; i >= 0; i--) {
-                const b = this.bldgs[i];
-                if (b.x > impactLine - 280 || this.inWater(b.x, b.y, 40)) {
-                  this.brownScars.push({ x: b.x, y: b.y, r: Math.max(b.w, b.h) * 0.8, life: 140, maxLife: 140, crater: true });
-                  this.bldgs.splice(i, 1);
-                }
-              }
-              this.recalcPop();
-              this.renderWorkers();
+              w.stage = 'crashing'; this.showBanner('🌊 ¡EL TSUNAMI INUNDA LA ZONA COSTERA!');
+              for (let i = this.bldgs.length - 1; i >= 0; i--) { const b = this.bldgs[i]; if (b.x > impactLine - 280 || this.inWater(b.x, b.y, 40)) { this.brownScars.push({ x: b.x, y: b.y, r: Math.max(b.w, b.h) * 0.8, life: 140, maxLife: 140, crater: true }); this.bldgs.splice(i, 1); } }
+              this.recalcPop(); this.renderWorkers();
             }
-          } else {
-            w.width += w.speed * 2.5 * dt;
-            if (w.width > 1200) {
-              this.tsunamiWave = null;
-              if (this.activeDisaster === 'tsunami') this.activeDisaster = null;
-              this.showBanner('🌊 El agua del tsunami se retira');
-              this.updateHUD();
-            }
-          }
+          } else { w.width += w.speed * 2.5 * dt; if (w.width > 1200) { this.tsunamiWave = null; if (this.activeDisaster === 'tsunami') this.activeDisaster = null; this.showBanner('🌊 El agua del tsunami se retira'); this.updateHUD(); } }
         }
-
-        for (let i = this.brownScars.length - 1; i >= 0; i--) {
-          this.brownScars[i].life -= dt;
-          if (this.brownScars[i].life <= 0) this.brownScars.splice(i, 1);
-        }
+        for (let i = this.brownScars.length - 1; i >= 0; i--) { this.brownScars[i].life -= dt; if (this.brownScars[i].life <= 0) this.brownScars.splice(i, 1); }
       }
-
       updateWildlife(dt) {
         const reg = REGIONS[this.regId] || REGIONS.valley;
-
-        // Ciervos
         if (this.deers.length < (reg.deer || 14) && Math.random() < dt * 0.25) {
-          const x = 200 + Math.random() * (MAP_W - 400);
-          const y = 200 + Math.random() * (MAP_H - 400);
-          if (!this.inWater(x, y, 30)) {
-            this.deers.push({ id: this.uid++, x, y, tx: x + 120, ty: y + 80, ang: 0, wait: 1 });
-          }
+          const x = 200 + Math.random() * (MAP_W - 400), y = 200 + Math.random() * (MAP_H - 400);
+          if (!this.inWater(x, y, 30)) this.deers.push({ id: this.uid++, x, y, tx: x + 120, ty: y + 80, ang: 0, wait: 1 });
         }
-
         for (const d of this.deers) {
           if (d.wait > 0) { d.wait -= dt; continue; }
-          const dd = dist(d.x, d.y, d.tx, d.ty);
-          if (dd < 20) {
-            d.wait = 1.5 + Math.random() * 3;
-            d.tx = Math.max(120, Math.min(MAP_W - 120, d.x + (Math.random() - 0.5) * 340));
-            d.ty = Math.max(120, Math.min(MAP_H - 120, d.y + (Math.random() - 0.5) * 340));
-          } else {
-            d.ang = Math.atan2(d.ty - d.y, d.tx - d.x);
-            const nx = d.x + Math.cos(d.ang) * 24 * dt;
-            const ny = d.y + Math.sin(d.ang) * 24 * dt;
-            if (!this.inWater(nx, ny, 14)) { d.x = nx; d.y = ny; } else { d.wait = 1; }
-          }
+          if (dist(d.x, d.y, d.tx, d.ty) < 20) { d.wait = 1.5 + Math.random() * 3; d.tx = Math.max(120, Math.min(MAP_W - 120, d.x + (Math.random() - 0.5) * 340)); d.ty = Math.max(120, Math.min(MAP_H - 120, d.y + (Math.random() - 0.5) * 340)); }
+          else { d.ang = Math.atan2(d.ty - d.y, d.tx - d.x); const nx = d.x + Math.cos(d.ang) * 24 * dt, ny = d.y + Math.sin(d.ang) * 24 * dt; if (!this.inWater(nx, ny, 14)) { d.x = nx; d.y = ny; } else d.wait = 1; }
         }
-
-        // Conejos
         if (this.rabbits.length < (reg.rabbits || 16) && Math.random() < dt * 0.35) {
-          const x = 180 + Math.random() * (MAP_W - 360);
-          const y = 180 + Math.random() * (MAP_H - 360);
-          if (!this.inWater(x, y, 25)) {
-            this.rabbits.push({ id: this.uid++, x, y, tx: x + 80, ty: y + 60, ang: 0, wait: 0.8, hop: 0 });
-          }
+          const x = 180 + Math.random() * (MAP_W - 360), y = 180 + Math.random() * (MAP_H - 360);
+          if (!this.inWater(x, y, 25)) this.rabbits.push({ id: this.uid++, x, y, tx: x + 80, ty: y + 60, ang: 0, wait: 0.8, hop: 0 });
         }
-
         for (const rb of this.rabbits) {
           rb.hop += dt * 10;
           if (rb.wait > 0) { rb.wait -= dt; continue; }
-          const dd = dist(rb.x, rb.y, rb.tx, rb.ty);
-          if (dd < 14) {
-            rb.wait = 0.8 + Math.random() * 2.2;
-            rb.tx = Math.max(100, Math.min(MAP_W - 100, rb.x + (Math.random() - 0.5) * 200));
-            rb.ty = Math.max(100, Math.min(MAP_H - 100, rb.y + (Math.random() - 0.5) * 200));
-          } else {
-            rb.ang = Math.atan2(rb.ty - rb.y, rb.tx - rb.x);
-            const nx = rb.x + Math.cos(rb.ang) * 32 * dt;
-            const ny = rb.y + Math.sin(rb.ang) * 32 * dt;
-            if (!this.inWater(nx, ny, 12)) { rb.x = nx; rb.y = ny; } else { rb.wait = 0.6; }
-          }
+          if (dist(rb.x, rb.y, rb.tx, rb.ty) < 14) { rb.wait = 0.8 + Math.random() * 2.2; rb.tx = Math.max(100, Math.min(MAP_W - 100, rb.x + (Math.random() - 0.5) * 200)); rb.ty = Math.max(100, Math.min(MAP_H - 100, rb.y + (Math.random() - 0.5) * 200)); }
+          else { rb.ang = Math.atan2(rb.ty - rb.y, rb.tx - rb.x); const nx = rb.x + Math.cos(rb.ang) * 32 * dt, ny = rb.y + Math.sin(rb.ang) * 32 * dt; if (!this.inWater(nx, ny, 12)) { rb.x = nx; rb.y = ny; } else rb.wait = 0.6; }
         }
       }
-
       sim(dt) {
-        this.updateWeatherAndDisasters(dt);
-        this.updateWildlife(dt);
-        this.recalcPop();
-
+        this.updateWeatherAndDisasters(dt); this.updateWildlife(dt); this.recalcPop();
         if (this.pop < this.popCap && this.res.food > 0) {
           const prev = Math.floor(this.pop);
           this.pop = Math.min(this.popCap, this.pop + dt * 4.5);
-          if (Math.floor(this.pop) > prev) {
-            this.checkEraProgression();
-            this.renderWorkers();
-          }
+          if (Math.floor(this.pop) > prev) { this.checkEraProgression(); this.renderWorkers(); }
         }
-
         this.prodT -= dt;
         if (this.prodT <= 0) {
-          this.prodT = 4.5;
-          const slots = this.getSlots();
-          const ratio = r => slots[r] ? Math.min(1, this.workers[r] / slots[r]) : 0;
-
+          this.prodT = 4.5; const slots = this.getSlots(), ratio = r => slots[r] ? Math.min(1, this.workers[r] / slots[r]) : 0;
           const extremeTemp = this.temperature <= 6 || this.temperature >= 31;
           const climateProtection = ratio('civic') >= 0.4 || this.bldgs.some(b => (b.type === 'power' || b.type === 'fusion' || b.type === 'shield_dome') && !b.fire);
           const climateMult = (extremeTemp && !climateProtection) ? 0.72 : 1.0;
-
           const civicMult = (1 + ratio('civic') * 0.25 + (this.bldgs.some(b => (b.type === 'power' || b.type === 'fusion') && !b.fire) && ratio('civic') > 0 ? 0.35 : 0)) * climateMult;
-
           let dg = 0, dw = 0, ds = 0, dm = 0, dc = 0, df = 0;
           for (const b of this.bldgs) {
             if (b.fire) continue;
-            const dmgMult = b.damaged ? 0.45 : (b.dusty ? 0.75 : 1.0);
-            const sp = ITEMS[b.type];
+            const dmgMult = b.damaged ? 0.45 : (b.dusty ? 0.75 : 1.0), sp = ITEMS[b.type];
             if (sp.pop && this.pop > 0) dg += sp.tax * Math.min(1, this.pop / Math.max(1, this.popCap)) * dmgMult * climateMult;
             if (sp.role && ratio(sp.role) > 0) {
               const f = ratio(sp.role) * civicMult * dmgMult;
-              if (sp.outW) dw += sp.outW * f;
-              if (sp.outS) ds += sp.outS * f;
-              if (sp.outM) dm += sp.outM * f;
-              if (sp.outC) dc += sp.outC * f;
-              if (sp.outF) {
-                const faunaCount = this.deers.length + this.rabbits.length * 0.5;
-                const huntBonus = sp.role === 'hunter' ? Math.min(1.6, 0.5 + faunaCount * 0.06) : 1;
-                df += sp.outF * f * huntBonus;
-              }
+              if (sp.outW) dw += sp.outW * f; if (sp.outS) ds += sp.outS * f; if (sp.outM) dm += sp.outM * f; if (sp.outC) dc += sp.outC * f;
+              if (sp.outF) { const faunaCount = this.deers.length + this.rabbits.length * 0.5; const huntBonus = sp.role === 'hunter' ? Math.min(1.6, 0.5 + faunaCount * 0.06) : 1; df += sp.outF * f * huntBonus; }
               if (sp.outG) dg += sp.outG * f;
             }
           }
-          this.res.gold   += Math.round(dg);
-          this.res.wood   += Math.round(dw);
-          this.res.stone  += Math.round(ds);
-          this.res.metal  += Math.round(dm);
-          this.res.copper += Math.round(dc);
-          this.res.food    = Math.max(0, this.res.food + Math.round(df) - Math.floor(this.pop * 0.06));
+          this.res.gold += Math.round(dg); this.res.wood += Math.round(dw); this.res.stone += Math.round(ds); this.res.metal += Math.round(dm); this.res.copper += Math.round(dc);
+          this.res.food = Math.max(0, this.res.food + Math.round(df) - Math.floor(this.pop * 0.06));
         }
-
-        if (this.bldgs.length >= 4 && this.pop >= 20 && !this.activeDisaster) {
-          this.fireT -= dt;
-          if (this.fireT <= 0) {
-            this.fireT = 135;
-            this.triggerFire();
-          }
-        }
-
+        if (this.bldgs.length >= 4 && this.pop >= 20 && !this.activeDisaster) { this.fireT -= dt; if (this.fireT <= 0) { this.fireT = 135; this.triggerFire(); } }
         for (let i = this.bldgs.length - 1; i >= 0; i--) {
-          const b = this.bldgs[i];
-          if (!b.fire) continue;
+          const b = this.bldgs[i]; if (!b.fire) continue;
           b.hp -= dt * 3;
-          if (this.workers.fire > 0 && !this.agents.some(a => a.kind === 'fire' && a.target === b.id)) {
-            this.sendFirefighter(b);
-          }
-          if (b.hp <= 0) {
-            this.brownScars.push({ x: b.x, y: b.y, r: Math.max(b.w, b.h) * 0.6, life: 90, maxLife: 90, crater: true });
-            this.bldgs.splice(i, 1);
-            this.showBanner('🔥 Edificio quemado · Asigna 🚒 Bomberos');
-          }
+          if (this.workers.fire > 0 && !this.agents.some(a => a.kind === 'fire' && a.target === b.id)) this.sendFirefighter(b);
+          if (b.hp <= 0) { this.brownScars.push({ x: b.x, y: b.y, r: Math.max(b.w, b.h) * 0.6, life: 90, maxLife: 90, crater: true }); this.bldgs.splice(i, 1); this.showBanner('🔥 Edificio quemado · Asigna 🚒 Bomberos'); }
         }
-
         this.updateAgents(dt);
       }
-
       triggerFire() {
-        const list = this.bldgs.filter(b => !b.fire && !ITEMS[b.type]?.light);
-        if (!list.length) return;
-        const b = list[Math.floor(Math.random() * list.length)];
-        b.fire = true;
-        b.hp = 100;
+        const list = this.bldgs.filter(b => !b.fire && !ITEMS[b.type]?.light); if (!list.length) return;
+        const b = list[Math.floor(Math.random() * list.length)]; b.fire = true; b.hp = 100;
         this.showBanner(this.workers.fire > 0 ? '🔥 ¡Incendio! Bomberos en camino' : '🔥 ¡Incendio! Asigna Bomberos en 👷');
       }
-
       sendFirefighter(target) {
-        const st = this.bldgs.find(b => (b.type === 'well' || b.type === 'fire_hq') && !b.fire) || this.bldgs[0];
-        if (!st) return;
+        const st = this.bldgs.find(b => (b.type === 'well' || b.type === 'fire_hq') && !b.fire) || this.bldgs[0]; if (!st) return;
         this.agents.push({ kind: 'fire', x: st.x, y: st.y, target: target.id, spd: this.era === 1 ? 80 : 125, ang: 0 });
       }
-
       updateAgents(dt) {
         const want = Math.min(34, Math.floor(this.pop * 0.25 + this.workers.guard * 2 + this.workers.hunter * 2));
         if (this.agents.length < want && Math.random() < dt * 2.5) {
           if (this.workers.hunter > 0 && (this.deers.length > 0 || this.rabbits.length > 0) && Math.random() < 0.35) {
             const post = this.bldgs.find(b => b.type === 'hunter_post' && !b.fire);
             if (post) {
-              if (this.deers.length > 0 && Math.random() < 0.6) {
-                const targetDeer = this.deers[Math.floor(Math.random() * this.deers.length)];
-                this.agents.push({ kind: 'hunter', preyType: 'deer', x: post.x, y: post.y, preyId: targetDeer.id, spd: 55, ang: 0 });
-              } else if (this.rabbits.length > 0) {
-                const targetRabbit = this.rabbits[Math.floor(Math.random() * this.rabbits.length)];
-                this.agents.push({ kind: 'hunter', preyType: 'rabbit', x: post.x, y: post.y, preyId: targetRabbit.id, spd: 58, ang: 0 });
-              }
+              if (this.deers.length > 0 && Math.random() < 0.6) { const td = this.deers[Math.floor(Math.random() * this.deers.length)]; this.agents.push({ kind: 'hunter', preyType: 'deer', x: post.x, y: post.y, preyId: td.id, spd: 55, ang: 0 }); }
+              else if (this.rabbits.length > 0) { const tr = this.rabbits[Math.floor(Math.random() * this.rabbits.length)]; this.agents.push({ kind: 'hunter', preyType: 'rabbit', x: post.x, y: post.y, preyId: tr.id, spd: 58, ang: 0 }); }
             }
           } else if (this.roads.length) {
-            const r = this.roads[Math.floor(Math.random() * this.roads.length)];
-            const a = this.getNode(r.a), b = this.getNode(r.b);
-            if (a && b) {
-              const k = this.workers.guard > 0 && Math.random() < 0.3 ? 'guard' : (this.era >= 3 ? 'car' : 'walk');
-              this.agents.push({ kind: k, ax: a.x, ay: a.y, bx: b.x, by: b.y, t: 0, spd: k === 'car' ? 105 : 44, ang: Math.atan2(b.y - a.y, b.x - a.x) });
-            }
+            const r = this.roads[Math.floor(Math.random() * this.roads.length)], a = this.getNode(r.a), b = this.getNode(r.b);
+            if (a && b) { const k = this.workers.guard > 0 && Math.random() < 0.3 ? 'guard' : (this.era >= 3 ? 'car' : 'walk'); this.agents.push({ kind: k, ax: a.x, ay: a.y, bx: b.x, by: b.y, t: 0, spd: k === 'car' ? 105 : 44, ang: Math.atan2(b.y - a.y, b.x - a.x) }); }
           }
         }
-
         for (let i = this.agents.length - 1; i >= 0; i--) {
           const ag = this.agents[i];
           if (ag.kind === 'fire') {
-            const b = this.bldgs.find(x => x.id === ag.target);
-            if (!b || !b.fire) { this.agents.splice(i, 1); continue; }
+            const b = this.bldgs.find(x => x.id === ag.target); if (!b || !b.fire) { this.agents.splice(i, 1); continue; }
             ag.ang = Math.atan2(b.y - ag.y, b.x - ag.x);
-            if (dist(ag.x, ag.y, b.x, b.y) < 22) {
-              b.fire = false;
-              b.hp = 100;
-              this.showBanner('💦 ¡Fuego apagado!');
-              this.agents.splice(i, 1);
-            } else {
-              ag.x += Math.cos(ag.ang) * ag.spd * dt;
-              ag.y += Math.sin(ag.ang) * ag.spd * dt;
-            }
+            if (dist(ag.x, ag.y, b.x, b.y) < 22) { b.fire = false; b.hp = 100; this.showBanner('💦 ¡Fuego apagado!'); this.agents.splice(i, 1); }
+            else { ag.x += Math.cos(ag.ang) * ag.spd * dt; ag.y += Math.sin(ag.ang) * ag.spd * dt; }
             continue;
           }
           if (ag.kind === 'hunter') {
-            const list = ag.preyType === 'rabbit' ? this.rabbits : this.deers;
-            const prey = list.find(p => p.id === ag.preyId);
+            const list = ag.preyType === 'rabbit' ? this.rabbits : this.deers, prey = list.find(p => p.id === ag.preyId);
             if (!prey) { this.agents.splice(i, 1); continue; }
             ag.ang = Math.atan2(prey.y - ag.y, prey.x - ag.x);
             if (dist(ag.x, ag.y, prey.x, prey.y) < 16) {
-              if (ag.preyType === 'rabbit') {
-                this.res.food += 10;
-                this.rabbits = this.rabbits.filter(p => p.id !== prey.id);
-              } else {
-                this.res.food += 20;
-                this.deers = this.deers.filter(p => p.id !== prey.id);
-              }
+              if (ag.preyType === 'rabbit') { this.res.food += 10; this.rabbits = this.rabbits.filter(p => p.id !== prey.id); }
+              else { this.res.food += 20; this.deers = this.deers.filter(p => p.id !== prey.id); }
               this.agents.splice(i, 1);
-            } else {
-              ag.x += Math.cos(ag.ang) * ag.spd * dt;
-              ag.y += Math.sin(ag.ang) * ag.spd * dt;
-            }
+            } else { ag.x += Math.cos(ag.ang) * ag.spd * dt; ag.y += Math.sin(ag.ang) * ag.spd * dt; }
             continue;
           }
           const len = Math.max(1, dist(ag.ax, ag.ay, ag.bx, ag.by));
-          ag.t += (ag.spd * dt) / len;
-          if (ag.t >= 1) { this.agents.splice(i, 1); continue; }
-          ag.x = ag.ax + (ag.bx - ag.ax) * ag.t;
-          ag.y = ag.ay + (ag.by - ag.ay) * ag.t;
+          ag.t += (ag.spd * dt) / len; if (ag.t >= 1) { this.agents.splice(i, 1); continue; }
+          ag.x = ag.ax + (ag.bx - ag.ax) * ag.t; ag.y = ag.ay + (ag.by - ag.ay) * ag.t;
         }
       }
-
       getNightFactor() {
         const h = this.timeOfDay;
         if (h >= 7 && h <= 17) return 0;
@@ -1951,892 +754,382 @@
         if (h >= 20.5 || h <= 4.5) return 1;
         return 1 - (h - 4.5) / 2.5;
       }
-
       loop(now) {
         try {
-          const dt = Math.min(0.05, (now - this.lastT) / 1000);
-          this.lastT = now;
-
-          if (!this.gesture || this.gesture.mode !== 'pan') {
-            this.cam.x += this.cam.vx * dt;
-            this.cam.y += this.cam.vy * dt;
-            this.cam.vx *= Math.pow(0.06, dt);
-            this.cam.vy *= Math.pow(0.06, dt);
-          }
-
-          this.cam.x = Math.max(200, Math.min(MAP_W - 200, this.cam.x));
-          this.cam.y = Math.max(150, Math.min(MAP_H - 150, this.cam.y));
-
+          const dt = Math.min(0.05, (now - this.lastT) / 1000); this.lastT = now;
+          if (!this.gesture || this.gesture.mode !== 'pan') { this.cam.x += this.cam.vx * dt; this.cam.y += this.cam.vy * dt; this.cam.vx *= Math.pow(0.06, dt); this.cam.vy *= Math.pow(0.06, dt); }
+          this.cam.x = Math.max(200, Math.min(MAP_W - 200, this.cam.x)); this.cam.y = Math.max(150, Math.min(MAP_H - 150, this.cam.y));
           if (this.speed > 0) this.sim(dt * this.speed);
-
-          this.saveT -= dt;
-          if (this.saveT <= 0) {
-            this.saveT = 15;
-            if (this.bldgs.length || this.roads.length) this.save(true);
-          }
-
-          this.hudT = (this.hudT || 0) + dt;
-          if (this.hudT >= 0.25) {
-            this.hudT = 0;
-            this.updateHUD();
-            this.drawMini();
-          }
-
+          this.saveT -= dt; if (this.saveT <= 0) { this.saveT = 15; if (this.bldgs.length || this.roads.length) this.save(true); }
+          this.hudT = (this.hudT || 0) + dt; if (this.hudT >= 0.25) { this.hudT = 0; this.updateHUD(); this.drawMini(); }
           this.draw();
-        } catch (err) {
-          console.error(err);
-        }
+        } catch (err) { console.error(err); }
         requestAnimationFrame(t => this.loop(t));
       }
-
       drawDetailedBuilding(c, b) {
-        const hw = b.w * 0.5, hh = b.h * 0.5;
-        const isWinter = SEASONS[this.seasonIdx]?.snow;
-
+        const hw = b.w * 0.5, hh = b.h * 0.5, isWinter = SEASONS[this.seasonIdx]?.snow;
         if (b.type === 'street_light') {
-          c.fillStyle = 'rgba(0,0,0,0.35)';
-          c.beginPath(); c.arc(3, 3, 7, 0, Math.PI * 2); c.fill();
-          c.fillStyle = '#334155';
-          c.beginPath(); c.arc(0, 0, 6, 0, Math.PI * 2); c.fill();
-          c.fillStyle = '#fef08a';
-          c.beginPath(); c.arc(0, 0, 3.5, 0, Math.PI * 2); c.fill();
+          c.fillStyle = 'rgba(0,0,0,0.35)'; c.beginPath(); c.arc(3, 3, 7, 0, Math.PI * 2); c.fill();
+          c.fillStyle = '#334155'; c.beginPath(); c.arc(0, 0, 6, 0, Math.PI * 2); c.fill();
+          c.fillStyle = '#fef08a'; c.beginPath(); c.arc(0, 0, 3.5, 0, Math.PI * 2); c.fill();
           return;
         }
-
-        c.fillStyle = 'rgba(0,0,0,0.28)';
-        c.roundRect(-hw + 4, -hh + 4, b.w, b.h, 6);
-        c.fill();
-
+        c.fillStyle = 'rgba(0,0,0,0.28)'; c.roundRect(-hw + 4, -hh + 4, b.w, b.h, 6); c.fill();
         switch (b.type) {
           case 'hut': {
-            c.fillStyle = '#78350f';
-            c.roundRect(-hw, -hh, b.w, b.h, 10); c.fill();
-            c.fillStyle = '#d97706';
-            c.beginPath(); c.arc(0, 0, Math.min(hw, hh) * 0.84, 0, Math.PI * 2); c.fill();
-            c.fillStyle = '#fef3c7';
-            c.beginPath(); c.arc(0, 0, 4, 0, Math.PI * 2); c.fill();
-            break;
+            c.fillStyle = '#78350f'; c.roundRect(-hw, -hh, b.w, b.h, 10); c.fill();
+            c.fillStyle = '#d97706'; c.beginPath(); c.arc(0, 0, Math.min(hw, hh) * 0.84, 0, Math.PI * 2); c.fill();
+            c.strokeStyle = '#92400e'; c.lineWidth = 1.5;
+            for (let a = 0; a < Math.PI * 2; a += Math.PI / 4) { c.beginPath(); c.moveTo(0, 0); c.lineTo(Math.cos(a) * Math.min(hw, hh) * 0.8, Math.sin(a) * Math.min(hw, hh) * 0.8); c.stroke(); }
+            c.fillStyle = '#fef3c7'; c.beginPath(); c.arc(0, 0, 4, 0, Math.PI * 2); c.fill(); break;
           }
-
           case 'manor': {
-            c.fillStyle = '#fef3c7';
-            c.roundRect(-hw, -hh, b.w, b.h, 5); c.fill();
-            c.fillStyle = '#b91c1c';
-            c.fillRect(-hw + 4, -hh + 4, b.w - 8, b.h - 8);
-            break;
+            c.fillStyle = '#fef3c7'; c.roundRect(-hw, -hh, b.w, b.h, 5); c.fill();
+            c.fillStyle = '#b91c1c'; c.fillRect(-hw + 4, -hh + 4, b.w - 8, b.h - 8);
+            c.strokeStyle = '#7f1d1d'; c.lineWidth = 2; c.beginPath(); c.moveTo(-hw + 4, 0); c.lineTo(hw - 4, 0); c.stroke();
+            c.fillStyle = '#475569'; c.fillRect(hw - 16, -hh + 7, 7, 7); break;
           }
-
+          case 'brick_house': {
+            c.fillStyle = '#7c2d12'; c.roundRect(-hw, -hh, b.w, b.h, 5); c.fill();
+            c.fillStyle = '#9a3412'; c.fillRect(-hw + 4, -hh + 4, b.w - 8, b.h * 0.5 - 4);
+            c.fillStyle = '#c2410c'; c.fillRect(-hw + 4, 0, b.w - 8, b.h * 0.5 - 4);
+            c.fillStyle = '#e2e8f0'; c.fillRect(-10, -hh + 8, 6, 6); c.fillRect(4, -hh + 8, 6, 6); break;
+          }
+          case 'apartments': {
+            c.fillStyle = '#64748b'; c.roundRect(-hw, -hh, b.w, b.h, 6); c.fill();
+            c.fillStyle = '#94a3b8'; c.fillRect(-hw + 6, -hh + 6, b.w - 12, b.h - 12);
+            c.fillStyle = '#334155'; c.fillRect(-hw + 12, -hh + 12, 16, 12); c.fillRect(8, 4, 14, 10); break;
+          }
+          case 'condo': {
+            c.fillStyle = '#cbd5e1'; c.roundRect(-hw, -hh, b.w, b.h, 8); c.fill();
+            c.fillStyle = '#38bdf8'; c.fillRect(-hw + 10, -hh + 10, 22, 14);
+            c.fillStyle = '#16a34a'; c.beginPath(); c.arc(14, 8, 12, 0, Math.PI * 2); c.fill(); break;
+          }
+          case 'tower': {
+            c.fillStyle = '#0f172a'; c.roundRect(-hw, -hh, b.w, b.h, 8); c.fill();
+            c.fillStyle = '#0284c7'; c.roundRect(-hw + 6, -hh + 6, b.w - 12, b.h - 12, 6); c.fill();
+            c.strokeStyle = '#e0f2fe'; c.lineWidth = 2; c.beginPath(); c.arc(0, 0, 15, 0, Math.PI * 2); c.stroke();
+            c.fillStyle = '#f8fafc'; c.font = 'bold 12px sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('H', 0, 1); break;
+          }
           case 'farm': {
-            c.fillStyle = '#a16207';
-            c.roundRect(-hw, -hh, b.w, b.h, 6); c.fill();
-            c.strokeStyle = '#fde047';
-            c.lineWidth = 3;
-            for (let y = -hh + 8; y < hh - 6; y += 8) {
-              c.beginPath(); c.moveTo(-hw + 7, y); c.lineTo(hw - 24, y); c.stroke();
-            }
-            c.fillStyle = '#991b1b';
-            c.fillRect(hw - 20, -hh + 6, 14, b.h - 12);
-            break;
+            c.fillStyle = '#a16207'; c.roundRect(-hw, -hh, b.w, b.h, 6); c.fill();
+            c.strokeStyle = '#fde047'; c.lineWidth = 3;
+            for (let y = -hh + 8; y < hh - 6; y += 8) { c.beginPath(); c.moveTo(-hw + 7, y); c.lineTo(hw - 24, y); c.stroke(); }
+            c.fillStyle = '#991b1b'; c.fillRect(hw - 20, -hh + 6, 14, b.h - 12);
+            c.fillStyle = '#f8fafc'; c.beginPath(); c.arc(hw - 13, -hh + 14, 4, 0, Math.PI * 2); c.fill(); break;
           }
-
           case 'hunter_post': {
-            c.fillStyle = '#3f6212';
-            c.roundRect(-hw, -hh, b.w, b.h, 8); c.fill();
-            c.fillStyle = '#92400e';
-            c.beginPath(); c.moveTo(0, -hh + 6); c.lineTo(hw - 8, hh - 8); c.lineTo(-hw + 8, hh - 8); c.closePath(); c.fill();
-            break;
+            c.fillStyle = '#3f6212'; c.roundRect(-hw, -hh, b.w, b.h, 8); c.fill();
+            c.fillStyle = '#92400e'; c.beginPath(); c.moveTo(0, -hh + 6); c.lineTo(hw - 8, hh - 8); c.lineTo(-hw + 8, hh - 8); c.closePath(); c.fill();
+            c.fillStyle = '#fef3c7'; c.beginPath(); c.arc(0, 4, 4, 0, Math.PI * 2); c.fill(); break;
           }
-
           case 'workshop': {
-            c.fillStyle = '#334155';
-            c.roundRect(-hw, -hh, b.w, b.h, 6); c.fill();
-            c.fillStyle = '#d97706';
-            c.fillRect(-hw + 5, -hh + 5, b.w - 10, b.h - 10);
-            break;
+            c.fillStyle = '#334155'; c.roundRect(-hw, -hh, b.w, b.h, 6); c.fill();
+            c.fillStyle = '#d97706'; c.fillRect(-hw + 5, -hh + 5, b.w - 10, b.h - 10);
+            c.fillStyle = '#1e293b'; c.beginPath(); c.arc(0, 0, 11, 0, Math.PI * 2); c.fill();
+            c.fillStyle = '#facc15'; c.beginPath(); c.arc(0, 0, 5, 0, Math.PI * 2); c.fill(); break;
           }
-
-          case 'lumber': {
-            c.fillStyle = '#78350f';
-            c.roundRect(-hw, -hh, b.w * 0.64, b.h, 5); c.fill();
+          case 'lumber':
+          case 'sawmill': {
+            c.fillStyle = '#78350f'; c.roundRect(-hw, -hh, b.w * 0.64, b.h, 5); c.fill();
+            c.fillStyle = '#b45309'; c.fillRect(-hw + 4, -hh + 4, b.w * 0.64 - 8, b.h - 8);
             c.fillStyle = '#92400e';
-            for (let row = -hh + 9; row <= hh - 9; row += 11) {
-              c.fillRect(hw - 19, row - 4, 15, 8);
-            }
+            for (let row = -hh + 9; row <= hh - 9; row += 11) c.fillRect(hw - 19, row - 4, 15, 8);
             break;
           }
-
           case 'quarry':
           case 'mine': {
-            c.fillStyle = '#475569';
-            c.roundRect(-hw, -hh, b.w, b.h, 6); c.fill();
-            c.fillStyle = '#94a3b8';
-            c.fillRect(-hw + 6, -hh + 6, 18, 14);
-            c.fillStyle = '#fb923c';
-            c.beginPath(); c.arc(10, 4, 6, 0, Math.PI * 2); c.fill();
+            c.fillStyle = '#475569'; c.roundRect(-hw, -hh, b.w, b.h, 6); c.fill();
+            c.fillStyle = '#94a3b8'; c.fillRect(-hw + 6, -hh + 6, 18, 14);
+            c.fillStyle = '#1e293b'; c.beginPath(); c.arc(8, 2, 13, 0, Math.PI * 2); c.fill();
+            c.fillStyle = '#fb923c'; c.beginPath(); c.arc(10, 4, 5, 0, Math.PI * 2); c.fill(); break;
+          }
+          case 'keep': {
+            c.fillStyle = '#64748b'; c.roundRect(-hw, -hh, b.w, b.h, 6); c.fill();
+            c.fillStyle = '#94a3b8'; c.fillRect(-hw + 8, -hh + 8, b.w - 16, b.h - 16);
+            c.fillStyle = '#2563eb';
+            for (const [tx, ty] of [[-hw + 6, -hh + 6], [hw - 6, -hh + 6], [-hw + 6, hh - 6], [hw - 6, hh - 6]]) { c.beginPath(); c.arc(tx, ty, 7, 0, Math.PI * 2); c.fill(); }
             break;
           }
-
+          case 'well': {
+            c.fillStyle = '#991b1b'; c.beginPath(); c.arc(0, 0, hw * 0.9, 0, Math.PI * 2); c.fill();
+            c.fillStyle = '#0284c7'; c.beginPath(); c.arc(0, 0, hw * 0.55, 0, Math.PI * 2); c.fill(); break;
+          }
+          case 'fire_hq': {
+            c.fillStyle = '#b91c1c'; c.roundRect(-hw, -hh, b.w, b.h, 7); c.fill();
+            c.fillStyle = '#f8fafc'; c.fillRect(-hw + 8, -hh + 8, b.w - 16, 12);
+            c.fillStyle = '#ef4444'; c.beginPath(); c.arc(0, 8, 8, 0, Math.PI * 2); c.fill(); break;
+          }
+          case 'market': {
+            c.fillStyle = '#92400e'; c.roundRect(-hw, -hh, b.w, b.h, 6); c.fill();
+            const cols = ['#ef4444', '#facc15', '#38bdf8', '#10b981'];
+            for (let i = 0; i < 4; i++) { c.fillStyle = cols[i]; c.fillRect(-hw + 8 + (i % 2) * (hw - 6), -hh + 8 + Math.floor(i / 2) * (hh - 6), hw - 12, hh - 12); }
+            break;
+          }
           case 'trade_post': {
-            c.fillStyle = '#0f766e';
-            c.roundRect(-hw, -hh, b.w, b.h, 7); c.fill();
-            c.strokeStyle = '#5eead4';
-            c.lineWidth = 2.5;
+            c.fillStyle = '#0f766e'; c.roundRect(-hw, -hh, b.w, b.h, 7); c.fill();
+            c.strokeStyle = '#5eead4'; c.lineWidth = 2.5;
             c.beginPath(); c.arc(0, 0, 16, 0, Math.PI * 2); c.stroke();
-            c.beginPath(); c.moveTo(-16, 0); c.lineTo(16, 0); c.moveTo(0, -16); c.lineTo(0, 16); c.stroke();
-            break;
+            c.beginPath(); c.moveTo(-16, 0); c.lineTo(16, 0); c.moveTo(0, -16); c.lineTo(0, 16); c.stroke(); break;
           }
-
+          case 'school': {
+            c.fillStyle = '#d97706'; c.roundRect(-hw, -hh, b.w, b.h, 6); c.fill();
+            c.fillStyle = '#fef3c7'; c.fillRect(-hw + 8, -hh + 8, b.w - 16, b.h - 16);
+            c.fillStyle = '#1e3a8a'; c.beginPath(); c.arc(0, 0, 9, 0, Math.PI * 2); c.fill(); break;
+          }
+          case 'hospital': {
+            c.fillStyle = '#f8fafc'; c.roundRect(-hw, -hh, b.w, b.h, 8); c.fill();
+            c.fillStyle = '#ef4444'; c.fillRect(-4, -14, 8, 28); c.fillRect(-14, -4, 28, 8); break;
+          }
+          case 'power': {
+            c.fillStyle = '#334155'; c.roundRect(-hw, -hh, b.w, b.h, 6); c.fill();
+            c.fillStyle = '#94a3b8'; c.beginPath(); c.arc(-16, 0, 14, 0, Math.PI * 2); c.arc(16, 0, 14, 0, Math.PI * 2); c.fill();
+            c.fillStyle = '#facc15'; c.beginPath(); c.arc(-16, 0, 6, 0, Math.PI * 2); c.arc(16, 0, 6, 0, Math.PI * 2); c.fill(); break;
+          }
           case 'arcology':
           case 'fusion':
           case 'shield_dome': {
-            c.fillStyle = '#0f172a';
-            c.beginPath(); c.arc(0, 0, Math.min(hw, hh), 0, Math.PI * 2); c.fill();
+            c.fillStyle = '#0f172a'; c.beginPath(); c.arc(0, 0, Math.min(hw, hh), 0, Math.PI * 2); c.fill();
             c.fillStyle = b.type === 'fusion' ? '#a855f7' : (b.type === 'shield_dome' ? '#10b981' : '#38bdf8');
             c.beginPath(); c.arc(0, 0, Math.min(hw, hh) * 0.72, 0, Math.PI * 2); c.fill();
-            c.strokeStyle = '#f8fafc';
-            c.lineWidth = 2.5;
-            c.beginPath(); c.arc(0, 0, Math.min(hw, hh) * 0.4, 0, Math.PI * 2); c.stroke();
-            break;
-          }
-
-          default: {
-            c.fillStyle = '#1e293b';
-            c.roundRect(-hw, -hh, b.w, b.h, 7); c.fill();
-            c.fillStyle = '#0284c7';
-            c.roundRect(-hw + 6, -hh + 6, b.w - 12, b.h - 12, 5); c.fill();
-            break;
+            c.strokeStyle = '#f8fafc'; c.lineWidth = 2.5; c.beginPath(); c.arc(0, 0, Math.min(hw, hh) * 0.4, 0, Math.PI * 2); c.stroke(); break;
           }
         }
-
-        if (isWinter) {
-          c.fillStyle = 'rgba(248, 250, 252, 0.32)';
-          c.roundRect(-hw + 2, -hh + 2, b.w - 4, (b.h - 4) * 0.45, 4);
-          c.fill();
-        }
-
-        if (b.dusty) {
-          c.fillStyle = 'rgba(230, 200, 150, 0.55)';
-          c.roundRect(-hw, -hh, b.w, b.h, 6);
-          c.fill();
-        }
-
-        if (b.damaged) {
-          c.strokeStyle = '#1c1917';
-          c.lineWidth = 2.6;
-          c.beginPath();
-          c.moveTo(-hw * 0.6, -hh * 0.4);
-          c.lineTo(0, 2);
-          c.lineTo(hw * 0.5, -hh * 0.3);
-          c.stroke();
-        }
+        if (isWinter) { c.fillStyle = 'rgba(248, 250, 252, 0.32)'; c.roundRect(-hw + 2, -hh + 2, b.w - 4, (b.h - 4) * 0.45, 4); c.fill(); }
+        if (b.dusty) { c.fillStyle = 'rgba(230, 200, 150, 0.55)'; c.roundRect(-hw, -hh, b.w, b.h, 6); c.fill(); }
+        if (b.damaged) { c.strokeStyle = '#1c1917'; c.lineWidth = 2.6; c.beginPath(); c.moveTo(-hw * 0.6, -hh * 0.4); c.lineTo(0, 2); c.lineTo(hw * 0.5, -hh * 0.3); c.stroke(); }
       }
-
       draw() {
         if (this.bgDirty) this.renderBg();
-        const c = this.ctx;
-        const reg = REGIONS[this.regId] || REGIONS.valley;
-        const night = this.getNightFactor();
-
-        c.fillStyle = '#111827';
-        c.fillRect(0, 0, this.cam.vw, this.cam.vh);
-
+        const c = this.ctx, reg = REGIONS[this.regId] || REGIONS.valley, night = this.getNightFactor();
+        c.fillStyle = '#111827'; c.fillRect(0, 0, this.cam.vw, this.cam.vh);
         c.save();
-        const sx = this.shakeTimer > 0 ? (Math.random() - 0.5) * this.shakeMag : 0;
-        const sy = this.shakeTimer > 0 ? (Math.random() - 0.5) * this.shakeMag : 0;
+        const sx = this.shakeTimer > 0 ? (Math.random() - 0.5) * this.shakeMag : 0, sy = this.shakeTimer > 0 ? (Math.random() - 0.5) * this.shakeMag : 0;
         c.translate(Math.round(this.cam.vw * 0.5 - this.cam.x + sx), Math.round(this.cam.vh * 0.5 - this.cam.y + sy));
         c.drawImage(this.bg, 0, 0);
-
         if (this.weather.tide > 0.02) {
-          const extra = this.weather.tide * 12;
-          c.save();
-          c.lineCap = 'round';
-          c.strokeStyle = reg.water;
-          for (const s of this.water) {
-            c.lineWidth = (s.r + extra) * 2;
-            c.beginPath(); c.moveTo(s.ax, s.ay); c.lineTo(s.bx, s.by); c.stroke();
-          }
-          if (this.coastX) {
-            c.fillStyle = reg.water;
-            c.beginPath(); c.moveTo(MAP_W, 0); c.lineTo(MAP_W, MAP_H);
-            for (let y = MAP_H; y >= 0; y -= 30) {
-              c.lineTo(this.coastX - extra * 1.6 + Math.sin(y * 0.008) * 40, y);
-            }
-            c.closePath(); c.fill();
-          }
+          const extra = this.weather.tide * 12; c.save(); c.lineCap = 'round'; c.strokeStyle = reg.water;
+          for (const s of this.water) { c.lineWidth = (s.r + extra) * 2; c.beginPath(); c.moveTo(s.ax, s.ay); c.lineTo(s.bx, s.by); c.stroke(); }
+          if (this.coastX) { c.fillStyle = reg.water; c.beginPath(); c.moveTo(MAP_W, 0); c.lineTo(MAP_W, MAP_H); for (let y = MAP_H; y >= 0; y -= 30) c.lineTo(this.coastX - extra * 1.6 + Math.sin(y * 0.008) * 40, y); c.closePath(); c.fill(); }
           c.restore();
         }
-
-        for (const sc of this.brownScars) {
-          const alpha = Math.min(0.85, (sc.life / sc.maxLife) * 0.95);
-          c.save();
-          c.globalAlpha = alpha;
-          c.fillStyle = sc.crater ? '#5c3a21' : '#784b2a';
-          c.beginPath(); c.arc(sc.x, sc.y, sc.r, 0, Math.PI * 2); c.fill();
-          c.restore();
-        }
-
+        for (const sc of this.brownScars) { c.save(); c.globalAlpha = Math.min(0.85, (sc.life / sc.maxLife) * 0.95); c.fillStyle = sc.crater ? '#5c3a21' : '#784b2a'; c.beginPath(); c.arc(sc.x, sc.y, sc.r, 0, Math.PI * 2); c.fill(); c.restore(); }
         for (const f of this.fissures) {
-          c.save();
-          c.lineCap = 'round';
-          c.lineJoin = 'round';
-          c.strokeStyle = '#78350f';
-          c.lineWidth = 18;
-          c.beginPath();
-          f.pts.forEach((p, idx) => idx === 0 ? c.moveTo(p.x, p.y) : c.lineTo(p.x, p.y));
-          c.stroke();
-
-          c.strokeStyle = '#1c1917';
-          c.lineWidth = 9;
-          c.beginPath();
-          f.pts.forEach((p, idx) => idx === 0 ? c.moveTo(p.x, p.y) : c.lineTo(p.x, p.y));
-          c.stroke();
-          c.restore();
+          c.save(); c.lineCap = 'round'; c.lineJoin = 'round'; c.strokeStyle = '#78350f'; c.lineWidth = 18; c.beginPath(); f.pts.forEach((p, i) => i === 0 ? c.moveTo(p.x, p.y) : c.lineTo(p.x, p.y)); c.stroke();
+          c.strokeStyle = '#1c1917'; c.lineWidth = 9; c.beginPath(); f.pts.forEach((p, i) => i === 0 ? c.moveTo(p.x, p.y) : c.lineTo(p.x, p.y)); c.stroke(); c.restore();
         }
-
         c.lineCap = 'round';
         for (const r of this.roads) {
-          const a = this.getNode(r.a), b = this.getNode(r.b);
-          if (!a || !b) continue;
-          if (r.bridge) {
-            c.strokeStyle = '#78350f'; c.lineWidth = ROAD_W + 10;
-            c.beginPath(); c.moveTo(a.x, a.y); c.lineTo(b.x, b.y); c.stroke();
-          }
+          const a = this.getNode(r.a), b = this.getNode(r.b); if (!a || !b) continue;
+          if (r.bridge) { c.strokeStyle = '#78350f'; c.lineWidth = ROAD_W + 10; c.beginPath(); c.moveTo(a.x, a.y); c.lineTo(b.x, b.y); c.stroke(); }
           c.strokeStyle = r.tier === 1 ? '#855834' : (r.tier === 2 ? '#64748b' : (r.tier === 3 ? '#4b5563' : (r.tier === 4 ? '#1e293b' : '#0284c7')));
-          c.lineWidth = ROAD_W;
-          c.beginPath(); c.moveTo(a.x, a.y); c.lineTo(b.x, b.y); c.stroke();
-
-          if (r.tier === 5) {
-            c.save(); c.strokeStyle = '#38bdf8'; c.lineWidth = 4;
-            c.beginPath(); c.moveTo(a.x, a.y); c.lineTo(b.x, b.y); c.stroke(); c.restore();
-          } else if (r.tier === 4) {
-            c.save(); c.strokeStyle = '#facc15'; c.lineWidth = 2; c.setLineDash([10, 10]);
-            c.beginPath(); c.moveTo(a.x, a.y); c.lineTo(b.x, b.y); c.stroke(); c.restore();
-          }
+          c.lineWidth = ROAD_W; c.beginPath(); c.moveTo(a.x, a.y); c.lineTo(b.x, b.y); c.stroke();
+          if (r.tier === 5) { c.save(); c.strokeStyle = '#38bdf8'; c.lineWidth = 4; c.beginPath(); c.moveTo(a.x, a.y); c.lineTo(b.x, b.y); c.stroke(); c.restore(); }
+          else if (r.tier === 4) { c.save(); c.strokeStyle = '#facc15'; c.lineWidth = 2; c.setLineDash([10, 10]); c.beginPath(); c.moveTo(a.x, a.y); c.lineTo(b.x, b.y); c.stroke(); c.restore(); }
         }
-
-        // Dibujar Mini Ciervos
         for (const d of this.deers) {
-          c.save();
-          c.translate(d.x, d.y);
-          c.rotate(d.ang);
-          c.fillStyle = '#b45309';
-          c.beginPath(); c.ellipse(0, 0, 7, 4, 0, 0, Math.PI * 2); c.fill();
-          c.fillStyle = '#fef3c7';
-          c.beginPath(); c.arc(-6, 0, 2, 0, Math.PI * 2); c.fill();
-          c.fillStyle = '#78350f';
-          c.beginPath(); c.arc(7, 0, 3, 0, Math.PI * 2); c.fill();
-          c.restore();
+          c.save(); c.translate(d.x, d.y); c.rotate(d.ang);
+          c.fillStyle = '#b45309'; c.beginPath(); c.ellipse(0, 0, 7, 4, 0, 0, Math.PI * 2); c.fill();
+          c.fillStyle = '#fef3c7'; c.beginPath(); c.arc(-6, 0, 2, 0, Math.PI * 2); c.fill();
+          c.fillStyle = '#78350f'; c.beginPath(); c.arc(7, 0, 3, 0, Math.PI * 2); c.fill(); c.restore();
         }
-
-        // Dibujar Conejos
         for (const rb of this.rabbits) {
           const bounce = rb.wait <= 0 ? Math.abs(Math.sin(rb.hop)) * 2.5 : 0;
-          c.save();
-          c.translate(rb.x, rb.y - bounce);
-          c.rotate(rb.ang);
-          c.fillStyle = '#f8fafc';
-          c.beginPath(); c.ellipse(0, 0, 4.2, 2.8, 0, 0, Math.PI * 2); c.fill();
-          c.fillStyle = '#fbcfe8';
-          c.beginPath(); c.ellipse(2, -1.6, 2.4, 0.9, -0.3, 0, Math.PI * 2); c.fill();
-          c.beginPath(); c.ellipse(2,  1.6, 2.4, 0.9,  0.3, 0, Math.PI * 2); c.fill();
-          c.restore();
+          c.save(); c.translate(rb.x, rb.y - bounce); c.rotate(rb.ang);
+          c.fillStyle = '#f8fafc'; c.beginPath(); c.ellipse(0, 0, 4.2, 2.8, 0, 0, Math.PI * 2); c.fill();
+          c.fillStyle = '#fbcfe8'; c.beginPath(); c.ellipse(2, -1.6, 2.4, 0.9, -0.3, 0, Math.PI * 2); c.fill();
+          c.beginPath(); c.ellipse(2, 1.6, 2.4, 0.9, 0.3, 0, Math.PI * 2); c.fill(); c.restore();
         }
-
         for (const b of this.bldgs) {
-          const sp = ITEMS[b.type];
-          if (!sp) continue;
-          c.save();
-          c.translate(b.x, b.y);
-          c.rotate(b.ang);
-
+          const sp = ITEMS[b.type]; if (!sp) continue;
+          c.save(); c.translate(b.x, b.y); c.rotate(b.ang);
           this.drawDetailedBuilding(c, b);
-
           c.rotate(-b.ang);
           const hh = b.h * 0.5, hw = b.w * 0.5;
-          if (sp.role && this.workers[sp.role] === 0) {
-            c.fillStyle = '#fbbf24';
-            c.beginPath(); c.arc(hw - 4, -hh + 4, 6, 0, Math.PI * 2); c.fill();
-          }
-          if (b.damaged || b.dusty) {
-            c.font = '18px sans-serif';
-            c.textAlign = 'center';
-            c.fillText('🔨', 0, -hh - 6);
-          }
-          if (b.fire) {
-            c.font = '22px sans-serif';
-            c.textAlign = 'center';
-            c.fillText('🔥', 0, -hh - 8);
-          }
+          if (sp.role && this.workers[sp.role] === 0) { c.fillStyle = '#fbbf24'; c.beginPath(); c.arc(hw - 4, -hh + 4, 6, 0, Math.PI * 2); c.fill(); }
+          if (b.damaged || b.dusty) { c.font = '18px sans-serif'; c.textAlign = 'center'; c.fillText('🔨', 0, -hh - 6); }
+          if (b.fire) { c.font = '22px sans-serif'; c.textAlign = 'center'; c.fillText('🔥', 0, -hh - 8); }
           c.restore();
         }
-
         for (const ag of this.agents) {
-          c.save();
-          c.translate(ag.x, ag.y);
-          c.rotate(ag.ang);
-          if (ag.kind === 'fire') {
-            c.fillStyle = '#ef4444'; c.beginPath(); c.arc(0, 0, 6, 0, Math.PI * 2); c.fill();
-          } else if (ag.kind === 'guard') {
-            c.fillStyle = '#2563eb'; c.beginPath(); c.arc(0, 0, 5, 0, Math.PI * 2); c.fill();
-          } else if (ag.kind === 'hunter') {
-            c.fillStyle = '#15803d'; c.beginPath(); c.arc(0, 0, 5, 0, Math.PI * 2); c.fill();
-          } else if (ag.kind === 'car') {
-            c.fillStyle = '#facc15'; c.roundRect(-9, -4.5, 18, 9, 3); c.fill();
-          } else {
-            c.fillStyle = '#f9fafb'; c.beginPath(); c.arc(0, 0, 3.5, 0, Math.PI * 2); c.fill();
-          }
+          c.save(); c.translate(ag.x, ag.y); c.rotate(ag.ang);
+          if (ag.kind === 'fire') { c.fillStyle = '#ef4444'; c.beginPath(); c.arc(0, 0, 6, 0, Math.PI * 2); c.fill(); }
+          else if (ag.kind === 'guard') { c.fillStyle = '#2563eb'; c.beginPath(); c.arc(0, 0, 5, 0, Math.PI * 2); c.fill(); }
+          else if (ag.kind === 'hunter') { c.fillStyle = '#15803d'; c.beginPath(); c.arc(0, 0, 5, 0, Math.PI * 2); c.fill(); }
+          else if (ag.kind === 'car') { c.fillStyle = '#facc15'; c.roundRect(-9, -4.5, 18, 9, 3); c.fill(); }
+          else { c.fillStyle = '#f9fafb'; c.beginPath(); c.arc(0, 0, 3.5, 0, Math.PI * 2); c.fill(); }
           c.restore();
         }
-
         if (this.gesture && this.gesture.mode === 'road' && this.gesture.roadStart && this.gesture.roadEnd) {
           const s = this.gesture.roadStart, e = this.gesture.roadEnd;
-          c.strokeStyle = 'rgba(52, 211, 153, 0.8)';
-          c.lineWidth = ROAD_W;
-          c.lineCap = 'round';
-          c.beginPath(); c.moveTo(s.x, s.y); c.lineTo(e.x, e.y); c.stroke();
+          c.strokeStyle = 'rgba(52, 211, 153, 0.8)'; c.lineWidth = ROAD_W; c.lineCap = 'round'; c.beginPath(); c.moveTo(s.x, s.y); c.lineTo(e.x, e.y); c.stroke();
         }
-
         if (this.tornado) {
-          const t = this.tornado;
-          const maxR = t.strong ? (t.isSand ? 90 : 68) : 46;
-          c.save();
-          c.translate(t.x, t.y);
-          c.rotate(t.angle);
+          const t = this.tornado, maxR = t.strong ? (t.isSand ? 90 : 68) : 46;
+          c.save(); c.translate(t.x, t.y); c.rotate(t.angle);
           const arms = t.strong ? 12 : 7;
           for (let a = 0; a < arms; a++) {
-            c.save();
-            c.rotate((a * Math.PI * 2) / arms);
-            c.strokeStyle = t.isSand ? 'rgba(252, 211, 77, 0.85)' : 'rgba(226, 232, 240, 0.85)';
-            c.lineWidth = t.strong ? 3.8 : 2.4;
-            c.beginPath();
-            for (let r = 8; r <= maxR; r += 6) {
-              const theta = r * 0.075;
-              if (r === 8) c.moveTo(Math.cos(theta) * r, Math.sin(theta) * r);
-              else c.lineTo(Math.cos(theta) * r, Math.sin(theta) * r);
-            }
-            c.stroke();
-            c.restore();
+            c.save(); c.rotate((a * Math.PI * 2) / arms); c.strokeStyle = t.isSand ? 'rgba(252, 211, 77, 0.85)' : 'rgba(226, 232, 240, 0.85)'; c.lineWidth = t.strong ? 3.8 : 2.4; c.beginPath();
+            for (let r = 8; r <= maxR; r += 6) { const theta = r * 0.075; if (r === 8) c.moveTo(Math.cos(theta) * r, Math.sin(theta) * r); else c.lineTo(Math.cos(theta) * r, Math.sin(theta) * r); }
+            c.stroke(); c.restore();
           }
           c.restore();
         }
-
-        if (this.tsunamiWave) {
-          const w = this.tsunamiWave;
-          c.fillStyle = 'rgba(2, 132, 199, 0.85)';
-          c.fillRect(w.x, 0, w.width, MAP_H);
-          c.fillStyle = 'rgba(224, 242, 254, 0.95)';
-          c.fillRect(w.x, 0, 24, MAP_H);
-        }
-
-        for (const b of this.weather.bolts) {
-          c.save();
-          c.strokeStyle = `rgba(254, 249, 195, ${Math.min(1, b.life * 3.5)})`;
-          c.lineWidth = 4;
-          c.beginPath();
-          b.pts.forEach((p, idx) => idx === 0 ? c.moveTo(p.x, p.y) : c.lineTo(p.x, p.y));
-          c.stroke();
-          c.restore();
-        }
-
+        if (this.tsunamiWave) { const w = this.tsunamiWave; c.fillStyle = 'rgba(2, 132, 199, 0.85)'; c.fillRect(w.x, 0, w.width, MAP_H); c.fillStyle = 'rgba(224, 242, 254, 0.95)'; c.fillRect(w.x, 0, 24, MAP_H); }
+        for (const b of this.weather.bolts) { c.save(); c.strokeStyle = `rgba(254, 249, 195, ${Math.min(1, b.life * 3.5)})`; c.lineWidth = 4; c.beginPath(); b.pts.forEach((p, i) => i === 0 ? c.moveTo(p.x, p.y) : c.lineTo(p.x, p.y)); c.stroke(); c.restore(); }
         if (night > 0.02) {
-          c.save();
-          c.fillStyle = `rgba(10, 15, 35, ${night * 0.58})`;
-          c.fillRect(0, 0, MAP_W, MAP_H);
-
+          c.save(); c.fillStyle = `rgba(10, 15, 35, ${night * 0.58})`; c.fillRect(0, 0, MAP_W, MAP_H);
           c.globalCompositeOperation = 'lighter';
           for (const b of this.bldgs) {
             if (b.fire) continue;
-            const isLamp = b.type === 'street_light';
-            const radius = isLamp ? 155 : (this.era >= 3 ? 65 : 35);
+            const isLamp = b.type === 'street_light', radius = isLamp ? 155 : (this.era >= 3 ? 65 : 35);
             const grad = c.createRadialGradient(b.x, b.y, 4, b.x, b.y, radius);
             grad.addColorStop(0, isLamp ? `rgba(254, 240, 138, ${night * 0.65})` : `rgba(253, 224, 71, ${night * 0.25})`);
             grad.addColorStop(1, 'rgba(253, 224, 71, 0)');
-            c.fillStyle = grad;
-            c.beginPath();
-            c.arc(b.x, b.y, radius, 0, Math.PI * 2);
-            c.fill();
+            c.fillStyle = grad; c.beginPath(); c.arc(b.x, b.y, radius, 0, Math.PI * 2); c.fill();
           }
           c.restore();
         }
-
         c.restore();
-
-        if (this.windWarning > 0) {
-          c.strokeStyle = 'rgba(241, 245, 249, 0.55)';
-          c.lineWidth = 2.2;
-          c.beginPath();
-          for (const g of this.weather.windGusts) {
-            c.moveTo(g.x, g.y);
-            c.lineTo(g.x + g.len, g.y + Math.sin(g.x * 0.03) * 6);
-          }
-          c.stroke();
-        }
-
-        if (this.weather.state === 'rain' || this.weather.state === 'storm') {
-          c.fillStyle = this.weather.state === 'storm' ? 'rgba(15, 23, 42, 0.28)' : 'rgba(15, 23, 42, 0.15)';
-          c.fillRect(0, 0, this.cam.vw, this.cam.vh);
-          c.strokeStyle = 'rgba(186, 230, 253, 0.65)';
-          c.lineWidth = 1.6;
-          c.beginPath();
-          for (const d of this.weather.drops) {
-            c.moveTo(d.x, d.y);
-            c.lineTo(d.x - d.l * 0.22, d.y + d.l);
-          }
-          c.stroke();
-        }
-
-        if (this.sandIntensity > 0.05) {
-          c.fillStyle = `rgba(217, 119, 6, ${this.sandIntensity * 0.35})`;
-          c.fillRect(0, 0, this.cam.vw, this.cam.vh);
-          c.fillStyle = 'rgba(251, 191, 36, 0.65)';
-          for (const p of this.weather.sandParticles) {
-            c.beginPath(); c.arc(p.x, p.y, p.size, 0, Math.PI * 2); c.fill();
-          }
-        }
-
-        if (this.weather.lightningFlash > 0) {
-          c.fillStyle = `rgba(255, 255, 255, ${this.weather.lightningFlash * 0.85})`;
-          c.fillRect(0, 0, this.cam.vw, this.cam.vh);
-        }
+        if (this.windWarning > 0) { c.strokeStyle = 'rgba(241, 245, 249, 0.55)'; c.lineWidth = 2.2; c.beginPath(); for (const g of this.weather.windGusts) { c.moveTo(g.x, g.y); c.lineTo(g.x + g.len, g.y + Math.sin(g.x * 0.03) * 6); } c.stroke(); }
+        if (this.weather.state === 'rain' || this.weather.state === 'storm') { c.fillStyle = this.weather.state === 'storm' ? 'rgba(15, 23, 42, 0.28)' : 'rgba(15, 23, 42, 0.15)'; c.fillRect(0, 0, this.cam.vw, this.cam.vh); c.strokeStyle = 'rgba(186, 230, 253, 0.65)'; c.lineWidth = 1.6; c.beginPath(); for (const d of this.weather.drops) { c.moveTo(d.x, d.y); c.lineTo(d.x - d.l * 0.22, d.y + d.l); } c.stroke(); }
+        if (this.sandIntensity > 0.05) { c.fillStyle = `rgba(217, 119, 6, ${this.sandIntensity * 0.35})`; c.fillRect(0, 0, this.cam.vw, this.cam.vh); c.fillStyle = 'rgba(251, 191, 36, 0.65)'; for (const p of this.weather.sandParticles) { c.beginPath(); c.arc(p.x, p.y, p.size, 0, Math.PI * 2); c.fill(); } }
+        if (this.weather.lightningFlash > 0) { c.fillStyle = `rgba(255, 255, 255, ${this.weather.lightningFlash * 0.85})`; c.fillRect(0, 0, this.cam.vw, this.cam.vh); }
       }
-
       drawMini() {
-        const m = this.mctx, mw = this.mini.width, mh = this.mini.height;
-        const sx = mw / MAP_W, sy = mh / MAP_H;
-        m.clearRect(0, 0, mw, mh);
-        m.drawImage(this.bg, 0, 0, mw, mh);
-
+        const m = this.mctx, mw = this.mini.width, mh = this.mini.height, sx = mw / MAP_W, sy = mh / MAP_H;
+        m.clearRect(0, 0, mw, mh); m.drawImage(this.bg, 0, 0, mw, mh);
         m.strokeStyle = '#f3f4f6'; m.lineWidth = 1.5;
-        for (const r of this.roads) {
-          const a = this.getNode(r.a), b = this.getNode(r.b);
-          if (!a || !b) continue;
-          m.beginPath(); m.moveTo(a.x * sx, a.y * sy); m.lineTo(b.x * sx, b.y * sy); m.stroke();
-        }
-        for (const b of this.bldgs) {
-          m.fillStyle = b.fire ? '#ef4444' : (b.damaged ? '#f97316' : '#fbbf24');
-          m.fillRect(b.x * sx - 2, b.y * sy - 2, 4, 4);
-        }
-        m.strokeStyle = '#38bdf8'; m.lineWidth = 1.8;
-        m.strokeRect((this.cam.x - this.cam.vw * 0.5) * sx, (this.cam.y - this.cam.vh * 0.5) * sy, this.cam.vw * sx, this.cam.vh * sy);
+        for (const r of this.roads) { const a = this.getNode(r.a), b = this.getNode(r.b); if (!a || !b) continue; m.beginPath(); m.moveTo(a.x * sx, a.y * sy); m.lineTo(b.x * sx, b.y * sy); m.stroke(); }
+        for (const b of this.bldgs) { m.fillStyle = b.fire ? '#ef4444' : (b.damaged ? '#f97316' : '#fbbf24'); m.fillRect(b.x * sx - 2, b.y * sy - 2, 4, 4); }
+        m.strokeStyle = '#38bdf8'; m.lineWidth = 1.8; m.strokeRect((this.cam.x - this.cam.vw * 0.5) * sx, (this.cam.y - this.cam.vh * 0.5) * sy, this.cam.vw * sx, this.cam.vh * sy);
       }
-
       renderCards() {
-        const box = document.getElementById('cards');
-        box.innerHTML = '';
+        const box = document.getElementById('cards'); box.innerHTML = '';
         for (const [k, it] of Object.entries(ITEMS)) {
           if (it.sec !== this.sec) continue;
-          const lock = it.era > this.era;
-          const b = document.createElement('button');
+          const lock = it.era > this.era, b = document.createElement('button');
           b.className = 'card' + (this.item === k ? ' active' : '') + (lock ? ' locked' : '');
-          b.innerHTML = `
-            <span class="card-ico">${lock ? '🔒' : it.ico}</span>
-            <span class="card-lbl">${it.name}</span>
-            <span class="card-prc">${this.costText(it.cost)}</span>
-          `;
-          b.onclick = () => {
-            if (lock) { this.showBanner(`🔒 ${ERAS[it.era].name} (${ERAS[it.era - 1].reqPop} hab.)`); return; }
-            this.item = k;
-            this.renderCards();
-          };
+          b.innerHTML = `<span class="card-ico">${lock ? '🔒' : it.ico}</span><span class="card-lbl">${it.name}</span><span class="card-prc">${this.costText(it.cost)}</span>`;
+          b.onclick = () => { if (lock) { this.showBanner(`🔒 ${ERAS[it.era].name} (${ERAS[it.era - 1].reqPop} hab.)`); return; } this.item = k; this.renderCards(); };
           box.appendChild(b);
         }
       }
-
       renderWorkers() {
-        const list = document.getElementById('roles-list');
-        list.innerHTML = '';
-        const slots = this.getSlots();
-        const free = Math.max(0, Math.floor(this.pop) - Object.values(this.workers).reduce((a, b) => a + b, 0));
+        const list = document.getElementById('roles-list'); list.innerHTML = '';
+        const slots = this.getSlots(), free = Math.max(0, Math.floor(this.pop) - Object.values(this.workers).reduce((a, b) => a + b, 0));
         document.getElementById('w-free').textContent = String(free);
-
         for (const [k, r] of Object.entries(ROLES)) {
-          const cur = this.workers[k] || 0, max = slots[k] || 0;
-          const row = document.createElement('div');
+          const cur = this.workers[k] || 0, max = slots[k] || 0, row = document.createElement('div');
           row.className = 'role-row';
-          row.innerHTML = `
-            <span>${r.ico} ${r.name}</span>
-            <div class="stepper">
-              <button class="step-btn" data-r="${k}" data-d="-1" ${cur <= 0 ? 'disabled' : ''}>−</button>
-              <span style="min-width:36px;text-align:center;">${cur}/${max}</span>
-              <button class="step-btn" data-r="${k}" data-d="1" ${(cur >= max || free <= 0) ? 'disabled' : ''}>+</button>
-            </div>
-          `;
+          row.innerHTML = `<span>${r.ico} ${r.name}</span><div class="stepper"><button class="step-btn" data-r="${k}" data-d="-1" ${cur <= 0 ? 'disabled' : ''}>−</button><span style="min-width:36px;text-align:center;">${cur}/${max}</span><button class="step-btn" data-r="${k}" data-d="1" ${(cur >= max || free <= 0) ? 'disabled' : ''}>+</button></div>`;
           list.appendChild(row);
         }
       }
-
       updateHUD() {
-        const e = ERAS[this.era];
-        const s = SEASONS[this.seasonIdx] || SEASONS[0];
-        const hr = Math.floor(this.timeOfDay).toString().padStart(2, '0');
-        const min = Math.floor((this.timeOfDay % 1) * 60).toString().padStart(2, '0');
-        const dayIco = this.getNightFactor() > 0.4 ? '🌙' : '☀️';
-
+        const e = ERAS[this.era], s = SEASONS[this.seasonIdx] || SEASONS[0], hr = Math.floor(this.timeOfDay).toString().padStart(2, '0'), min = Math.floor((this.timeOfDay % 1) * 60).toString().padStart(2, '0'), dayIco = this.getNightFactor() > 0.4 ? '🌙' : '☀️';
         document.getElementById('era-pill').textContent = `${e.ico} Era ${['I','II','III','IV'][this.era - 1]}`;
         document.getElementById('time-pill').textContent = `${dayIco} ${hr}:${min} · ${s.ico} ${Math.round(this.temperature)}°C`;
-        document.getElementById('v-gold').textContent   = Math.floor(this.res.gold);
-        document.getElementById('v-wood').textContent   = Math.floor(this.res.wood);
-        document.getElementById('v-stone').textContent  = Math.floor(this.res.stone);
-        document.getElementById('v-metal').textContent  = Math.floor(this.res.metal);
-        document.getElementById('v-copper').textContent = Math.floor(this.res.copper);
-        document.getElementById('v-food').textContent   = Math.floor(this.res.food);
-        document.getElementById('v-pop').textContent    = `${Math.floor(this.pop)}/${this.popCap}`;
-        const free = Math.max(0, Math.floor(this.pop) - Object.values(this.workers).reduce((a, b) => a + b, 0));
-        document.getElementById('v-free').textContent = String(free);
+        document.getElementById('v-gold').textContent = Math.floor(this.res.gold); document.getElementById('v-wood').textContent = Math.floor(this.res.wood); document.getElementById('v-stone').textContent = Math.floor(this.res.stone);
+        document.getElementById('v-metal').textContent = Math.floor(this.res.metal); document.getElementById('v-copper').textContent = Math.floor(this.res.copper); document.getElementById('v-food').textContent = Math.floor(this.res.food);
+        document.getElementById('v-pop').textContent = `${Math.floor(this.pop)}/${this.popCap}`;
+        document.getElementById('v-free').textContent = String(Math.max(0, Math.floor(this.pop) - Object.values(this.workers).reduce((a, b) => a + b, 0)));
         document.getElementById('btn-era').textContent = e.reqPop ? `⚔️ ${e.next}: ${e.reqPop}👥` : '🚀 Era IV';
-
-        const wBtn = document.getElementById('btn-weather');
-        wBtn.classList.toggle('active', this.weather.mode === 'manual' || this.activeDisaster !== null);
-        wBtn.textContent = this.activeDisaster ? '⚡ Activo' : (this.weather.mode === 'manual' ? '🔧 Manual' : '☀️ Clima');
+        const wBtn = document.getElementById('btn-weather'); wBtn.classList.toggle('active', this.weather.mode === 'manual' || this.activeDisaster !== null); wBtn.textContent = this.activeDisaster ? '⚡ Activo' : (this.weather.mode === 'manual' ? '🔧 Manual' : '☀️ Clima');
       }
-
-      showBanner(msg) {
-        const el = document.getElementById('banner');
-        el.textContent = msg;
-        el.classList.add('show');
-        clearTimeout(this.bannerTimer);
-        this.bannerTimer = setTimeout(() => el.classList.remove('show'), 3600);
-      }
-
+      showBanner(msg) { const el = document.getElementById('banner'); el.textContent = msg; el.classList.add('show'); clearTimeout(this.bannerTimer); this.bannerTimer = setTimeout(() => el.classList.remove('show'), 3600); }
       openRegionModal(boot = false) {
-        const m = document.getElementById('modal');
-        document.getElementById('modal-title').textContent = '🗺️ Elige tu Región';
-        let sel = this.regId;
+        const m = document.getElementById('modal'); document.getElementById('modal-title').textContent = '🗺️ Elige tu Región'; let sel = this.regId;
         const draw = () => {
-          document.getElementById('modal-body').innerHTML = `<div class="reg-grid">${Object.values(REGIONS).map(r => `
-            <button type="button" class="reg-btn ${sel === r.id ? 'selected' : ''}" data-id="${r.id}">
-              <span style="font-size:32px;">${r.icon}</span>
-              <span>${r.name}</span>
-            </button>
-          `).join('')}</div>`;
-          document.querySelectorAll('.reg-btn').forEach(b => {
-            b.onclick = () => { sel = b.dataset.id; draw(); };
-          });
+          document.getElementById('modal-body').innerHTML = `<div class="reg-grid">${Object.values(REGIONS).map(r => `<button type="button" class="reg-btn ${sel === r.id ? 'selected' : ''}" data-id="${r.id}"><span style="font-size:32px;">${r.icon}</span><span>${r.name}</span></button>`).join('')}</div>`;
+          document.querySelectorAll('.reg-btn').forEach(b => b.onclick = () => { sel = b.dataset.id; draw(); });
         };
-        draw();
-        document.getElementById('modal-cancel').style.display = boot ? 'none' : 'inline-flex';
-        document.getElementById('modal-ok').textContent = '¡Empezar!';
-        document.getElementById('modal-ok').onclick = () => {
-          localStorage.removeItem(SAVE_KEY);
-          this.initWorld(sel);
-          this.sec = 'roads';
-          this.item = 'dirt_road';
-          this.renderCards();
-          this.renderWorkers();
-          this.updateHUD();
-          m.classList.add('hidden');
-        };
+        draw(); document.getElementById('modal-cancel').style.display = boot ? 'none' : 'inline-flex'; document.getElementById('modal-ok').textContent = '¡Empezar!';
+        document.getElementById('modal-ok').onclick = () => { localStorage.removeItem(SAVE_KEY); this.initWorld(sel); this.sec = 'roads'; this.item = 'dirt_road'; this.renderCards(); this.renderWorkers(); this.updateHUD(); m.classList.add('hidden'); };
         m.classList.remove('hidden');
       }
-
       openEraModal() {
-        const e = ERAS[this.era];
-        if (!e.reqPop) {
-          this.showBanner('🚀 ¡Ya estás en la Era IV · Futura!');
-          return;
-        }
-        const faltan = Math.max(0, e.reqPop - Math.floor(this.pop));
-        this.showBanner(`⚔️ ${e.next} se desbloquea automáticamente al llegar a ${e.reqPop} habitantes (faltan ${faltan})`);
+        const e = ERAS[this.era]; if (!e.reqPop) { this.showBanner('🚀 ¡Ya estás en la Era IV · Futura!'); return; }
+        this.showBanner(`⚔️ ${e.next} se desbloquea automáticamente al llegar a ${e.reqPop} habitantes (faltan ${Math.max(0, e.reqPop - Math.floor(this.pop))})`);
       }
-
       openTradeModal() {
-        const m = document.getElementById('modal');
-        document.getElementById('modal-title').textContent = '🌐 Comercio Libre entre Regiones';
+        const m = document.getElementById('modal'); document.getElementById('modal-title').textContent = '🌐 Comercio Libre entre Regiones';
         const hasPort = this.bldgs.some(b => b.type === 'trade_post' && !b.fire);
         const offers = [
-          { reg: '🌲 Bosque Norte', give: 'wood',   giveAmt: 40, get: 'gold',   getAmt: 120, label: 'Vender 40 🪵 por 120 🪙' },
-          { reg: '🏜️ Meseta Dorada', give: 'stone',  giveAmt: 35, get: 'copper', getAmt: 25,  label: 'Cambiar 35 🪨 por 25 🟠' },
-          { reg: '🌊 Costa Azul',    give: 'food',   giveAmt: 40, get: 'metal',  getAmt: 25,  label: 'Cambiar 40 🌾 por 25 ⚙️' },
-          { reg: '🌲 Bosque Norte',  give: 'gold',   giveAmt: 160,get: 'metal',  getAmt: 30,  label: 'Comprar 30 ⚙️ por 160 🪙' },
-          { reg: '🏜️ Meseta Dorada', give: 'gold',   giveAmt: 160,get: 'copper', getAmt: 30,  label: 'Comprar 30 🟠 por 160 🪙' },
-          { reg: '🌊 Costa Azul',    give: 'copper', giveAmt: 20, get: 'gold',   getAmt: 180, label: 'Exportar 20 🟠 por 180 🪙' }
+          { reg: '🌲 Bosque Norte', give: 'wood', giveAmt: 40, get: 'gold', getAmt: 120, label: 'Vender 40 🪵 por 120 🪙' },
+          { reg: '🏜️ Meseta Dorada', give: 'stone', giveAmt: 35, get: 'copper', getAmt: 25, label: 'Cambiar 35 🪨 por 25 🟠' },
+          { reg: '🌊 Costa Azul', give: 'food', giveAmt: 40, get: 'metal', getAmt: 25, label: 'Cambiar 40 🌾 por 25 ⚙️' },
+          { reg: '🌲 Bosque Norte', give: 'gold', giveAmt: 160, get: 'metal', getAmt: 30, label: 'Comprar 30 ⚙️ por 160 🪙' },
+          { reg: '🏜️ Meseta Dorada', give: 'gold', giveAmt: 160, get: 'copper', getAmt: 30, label: 'Comprar 30 🟠 por 160 🪙' },
+          { reg: '🌊 Costa Azul', give: 'copper', giveAmt: 20, get: 'gold', getAmt: 180, label: 'Exportar 20 🟠 por 180 🪙' }
         ];
-
         const renderBody = () => {
-          document.getElementById('modal-body').innerHTML = `
-            <div style="font-size:13px;color:#9ca3af;text-align:center;margin-bottom:12px;">
-              ${hasPort ? '✅ Ruta Regional activa (precios preferenciales)' : '💡 Consejo: Construye una 🌐 Ruta Regional en Servicios para ganar oro pasivo'}
-            </div>
-            ${offers.map((o, idx) => `
-              <div class="trade-row">
-                <div>
-                  <div style="color:#fbbf24;font-size:12px;">${o.reg}</div>
-                  <div>${o.label}</div>
-                </div>
-                <button type="button" class="icon-btn gold" data-idx="${idx}" ${this.res[o.give] < o.giveAmt ? 'disabled style="opacity:0.4;"' : ''}>Intercambiar</button>
-              </div>
-            `).join('')}
-          `;
-          document.querySelectorAll('#modal-body button[data-idx]').forEach(btn => {
-            btn.onclick = () => {
-              const o = offers[Number(btn.dataset.idx)];
-              if (this.res[o.give] < o.giveAmt) return;
-              this.res[o.give] -= o.giveAmt;
-              this.res[o.get]  += o.getAmt;
-              this.updateHUD();
-              this.showBanner(`🌐 Intercambio completado con ${o.reg}`);
-              renderBody();
-            };
-          });
+          document.getElementById('modal-body').innerHTML = `<div style="font-size:13px;color:#9ca3af;text-align:center;margin-bottom:12px;">${hasPort ? '✅ Ruta Regional activa' : '💡 Construye una 🌐 Ruta Regional en Servicios para ganar oro pasivo'}</div>${offers.map((o, idx) => `<div class="trade-row"><div><div style="color:#fbbf24;font-size:12px;">${o.reg}</div><div>${o.label}</div></div><button type="button" class="icon-btn gold" data-idx="${idx}" ${this.res[o.give] < o.giveAmt ? 'disabled style="opacity:0.4;"' : ''}>Intercambiar</button></div>`).join('')}`;
+          document.querySelectorAll('#modal-body button[data-idx]').forEach(btn => { btn.onclick = () => { const o = offers[Number(btn.dataset.idx)]; if (this.res[o.give] < o.giveAmt) return; this.res[o.give] -= o.giveAmt; this.res[o.get] += o.getAmt; this.updateHUD(); this.showBanner(`🌐 Intercambio completado con ${o.reg}`); renderBody(); }; });
         };
-        renderBody();
-        document.getElementById('modal-cancel').style.display = 'inline-flex';
-        document.getElementById('modal-ok').textContent = 'Listo';
-        document.getElementById('modal-ok').onclick = () => m.classList.add('hidden');
-        m.classList.remove('hidden');
+        renderBody(); document.getElementById('modal-cancel').style.display = 'inline-flex'; document.getElementById('modal-ok').textContent = 'Listo'; document.getElementById('modal-ok').onclick = () => m.classList.add('hidden'); m.classList.remove('hidden');
       }
-
-      save(silent = false) {
-        try {
-          const data = {
-            uid: this.uid,
-            regId: this.regId,
-            era: this.era,
-            timeOfDay: this.timeOfDay,
-            seasonIdx: this.seasonIdx,
-            res: this.res,
-            pop: this.pop,
-            workers: this.workers,
-            nodes: this.nodes,
-            roads: this.roads,
-            bldgs: this.bldgs,
-            fissures: this.fissures
-          };
-          localStorage.setItem(SAVE_KEY, JSON.stringify(data));
-          if (!silent) this.showBanner('💾 ¡Ciudad guardada!');
-        } catch (err) {
-          console.error(err);
-        }
-      }
-
+      save(silent = false) { try { localStorage.setItem(SAVE_KEY, JSON.stringify({ uid: this.uid, regId: this.regId, era: this.era, timeOfDay: this.timeOfDay, seasonIdx: this.seasonIdx, res: this.res, pop: this.pop, workers: this.workers, nodes: this.nodes, roads: this.roads, bldgs: this.bldgs, fissures: this.fissures })); if (!silent) this.showBanner('💾 ¡Ciudad guardada!'); } catch (e) {} }
       load(silent = false) {
         try {
-          const raw = localStorage.getItem(SAVE_KEY);
-          if (!raw) return false;
-          const d = JSON.parse(raw);
-          if (!d || !d.regId) return false;
-          this.initWorld(d.regId);
-          this.uid = d.uid || 1;
-          this.era = d.era || 1;
-          this.timeOfDay = d.timeOfDay ?? 10.0;
-          this.seasonIdx = d.seasonIdx || 0;
+          const raw = localStorage.getItem(SAVE_KEY); if (!raw) return false;
+          const d = JSON.parse(raw); if (!d || !d.regId) return false;
+          this.initWorld(d.regId); this.uid = d.uid || 1; this.era = d.era || 1; this.timeOfDay = d.timeOfDay ?? 10.0; this.seasonIdx = d.seasonIdx || 0;
           this.res = Object.assign({ gold: 700, wood: 150, stone: 100, metal: 25, copper: 25, food: 60 }, d.res || {});
-          this.pop = d.pop || 0;
-          this.workers = Object.assign({ wood: 0, stone: 0, farm: 0, hunter: 0, eng: 0, guard: 0, fire: 0, civic: 0 }, d.workers || {});
-          this.nodes = d.nodes || [];
-          this.roads = d.roads || [];
-          this.bldgs = d.bldgs || [];
-          this.fissures = d.fissures || [];
-          this.bgDirty = true;
-          this.recalcPop();
-          this.checkEraProgression();
-          if (!silent) this.showBanner('📂 Ciudad cargada');
-          return true;
-        } catch (err) {
-          console.error(err);
-          return false;
-        }
+          this.pop = d.pop || 0; this.workers = Object.assign({ wood: 0, stone: 0, farm: 0, hunter: 0, eng: 0, guard: 0, fire: 0, civic: 0 }, d.workers || {});
+          this.nodes = d.nodes || []; this.roads = d.roads || []; this.bldgs = d.bldgs || []; this.fissures = d.fissures || [];
+          this.bgDirty = true; this.recalcPop(); this.checkEraProgression(); if (!silent) this.showBanner('📂 Ciudad cargada'); return true;
+        } catch (e) { return false; }
       }
-
-      resize() {
-        const dpr = Math.min(2, window.devicePixelRatio || 1);
-        this.cam.vw = window.innerWidth;
-        this.cam.vh = window.innerHeight;
-        this.canvas.width = Math.round(this.cam.vw * dpr);
-        this.canvas.height = Math.round(this.cam.vh * dpr);
-        this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      }
-
+      resize() { const dpr = Math.min(2, window.devicePixelRatio || 1); this.cam.vw = window.innerWidth; this.cam.vh = window.innerHeight; this.canvas.width = Math.round(this.cam.vw * dpr); this.canvas.height = Math.round(this.cam.vh * dpr); this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0); }
       bindEvents() {
         window.addEventListener('resize', () => this.resize());
-
-        document.querySelectorAll('.tab-btn').forEach(btn => {
-          btn.onclick = () => {
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            this.sec = btn.dataset.sec;
-            const first = Object.keys(ITEMS).find(k => ITEMS[k].sec === this.sec && ITEMS[k].era <= this.era);
-            if (first) this.item = first;
-            this.renderCards();
-          };
-        });
-
-        document.getElementById('btn-workers').onclick = () => {
-          document.getElementById('workers-drawer').classList.toggle('open');
-          this.renderWorkers();
-        };
-
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.onclick = () => { document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); this.sec = btn.dataset.sec; const first = Object.keys(ITEMS).find(k => ITEMS[k].sec === this.sec && ITEMS[k].era <= this.era); if (first) this.item = first; this.renderCards(); });
+        document.getElementById('btn-workers').onclick = () => { document.getElementById('workers-drawer').classList.toggle('open'); this.renderWorkers(); };
         document.getElementById('btn-auto').onclick = () => this.autoWorkers();
-
-        document.getElementById('roles-list').onclick = e => {
-          const btn = e.target.closest('.step-btn');
-          if (!btn || btn.disabled) return;
-          const r = btn.dataset.r;
-          const d = parseInt(btn.dataset.d, 10);
-          const slots = this.getSlots();
-          const free = Math.max(0, Math.floor(this.pop) - Object.values(this.workers).reduce((a, b) => a + b, 0));
-          if (d > 0 && free > 0 && this.workers[r] < slots[r]) this.workers[r]++;
-          if (d < 0 && this.workers[r] > 0) this.workers[r]--;
-          this.renderWorkers();
-          this.updateHUD();
-        };
-
+        document.getElementById('roles-list').onclick = e => { const btn = e.target.closest('.step-btn'); if (!btn || btn.disabled) return; const r = btn.dataset.r, d = parseInt(btn.dataset.d, 10), slots = this.getSlots(), free = Math.max(0, Math.floor(this.pop) - Object.values(this.workers).reduce((a, b) => a + b, 0)); if (d > 0 && free > 0 && this.workers[r] < slots[r]) this.workers[r]++; if (d < 0 && this.workers[r] > 0) this.workers[r]--; this.renderWorkers(); this.updateHUD(); };
         document.getElementById('btn-era').onclick = () => this.openEraModal();
         document.getElementById('btn-trade').onclick = () => this.openTradeModal();
         document.getElementById('btn-weather').onclick = () => this.toggleWeatherMode();
-
-        document.getElementById('btn-disasters').onclick = () => {
-          const bar = document.getElementById('disasters-bar');
-          bar.style.display = bar.style.display === 'none' ? 'flex' : 'none';
-        };
-
-        document.getElementById('btn-close-disasters').onclick = () => {
-          document.getElementById('disasters-bar').style.display = 'none';
-        };
-
+        document.getElementById('btn-disasters').onclick = () => { const bar = document.getElementById('disasters-bar'); bar.style.display = bar.style.display === 'none' ? 'flex' : 'none'; };
+        document.getElementById('btn-close-disasters').onclick = () => document.getElementById('disasters-bar').style.display = 'none';
         document.getElementById('btn-undo').onclick = () => this.undoLast();
-        document.getElementById('btn-rotate').onclick = () => {
-          this.rot = (this.rot + Math.PI * 0.25) % (Math.PI * 2);
-          this.showBanner('↻ Edificio rotado');
-        };
-
-        document.getElementById('btn-speed').onclick = e => {
-          this.speed = this.speed === 1 ? 2 : (this.speed === 2 ? 0 : 1);
-          e.currentTarget.textContent = this.speed === 0 ? '⏸️' : (this.speed === 2 ? '⏩' : '▶️');
-        };
-
+        document.getElementById('btn-rotate').onclick = () => { this.rot = (this.rot + Math.PI * 0.25) % (Math.PI * 2); this.showBanner('↻ Edificio rotado'); };
+        document.getElementById('btn-speed').onclick = e => { this.speed = this.speed === 1 ? 2 : (this.speed === 2 ? 0 : 1); e.currentTarget.textContent = this.speed === 0 ? '⏸️' : (this.speed === 2 ? '⏩' : '▶️'); };
         document.getElementById('btn-export').onclick = () => this.save(false);
         document.getElementById('btn-region').onclick = () => this.openRegionModal(false);
         document.getElementById('modal-cancel').onclick = () => document.getElementById('modal').classList.add('hidden');
-
-        const jumpMini = e => {
-          const rect = this.mini.getBoundingClientRect();
-          const cx = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
-          const cy = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
-          this.cam.x = Math.max(200, Math.min(MAP_W - 200, (cx / rect.width) * MAP_W));
-          this.cam.y = Math.max(150, Math.min(MAP_H - 150, (cy / rect.height) * MAP_H));
-          this.cam.vx = 0;
-          this.cam.vy = 0;
-        };
-        this.mini.addEventListener('pointerdown', e => {
-          e.stopPropagation();
-          jumpMini(e);
-        });
-
+        const jumpMini = e => { const rect = this.mini.getBoundingClientRect(), cx = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left, cy = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top; this.cam.x = Math.max(200, Math.min(MAP_W - 200, (cx / rect.width) * MAP_W)); this.cam.y = Math.max(150, Math.min(MAP_H - 150, (cy / rect.height) * MAP_H)); this.cam.vx = 0; this.cam.vy = 0; };
+        this.mini.addEventListener('pointerdown', e => { e.stopPropagation(); jumpMini(e); });
         this.canvas.addEventListener('pointerdown', e => {
-          this.canvas.setPointerCapture(e.pointerId);
-          this.touches.set(e.pointerId, { x: e.clientX, y: e.clientY });
-
-          if (this.touches.size >= 2) {
-            const pts = Array.from(this.touches.values());
-            this.gesture = {
-              mode: 'pan',
-              cx: (pts[0].x + pts[1].x) * 0.5,
-              cy: (pts[0].y + pts[1].y) * 0.5
-            };
-            return;
-          }
-
-          const w = this.toWorld(e.clientX, e.clientY);
-          const spec = ITEMS[this.item];
-
-          if (e.button === 2 || e.shiftKey) {
-            this.gesture = { mode: 'pan', cx: e.clientX, cy: e.clientY, lastT: performance.now() };
-          } else if (spec && spec.kind === 'road') {
-            const snap = this.snapPoint(w.x, w.y);
-            this.gesture = {
-              mode: 'road',
-              sx: e.clientX,
-              sy: e.clientY,
-              roadStart: snap,
-              roadEnd: snap
-            };
-          } else {
-            this.gesture = {
-              mode: 'tap_or_pan',
-              sx: e.clientX,
-              sy: e.clientY,
-              cx: e.clientX,
-              cy: e.clientY,
-              moved: false,
-              lastT: performance.now()
-            };
-          }
+          this.canvas.setPointerCapture(e.pointerId); this.touches.set(e.pointerId, { x: e.clientX, y: e.clientY });
+          if (this.touches.size >= 2) { const pts = Array.from(this.touches.values()); this.gesture = { mode: 'pan', cx: (pts[0].x + pts[1].x) * 0.5, cy: (pts[0].y + pts[1].y) * 0.5 }; return; }
+          const w = this.toWorld(e.clientX, e.clientY), spec = ITEMS[this.item];
+          if (e.button === 2 || e.shiftKey) this.gesture = { mode: 'pan', cx: e.clientX, cy: e.clientY, lastT: performance.now() };
+          else if (spec && spec.kind === 'road') { const snap = this.snapPoint(w.x, w.y); this.gesture = { mode: 'road', sx: e.clientX, sy: e.clientY, roadStart: snap, roadEnd: snap }; }
+          else this.gesture = { mode: 'tap_or_pan', sx: e.clientX, sy: e.clientY, cx: e.clientX, cy: e.clientY, moved: false, lastT: performance.now() };
         });
-
         this.canvas.addEventListener('pointermove', e => {
           if (!this.touches.has(e.pointerId) || !this.gesture) return;
           this.touches.set(e.pointerId, { x: e.clientX, y: e.clientY });
-
-          if (this.touches.size >= 2) {
-            const pts = Array.from(this.touches.values());
-            const ncx = (pts[0].x + pts[1].x) * 0.5;
-            const ncy = (pts[0].y + pts[1].y) * 0.5;
-            if (this.gesture.mode === 'pan') {
-              this.cam.x -= (ncx - this.gesture.cx);
-              this.cam.y -= (ncy - this.gesture.cy);
-            }
-            this.gesture = { mode: 'pan', cx: ncx, cy: ncy };
-            return;
-          }
-
-          if (this.gesture.mode === 'road') {
-            const w = this.toWorld(e.clientX, e.clientY);
-            this.gesture.roadEnd = this.snapPoint(w.x, w.y);
-          } else if (this.gesture.mode === 'pan' || this.gesture.mode === 'tap_or_pan') {
-            const dx = e.clientX - this.gesture.cx;
-            const dy = e.clientY - this.gesture.cy;
-            if (dist(e.clientX, e.clientY, this.gesture.sx, this.gesture.sy) > 12) {
-              this.gesture.moved = true;
-              this.gesture.mode = 'pan';
-            }
-            if (this.gesture.mode === 'pan') {
-              const now = performance.now();
-              const dt = Math.max(0.008, (now - (this.gesture.lastT || now)) / 1000);
-              this.cam.x -= dx;
-              this.cam.y -= dy;
-              this.cam.vx = -dx / dt * 0.35;
-              this.cam.vy = -dy / dt * 0.35;
-              this.gesture.cx = e.clientX;
-              this.gesture.cy = e.clientY;
-              this.gesture.lastT = now;
-            }
+          if (this.touches.size >= 2) { const pts = Array.from(this.touches.values()), ncx = (pts[0].x + pts[1].x) * 0.5, ncy = (pts[0].y + pts[1].y) * 0.5; if (this.gesture.mode === 'pan') { this.cam.x -= (ncx - this.gesture.cx); this.cam.y -= (ncy - this.gesture.cy); } this.gesture = { mode: 'pan', cx: ncx, cy: ncy }; return; }
+          if (this.gesture.mode === 'road') { const w = this.toWorld(e.clientX, e.clientY); this.gesture.roadEnd = this.snapPoint(w.x, w.y); }
+          else if (this.gesture.mode === 'pan' || this.gesture.mode === 'tap_or_pan') {
+            const dx = e.clientX - this.gesture.cx, dy = e.clientY - this.gesture.cy;
+            if (dist(e.clientX, e.clientY, this.gesture.sx, this.gesture.sy) > 12) { this.gesture.moved = true; this.gesture.mode = 'pan'; }
+            if (this.gesture.mode === 'pan') { const now = performance.now(), dt = Math.max(0.008, (now - (this.gesture.lastT || now)) / 1000); this.cam.x -= dx; this.cam.y -= dy; this.cam.vx = -dx / dt * 0.35; this.cam.vy = -dy / dt * 0.35; this.gesture.cx = e.clientX; this.gesture.cy = e.clientY; this.gesture.lastT = now; }
           }
         });
-
         const endPointer = e => {
-          this.touches.delete(e.pointerId);
-          if (!this.gesture) return;
-
-          if (this.gesture.mode === 'road' && this.gesture.roadStart && this.gesture.roadEnd) {
-            const spec = ITEMS[this.item];
-            if (spec && spec.kind === 'road') {
-              this.buildRoadSegment(this.gesture.roadStart, this.gesture.roadEnd, spec);
-            }
-          } else if (this.gesture.mode === 'tap_or_pan' && !this.gesture.moved) {
-            const w = this.toWorld(e.clientX, e.clientY);
-            const spec = ITEMS[this.item];
-            if (spec && spec.kind === 'bldg') {
-              this.placeBldg(w.x, w.y);
-            } else if (spec && spec.kind === 'tool') {
-              this.useTool(w.x, w.y);
-            }
-          }
-
-          if (this.touches.size === 0) {
-            this.gesture = null;
-          }
+          this.touches.delete(e.pointerId); if (!this.gesture) return;
+          if (this.gesture.mode === 'road' && this.gesture.roadStart && this.gesture.roadEnd) { const spec = ITEMS[this.item]; if (spec && spec.kind === 'road') this.buildRoadSegment(this.gesture.roadStart, this.gesture.roadEnd, spec); }
+          else if (this.gesture.mode === 'tap_or_pan' && !this.gesture.moved) { const w = this.toWorld(e.clientX, e.clientY), spec = ITEMS[this.item]; if (spec && spec.kind === 'bldg') this.placeBldg(w.x, w.y); else if (spec && spec.kind === 'tool') this.useTool(w.x, w.y); }
+          if (this.touches.size === 0) this.gesture = null;
         };
-
-        this.canvas.addEventListener('pointerup', endPointer);
-        this.canvas.addEventListener('pointercancel', endPointer);
-        this.canvas.addEventListener('contextmenu', e => e.preventDefault());
+        this.canvas.addEventListener('pointerup', endPointer); this.canvas.addEventListener('pointercancel', endPointer); this.canvas.addEventListener('contextmenu', e => e.preventDefault());
       }
     }
-
-    window.addEventListener('DOMContentLoaded', () => {
-      window.game = new Game();
-    });
+    window.addEventListener('DOMContentLoaded', () => { window.game = new Game(); });
   </script>
 </body>
 </html>
